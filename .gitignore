@@ -18,6 +18,9 @@ venv/
 .DS_Store
 Thumbs.db
 
+# Database files
+*.db
+
 # Database backups
 *_backup_*.db
 
