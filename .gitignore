@@ -29,3 +29,11 @@ Thumbs.db
 
 # Exports
 *.json
+
+*.sqlite
+*.sqlite3
+backups/
+exports/
+__pycache__/
+.venv/
+venv/

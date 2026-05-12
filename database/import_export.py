@@ -38,6 +38,20 @@ def export_database_to_json():
         for row in cursor.fetchall()
     ]
 
+    cursor.execute("SELECT * FROM stories ORDER BY id")
+    story_columns = [column[0] for column in cursor.description]
+    stories = [
+        dict(zip(story_columns, row))
+        for row in cursor.fetchall()
+    ]
+
+    cursor.execute("SELECT * FROM story_chapters ORDER BY id")
+    story_chapter_columns = [column[0] for column in cursor.description]
+    story_chapters = [
+        dict(zip(story_chapter_columns, row))
+        for row in cursor.fetchall()
+    ]
+
     conn.close()
 
     export_data = {
@@ -45,7 +59,9 @@ def export_database_to_json():
         "characters": characters,
         "profiles": profiles,
         "story_templates": story_templates,
-        "story_template_chapters": story_template_chapters
+        "story_template_chapters": story_template_chapters,
+        "stories": stories,
+        "story_chapters": story_chapters
     }
 
     return json.dumps(
@@ -75,6 +91,16 @@ def import_database_from_json(uploaded_file):
         []
     )
 
+    stories = data.get(
+        "stories",
+        []
+    )
+
+    story_chapters = data.get(
+        "story_chapters",
+        []
+    )
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -82,6 +108,8 @@ def import_database_from_json(uploaded_file):
     imported_characters = 0
     imported_templates = 0
     imported_template_chapters = 0
+    imported_stories = 0
+    imported_story_chapters = 0
 
     # -------------------------
     # Profiles
@@ -250,20 +278,96 @@ def import_database_from_json(uploaded_file):
             (
                 template_id,
                 chapter_number,
+                chapter_description
+            )
+            VALUES (?, ?, ?)
+        """, (
+            new_template_id,
+            chapter.get("chapter_number", 1),
+            chapter.get("chapter_description", "")
+        ))
+
+        imported_template_chapters += 1
+
+    # -------------------------
+    # Stories
+    # -------------------------
+
+    story_id_map = {}
+
+    for story in stories:
+        old_id = story.get("id")
+        old_template_id = story.get("template_id")
+
+        new_template_id = template_id_map.get(
+            old_template_id,
+            old_template_id
+        )
+
+        cursor.execute("""
+            INSERT OR REPLACE INTO stories
+            (
+                created_at,
+                story_name,
+                template_id,
+                overview,
+                setting_background,
+                tone_style,
+                male_characters,
+                female_characters
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            story.get("created_at")
+            or datetime.now().isoformat(timespec="seconds"),
+
+            story.get("story_name", ""),
+            new_template_id,
+            story.get("overview", ""),
+            story.get("setting_background", ""),
+            story.get("tone_style", ""),
+            story.get("male_characters", "[]"),
+            story.get("female_characters", "[]")
+        ))
+
+        new_id = cursor.lastrowid
+
+        if old_id is not None:
+            story_id_map[old_id] = new_id
+
+        imported_stories += 1
+
+    # -------------------------
+    # Story Chapters
+    # -------------------------
+
+    for chapter in story_chapters:
+        old_story_id = chapter.get("story_id")
+
+        new_story_id = story_id_map.get(
+            old_story_id,
+            old_story_id
+        )
+
+        cursor.execute("""
+            INSERT INTO story_chapters
+            (
+                story_id,
+                chapter_number,
                 chapter_description,
                 chapter_body,
                 chapter_summary
             )
             VALUES (?, ?, ?, ?, ?)
         """, (
-            new_template_id,
+            new_story_id,
             chapter.get("chapter_number", 1),
             chapter.get("chapter_description", ""),
             chapter.get("chapter_body", ""),
             chapter.get("chapter_summary", "")
         ))
 
-        imported_template_chapters += 1
+        imported_story_chapters += 1
 
     conn.commit()
     conn.close()
@@ -272,5 +376,7 @@ def import_database_from_json(uploaded_file):
         "profiles": imported_profiles,
         "characters": imported_characters,
         "story_templates": imported_templates,
-        "story_template_chapters": imported_template_chapters
+        "story_template_chapters": imported_template_chapters,
+        "stories": imported_stories,
+        "story_chapters": imported_story_chapters
     }
