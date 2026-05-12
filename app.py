@@ -23,15 +23,37 @@ st.title("Story Builder")
 with st.sidebar:
     st.header("LLM Settings")
 
-    st.session_state["llm_provider"] = st.selectbox(
-        "Provider",
-        ["Gemini"],
-        index=0
+    provider_options = ["Gemini", "Groq"]
+
+    default_models = {
+        "Gemini": "gemini-2.5-flash",
+        "Groq": "llama-3.3-70b-versatile"
+    }
+
+    current_provider = st.session_state.get(
+        "llm_provider",
+        "Gemini"
     )
+
+    selected_provider = st.selectbox(
+        "Provider",
+        provider_options,
+        index=provider_options.index(current_provider)
+        if current_provider in provider_options
+        else 0
+    )
+
+    if selected_provider != current_provider:
+        st.session_state["llm_model"] = default_models[selected_provider]
+
+    st.session_state["llm_provider"] = selected_provider
 
     st.session_state["llm_model"] = st.text_input(
         "Model",
-        value=st.session_state.get("llm_model", "gemini-2.5-flash")
+        value=st.session_state.get(
+            "llm_model",
+            default_models[selected_provider]
+        )
     )
 
 tab_characters, tab_profiles, tab_templates, tab_stories, tab_history, tab_export_import = st.tabs(

@@ -3,6 +3,7 @@ from database.characters import (
     delete_character,
     get_characters,
     get_characters_by_gender,
+    get_character_summaries_by_names,
     save_character,
     update_character,
 )
@@ -10,6 +11,11 @@ from database.characters import (
 from database.import_export import (
     export_database_to_json,
     import_database_from_json,
+)
+
+from database.llm_calls import (
+    get_llm_calls,
+    save_llm_call,
 )
 
 from database.metadata import (

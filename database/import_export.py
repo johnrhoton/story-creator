@@ -53,6 +53,13 @@ def export_database_to_json():
         for row in cursor.fetchall()
     ]
 
+    cursor.execute("SELECT * FROM llm_calls ORDER BY id")
+    llm_call_columns = [column[0] for column in cursor.description]
+    llm_calls = [
+        dict(zip(llm_call_columns, row))
+        for row in cursor.fetchall()
+    ]
+
     conn.close()
 
     export_data = {
@@ -62,7 +69,8 @@ def export_database_to_json():
         "story_templates": story_templates,
         "story_template_chapters": story_template_chapters,
         "stories": stories,
-        "story_chapters": story_chapters
+        "story_chapters": story_chapters,
+        "llm_calls": llm_calls
     }
 
     return json.dumps(
@@ -102,6 +110,11 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         []
     )
 
+    llm_calls = data.get(
+        "llm_calls",
+        []
+    )
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -114,6 +127,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
     imported_template_chapters = 0
     imported_stories = 0
     imported_story_chapters = 0
+    imported_llm_calls = 0
 
     # -------------------------
     # Profiles
@@ -373,6 +387,32 @@ def import_database_from_json(uploaded_file, replace_existing=False):
 
         imported_story_chapters += 1
 
+    # -------------------------
+    # LLM Calls
+    # -------------------------
+
+    for llm_call in llm_calls:
+        cursor.execute("""
+            INSERT INTO llm_calls
+            (
+                created_at,
+                provider,
+                model,
+                prompt,
+                response
+            )
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            llm_call.get("created_at")
+            or datetime.now().isoformat(timespec="seconds"),
+            llm_call.get("provider", ""),
+            llm_call.get("model", ""),
+            llm_call.get("prompt", ""),
+            llm_call.get("response", "")
+        ))
+
+        imported_llm_calls += 1
+
     total_imported = (
         imported_profiles
         + imported_characters
@@ -380,6 +420,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         + imported_template_chapters
         + imported_stories
         + imported_story_chapters
+        + imported_llm_calls
     )
 
     if total_imported or replace_existing:
@@ -394,11 +435,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         "story_templates": imported_templates,
         "story_template_chapters": imported_template_chapters,
         "stories": imported_stories,
-        "story_chapters": imported_story_chapters
+        "story_chapters": imported_story_chapters,
+        "llm_calls": imported_llm_calls
     }
 
 
 def clear_exported_tables(cursor):
+    cursor.execute("DELETE FROM llm_calls")
     cursor.execute("DELETE FROM story_chapters")
     cursor.execute("DELETE FROM stories")
     cursor.execute("DELETE FROM story_template_chapters")

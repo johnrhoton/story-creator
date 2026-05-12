@@ -24,29 +24,18 @@ def render_characters_tab():
     st.header("Characters")
 
     profiles = list_profiles_for_character_creation()
-    profile_options = [p[0] for p in profiles]
-
-    selected_profiles = st.multiselect(
-        "Profiles",
-        profile_options
-    )
-
-    defaults = combine_profile_defaults(
-        selected_profiles,
-        profiles
-    )
+    all_profile_options = [profile[0] for profile in profiles]
 
     st.subheader("Create character")
-
-    creation_age = st.text_input(
-        "Age",
-        value=defaults["age"]
-    )
 
     creation_gender = st.selectbox(
         "Gender",
         GENDER_OPTIONS,
-        index=GENDER_OPTIONS.index(defaults["gender"])
+        index=0
+    )
+
+    creation_age = st.text_input(
+        "Age"
     )
 
     suggested_name = suggest_name(
@@ -54,12 +43,28 @@ def render_characters_tab():
         creation_gender
     )
 
+    previous_suggested_name = st.session_state.get(
+        "last_suggested_character_name"
+    )
+
+    current_character_name = st.session_state.get(
+        "new_character_name",
+        ""
+    )
+
+    if (
+        not current_character_name
+        or current_character_name == previous_suggested_name
+    ):
+        st.session_state["new_character_name"] = suggested_name
+
+    st.session_state[
+        "last_suggested_character_name"
+    ] = suggested_name
+
     if st.button("Use suggested name"):
         st.session_state["new_character_name"] = suggested_name
         st.rerun()
-
-    if "new_character_name" not in st.session_state:
-        st.session_state["new_character_name"] = suggested_name
 
     if suggested_name:
         st.caption(
@@ -67,7 +72,66 @@ def render_characters_tab():
             f"and gender {creation_gender}: {suggested_name}"
         )
 
+    name = st.text_input(
+        "Name",
+        key="new_character_name"
+    )
+
+    gender_profiles = [
+        profile for profile in profiles
+        if profile[3] == creation_gender
+    ]
+
+    profile_options = [
+        profile[0] for profile in gender_profiles
+    ]
+
+    if st.session_state.get("creation_gender") != creation_gender:
+        st.session_state["creation_gender"] = creation_gender
+        st.session_state["creation_selected_profiles"] = []
+
+    selected_profiles = st.multiselect(
+        "Profiles",
+        profile_options,
+        key="creation_selected_profiles"
+    )
+
+    defaults = combine_profile_defaults(
+        selected_profiles,
+        gender_profiles
+    )
+
+    selected_profile_key = tuple(selected_profiles)
+
+    if (
+        st.session_state.get("last_creation_profiles")
+        != selected_profile_key
+    ):
+        st.session_state["creation_physical_traits"] = (
+            defaults["physical_traits"]
+        )
+        st.session_state["creation_personality_traits"] = (
+            defaults["personality_traits"]
+        )
+        st.session_state["creation_notes"] = defaults["notes"]
+        st.session_state["last_creation_profiles"] = selected_profile_key
+
     with st.form("generate_form"):
+        physical_traits = st.text_area(
+            "Physical traits",
+            key="creation_physical_traits"
+        )
+
+        personality_traits = st.text_area(
+            "Personality traits",
+            key="creation_personality_traits"
+        )
+
+        notes = st.text_area(
+            "Notes",
+            key="creation_notes"
+        )
+
         length = st.number_input(
             "Description length in words",
             min_value=50,
@@ -82,26 +146,6 @@ def render_characters_tab():
             max_value=500,
             value=50,
             step=25
-        )
-
-        name = st.text_input(
-            "Name",
-            key="new_character_name"
-        )
-
-        physical_traits = st.text_area(
-            "Physical traits",
-            value=defaults["physical_traits"]
-        )
-
-        personality_traits = st.text_area(
-            "Personality traits",
-            value=defaults["personality_traits"]
-        )
-
-        notes = st.text_area(
-            "Notes",
-            value=defaults["notes"]
         )
 
         submitted = st.form_submit_button(
@@ -179,7 +223,7 @@ def render_characters_tab():
             render_character_expander(
                 row,
                 profiles,
-                profile_options
+                all_profile_options
             )
 
 

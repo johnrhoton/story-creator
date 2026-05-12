@@ -12,6 +12,8 @@ from services.story_service import (
     delete_existing_story_chapter,
     edit_story,
     edit_story_chapter,
+    list_female_characters,
+    list_male_characters,
     list_stories,
     list_story_chapters,
     list_templates,
@@ -28,6 +30,23 @@ def render_stories_tab():
         for template in templates
     }
 
+    stories = list_stories()
+    existing_story_names = {
+        story[2].strip().lower()
+        for story in stories
+        if story[2]
+    }
+
+    male_character_options = [
+        row[1]
+        for row in list_male_characters()
+    ]
+
+    female_character_options = [
+        row[1]
+        for row in list_female_characters()
+    ]
+
     st.subheader("Create story from template")
 
     with st.form("create_story_form"):
@@ -38,29 +57,53 @@ def render_stories_tab():
             list(template_options.keys()) if template_options else []
         )
 
-        create_story = st.form_submit_button("Create story")
+        selected_male_characters = st.multiselect(
+            "Male characters",
+            male_character_options
+        )
+
+        selected_female_characters = st.multiselect(
+            "Female characters",
+            female_character_options
+        )
+
+        create_story = st.form_submit_button(
+            "Create story and generate chapters"
+        )
 
     if create_story:
-        if not story_name.strip():
+        story_name = story_name.strip()
+
+        if not story_name:
             st.error("Story name is required.")
         elif not selected_template_name:
             st.error("A template is required.")
+        elif story_name.lower() in existing_story_names:
+            st.error(
+                f"A story named '{story_name}' already exists. "
+                "Choose another name."
+            )
         else:
             template_id = template_options[selected_template_name]
 
-            story_id = create_from_template(
-                template_id,
-                story_name.strip()
-            )
+            try:
+                with st.spinner("Creating story and generating chapters..."):
+                    story_id = create_from_template(
+                        template_id,
+                        story_name,
+                        selected_male_characters,
+                        selected_female_characters
+                    )
 
-            st.success(f"Story created with ID {story_id}.")
-            st.rerun()
+                st.success(f"Story created with ID {story_id}.")
+                st.rerun()
+
+            except Exception as error:
+                st.error(f"Story creation failed: {error}")
 
     st.divider()
 
     st.subheader("Stories")
-
-    stories = list_stories()
 
     if not stories:
         st.info("No stories created yet.")
@@ -240,7 +283,7 @@ def render_story_chapter_expander(chapter):
         with st.form(f"edit_story_chapter_{chapter_id}"):
             edited_chapter_number = st.number_input(
                 "Chapter number",
-                min_value=1,
+                min_value=0,
                 value=chapter_number,
                 step=1
             )

@@ -245,3 +245,34 @@ def get_characters_by_gender(gender):
     conn.close()
 
     return rows
+
+
+def get_character_summaries_by_names(names):
+    if not names:
+        return {}
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    placeholders = ", ".join("?" for _name in names)
+
+    cursor.execute(f"""
+        SELECT
+            name,
+            summary
+        FROM characters
+        WHERE LOWER(TRIM(name)) IN ({placeholders})
+    """, tuple(
+        name.strip().lower()
+        for name in names
+    ))
+
+    summaries = {
+        row[0].strip().lower(): row[1] or ""
+        for row in cursor.fetchall()
+        if row[0]
+    }
+
+    conn.close()
+
+    return summaries

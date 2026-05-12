@@ -99,6 +99,17 @@ def create_tables():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS llm_calls (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
+            provider TEXT NOT NULL,
+            model TEXT NOT NULL,
+            prompt TEXT NOT NULL,
+            response TEXT
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS sync_metadata (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL

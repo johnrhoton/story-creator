@@ -107,6 +107,8 @@ def normalise_for_content_hash(data):
             normalised[key] = normalise_rows(value, ["id", "template_id"])
         elif key == "story_chapters":
             normalised[key] = normalise_rows(value, ["id", "story_id"])
+        elif key == "llm_calls":
+            normalised[key] = normalise_rows(value, ["id"])
         else:
             normalised[key] = value
 

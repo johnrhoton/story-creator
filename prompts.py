@@ -44,3 +44,65 @@ def build_character_summary_prompt(length, description):
         "details. Avoid decorative language.\n\n"
         f"Character description:\n{description}"
     )
+
+
+def build_story_chapter_prompt(
+    overview,
+    setting_background,
+    tone_style,
+    outline,
+    previous_summaries,
+    chapter_number,
+    chapter_description
+):
+    previous_summary_text = (
+        "\n\n".join(previous_summaries)
+        if previous_summaries
+        else "None yet."
+    )
+
+    return (
+        "Write the full body for the current story chapter.\n\n"
+        f"Template overview:\n{overview or ''}\n\n"
+        f"Template setting/background:\n{setting_background or ''}\n\n"
+        f"Template tone/style:\n{tone_style or ''}\n\n"
+        f"Outline:\n{outline}\n\n"
+        f"Previous chapter summaries:\n{previous_summary_text}\n\n"
+        f"Current chapter: Chapter {chapter_number}\n"
+        f"Current chapter description:\n{chapter_description or ''}\n\n"
+        "Write only the chapter body. Follow the outline, maintain continuity "
+        "with previous summaries, and match the requested tone/style."
+    )
+
+
+def build_story_chapter_zero_prompt(
+    overview,
+    setting_background,
+    tone_style,
+    outline,
+    characters,
+    chapter_description
+):
+    return (
+        "Write Chapter 0 for this story.\n\n"
+        f"Template overview:\n{overview or ''}\n\n"
+        f"Template setting/background:\n{setting_background or ''}\n\n"
+        f"Template tone/style:\n{tone_style or ''}\n\n"
+        f"Outline:\n{outline}\n\n"
+        f"Characters:\n{characters}\n\n"
+        f"Chapter 0 purpose:\n{chapter_description or ''}\n\n"
+        "Write only the chapter body. Establish the setting, introduce the "
+        "main characters naturally, and prepare the reader for the story "
+        "outlined above. Do not advance too far into the Chapter 1 events."
+    )
+
+
+def build_story_chapter_summary_prompt(chapter_body):
+    return (
+        "Summarise the following chapter body as concise continuity notes for "
+        "future chapter generation.\n\n"
+        "Include key events, character decisions, emotional changes, revealed "
+        "information, unresolved tension, and the final state at the end of the "
+        "chapter. Avoid polished prose.\n\n"
+        f"Chapter body:\n{chapter_body}"
+    )

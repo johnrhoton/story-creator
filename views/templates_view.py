@@ -1,7 +1,5 @@
 # views/templates_view.py
 
-import json
-
 import streamlit as st
 
 from services.template_service import (
@@ -12,8 +10,6 @@ from services.template_service import (
     delete_template_chapter,
     edit_template,
     edit_template_chapter,
-    list_female_characters,
-    list_male_characters,
     list_template_chapters,
     list_templates,
 )
@@ -21,17 +17,6 @@ from services.template_service import (
 
 def render_templates_tab():
     st.header("Templates")
-
-    male_character_rows = list_male_characters()
-    female_character_rows = list_female_characters()
-
-    male_character_options = [
-        row[1] for row in male_character_rows
-    ]
-
-    female_character_options = [
-        row[1] for row in female_character_rows
-    ]
 
     st.subheader("Create template")
 
@@ -50,16 +35,6 @@ def render_templates_tab():
 
         tone_style = st.text_input("Tone / Style")
 
-        selected_male_characters = st.multiselect(
-            "Male characters",
-            male_character_options
-        )
-
-        selected_female_characters = st.multiselect(
-            "Female characters",
-            female_character_options
-        )
-
         save_template = st.form_submit_button(
             "Create template"
         )
@@ -72,9 +47,7 @@ def render_templates_tab():
                 template_name.strip(),
                 overview,
                 setting_background,
-                tone_style,
-                selected_male_characters,
-                selected_female_characters
+                tone_style
             )
 
             st.success(f"Template '{template_name}' created.")
@@ -91,18 +64,10 @@ def render_templates_tab():
         return
 
     for template in templates:
-        render_template_expander(
-            template,
-            male_character_options,
-            female_character_options
-        )
+        render_template_expander(template)
 
 
-def render_template_expander(
-    template,
-    male_character_options,
-    female_character_options
-):
+def render_template_expander(template):
     (
         template_id,
         created_at,
@@ -110,12 +75,9 @@ def render_template_expander(
         overview,
         setting_background,
         tone_style,
-        male_characters,
-        female_characters
+        _male_characters,
+        _female_characters
     ) = template
-
-    male_character_values = safe_json_loads(male_characters)
-    female_character_values = safe_json_loads(female_characters)
 
     with st.expander(template_name):
         st.write(f"**Created:** {created_at}")
@@ -143,18 +105,6 @@ def render_template_expander(
                 value=tone_style or ""
             )
 
-            edited_male_characters = st.multiselect(
-                "Male characters",
-                male_character_options,
-                default=male_character_values
-            )
-
-            edited_female_characters = st.multiselect(
-                "Female characters",
-                female_character_options,
-                default=female_character_values
-            )
-
             save_changes = st.form_submit_button(
                 "Save template changes"
             )
@@ -165,9 +115,7 @@ def render_template_expander(
                 edited_template_name,
                 edited_overview,
                 edited_setting_background,
-                edited_tone_style,
-                edited_male_characters,
-                edited_female_characters
+                edited_tone_style
             )
 
             st.success("Template updated.")
@@ -296,16 +244,6 @@ def render_template_chapter_expander(chapter):
 
             st.success("Chapter deleted.")
             st.rerun()
-
-
-def safe_json_loads(value):
-    if not value:
-        return []
-
-    try:
-        return json.loads(value)
-    except Exception:
-        return []
 
 
 def truncate_text(text, max_length):

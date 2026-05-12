@@ -40,17 +40,6 @@ def replace_character_placeholders(
     )
 
 
-def safe_json_loads(value):
-    if not value:
-        return []
-
-    try:
-        return json.loads(value)
-
-    except Exception:
-        return []
-
-
 def add_story(
     story_name,
     template_id,
@@ -333,7 +322,9 @@ def get_story(story_id):
 
 def create_story_from_template(
     template_id,
-    story_name
+    story_name,
+    male_characters,
+    female_characters
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -342,9 +333,7 @@ def create_story_from_template(
         SELECT
             overview,
             setting_background,
-            tone_style,
-            male_characters,
-            female_characters
+            tone_style
         FROM story_templates
         WHERE id = ?
     """, (template_id,))
@@ -358,17 +347,17 @@ def create_story_from_template(
     (
         overview,
         setting_background,
-        tone_style,
-        male_characters_json,
-        female_characters_json
+        tone_style
     ) = template_row
 
-    male_characters = safe_json_loads(
-        male_characters_json
+    male_characters_json = json.dumps(
+        male_characters,
+        ensure_ascii=False
     )
 
-    female_characters = safe_json_loads(
-        female_characters_json
+    female_characters_json = json.dumps(
+        female_characters,
+        ensure_ascii=False
     )
 
     resolved_overview = replace_character_placeholders(
@@ -408,6 +397,24 @@ def create_story_from_template(
     ))
 
     story_id = cursor.lastrowid
+
+    cursor.execute("""
+        INSERT INTO story_chapters
+        (
+            story_id,
+            chapter_number,
+            chapter_description,
+            chapter_body,
+            chapter_summary
+        )
+        VALUES (?, ?, ?, ?, ?)
+    """, (
+        story_id,
+        0,
+        "Establish the setting and introduce the characters.",
+        "",
+        ""
+    ))
 
     cursor.execute("""
         SELECT

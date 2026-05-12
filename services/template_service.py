@@ -4,7 +4,6 @@ from database import (
     clone_story_template,
     delete_story_template,
     delete_story_template_chapter,
-    get_characters_by_gender,
     get_story_template_chapters,
     get_story_templates,
     update_story_template,
@@ -20,17 +19,15 @@ def create_template(
     template_name,
     overview,
     setting_background,
-    tone_style,
-    male_characters,
-    female_characters
+    tone_style
 ):
     return add_story_template(
         template_name,
         overview,
         setting_background,
         tone_style,
-        male_characters,
-        female_characters
+        [],
+        []
     )
 
 
@@ -39,9 +36,7 @@ def edit_template(
     template_name,
     overview,
     setting_background,
-    tone_style,
-    male_characters,
-    female_characters
+    tone_style
 ):
     update_story_template(
         template_id,
@@ -49,8 +44,8 @@ def edit_template(
         overview,
         setting_background,
         tone_style,
-        male_characters,
-        female_characters
+        [],
+        []
     )
 
 
@@ -92,11 +87,3 @@ def edit_template_chapter(
 
 def delete_template_chapter(chapter_id):
     delete_story_template_chapter(chapter_id)
-
-
-def list_male_characters():
-    return get_characters_by_gender("male")
-
-
-def list_female_characters():
-    return get_characters_by_gender("female")
