@@ -3,6 +3,7 @@ from datetime import datetime
 
 from config import GENDER_OPTIONS
 from database.connection import get_connection
+from database.metadata import mark_local_data_modified
 
 
 def export_database_to_json():
@@ -71,7 +72,7 @@ def export_database_to_json():
     )
 
 
-def import_database_from_json(uploaded_file):
+def import_database_from_json(uploaded_file, replace_existing=False):
     data = json.load(uploaded_file)
 
     characters = data.get(
@@ -103,6 +104,9 @@ def import_database_from_json(uploaded_file):
 
     conn = get_connection()
     cursor = conn.cursor()
+
+    if replace_existing:
+        clear_exported_tables(cursor)
 
     imported_profiles = 0
     imported_characters = 0
@@ -369,6 +373,18 @@ def import_database_from_json(uploaded_file):
 
         imported_story_chapters += 1
 
+    total_imported = (
+        imported_profiles
+        + imported_characters
+        + imported_templates
+        + imported_template_chapters
+        + imported_stories
+        + imported_story_chapters
+    )
+
+    if total_imported or replace_existing:
+        mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -380,3 +396,12 @@ def import_database_from_json(uploaded_file):
         "stories": imported_stories,
         "story_chapters": imported_story_chapters
     }
+
+
+def clear_exported_tables(cursor):
+    cursor.execute("DELETE FROM story_chapters")
+    cursor.execute("DELETE FROM stories")
+    cursor.execute("DELETE FROM story_template_chapters")
+    cursor.execute("DELETE FROM story_templates")
+    cursor.execute("DELETE FROM characters")
+    cursor.execute("DELETE FROM profiles")

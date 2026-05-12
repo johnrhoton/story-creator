@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from database.connection import get_connection
+from database.metadata import mark_local_data_modified
 
 
 def add_story_template(
@@ -38,6 +39,8 @@ def add_story_template(
     ))
 
     template_id = cursor.lastrowid
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -75,6 +78,9 @@ def update_story_template(
         json.dumps(female_characters, ensure_ascii=False),
         template_id
     ))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
@@ -177,6 +183,8 @@ def clone_story_template(template_id):
             chapter_description
         ))
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -196,6 +204,9 @@ def delete_story_template(template_id):
         DELETE FROM story_templates
         WHERE id = ?
     """, (template_id,))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
@@ -273,6 +284,8 @@ def add_story_template_chapter(
 
     chapter_id = cursor.lastrowid
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -299,6 +312,9 @@ def update_story_template_chapter(
         chapter_id
     ))
 
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -311,6 +327,9 @@ def delete_story_template_chapter(chapter_id):
         DELETE FROM story_template_chapters
         WHERE id = ?
     """, (chapter_id,))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()

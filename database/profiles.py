@@ -1,4 +1,5 @@
 from database.connection import get_connection
+from database.metadata import mark_local_data_modified
 
 
 def add_profile(
@@ -34,6 +35,8 @@ def add_profile(
         personality_traits,
         notes
     ))
+
+    mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
@@ -71,6 +74,9 @@ def update_profile(
         profile_name.lower()
     ))
 
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -90,6 +96,7 @@ def rename_profile(old_profile_name, new_profile_name):
         new_profile_name,
         old_profile_name
     ))
+    profile_rows_changed = cursor.rowcount
 
     cursor.execute("""
         UPDATE characters
@@ -99,6 +106,10 @@ def rename_profile(old_profile_name, new_profile_name):
         new_profile_name,
         old_profile_name
     ))
+    character_rows_changed = cursor.rowcount
+
+    if profile_rows_changed or character_rows_changed:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
@@ -166,6 +177,8 @@ def clone_profile(profile_name):
         notes
     ))
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -180,6 +193,9 @@ def delete_profile(profile_name):
         DELETE FROM profiles
         WHERE profile_name = ?
     """, (profile_name.lower(),))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()

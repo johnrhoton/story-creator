@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 from database.connection import get_connection
+from database.metadata import mark_local_data_modified
 
 
 def replace_character_placeholders(
@@ -88,6 +89,8 @@ def add_story(
 
     story_id = cursor.lastrowid
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -126,6 +129,9 @@ def update_story(
         story_id
     ))
 
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -143,6 +149,9 @@ def delete_story(story_id):
         DELETE FROM stories
         WHERE id = ?
     """, (story_id,))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
@@ -261,6 +270,8 @@ def clone_story(story_id):
             chapter_body,
             chapter_summary
         ))
+
+    mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
@@ -438,6 +449,8 @@ def create_story_from_template(
             ""
         ))
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -474,6 +487,8 @@ def add_story_chapter(
 
     chapter_id = cursor.lastrowid
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -506,6 +521,9 @@ def update_story_chapter(
         chapter_id
     ))
 
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -518,6 +536,9 @@ def delete_story_chapter(chapter_id):
         DELETE FROM story_chapters
         WHERE id = ?
     """, (chapter_id,))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()

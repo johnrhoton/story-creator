@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from database.connection import get_connection
+from database.metadata import mark_local_data_modified
 
 
 def save_character(
@@ -48,6 +49,8 @@ def save_character(
         summary
     ))
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -92,6 +95,9 @@ def update_character(
         summary,
         record_id
     ))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
@@ -168,6 +174,8 @@ def clone_character(record_id):
 
     new_id = cursor.lastrowid
 
+    mark_local_data_modified(cursor)
+
     conn.commit()
     conn.close()
 
@@ -182,6 +190,9 @@ def delete_character(record_id):
         DELETE FROM characters
         WHERE id = ?
     """, (record_id,))
+
+    if cursor.rowcount:
+        mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()

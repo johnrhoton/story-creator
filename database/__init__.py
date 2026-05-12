@@ -12,6 +12,12 @@ from database.import_export import (
     import_database_from_json,
 )
 
+from database.metadata import (
+    get_sync_metadata,
+    mark_local_data_modified,
+    set_sync_metadata,
+)
+
 from database.profiles import (
     add_profile,
     clone_profile,

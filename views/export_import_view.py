@@ -55,15 +55,18 @@ def render_export_import_tab():
     st.subheader("MongoDB Sync")
 
     st.caption(
-        "This is a one-way, last-newer-timestamp sync between local SQLite "
-        "and one MongoDB backup document."
+        "This sync compares local SQLite content with one MongoDB backup "
+        "document and warns before overwriting diverged changes."
     )
 
     if st.button("Check sync status"):
         try:
             status = get_sync_status()
 
-            st.info(status["message"])
+            if status["direction"] == "conflict":
+                st.warning(status["message"])
+            else:
+                st.info(status["message"])
 
             st.write("Local timestamp:", status["local_timestamp"])
             st.write("MongoDB timestamp:", status["mongo_timestamp"])
@@ -76,7 +79,10 @@ def render_export_import_tab():
         try:
             result = sync_now()
 
-            st.success(result["message"])
+            if result["direction"] == "conflict":
+                st.warning(result["message"])
+            else:
+                st.success(result["message"])
 
             if result["details"]:
                 st.json(result["details"])
