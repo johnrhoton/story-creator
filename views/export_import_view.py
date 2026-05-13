@@ -2,8 +2,17 @@ from datetime import datetime
 
 import streamlit as st
 
-from database import export_database_to_json, import_database_from_json
-from services.sync_service import get_sync_status, sync_now
+from database import (
+    export_database_to_json,
+    import_database_from_json,
+    reinitialize_database,
+)
+from services.sync_service import (
+    get_sync_status,
+    pull_mongo_to_local,
+    push_local_to_mongo,
+    sync_now,
+)
 
 
 def render_export_import_tab():
@@ -25,6 +34,34 @@ def render_export_import_tab():
 
     with st.expander("Preview JSON"):
         st.code(json_data, language="json")
+
+    st.divider()
+
+    st.subheader("Database Maintenance")
+
+    confirm_reinitialize = st.checkbox(
+        "I understand this will archive the current database and start a new empty one."
+    )
+
+    if st.button(
+        "Reinitialize database",
+        disabled=not confirm_reinitialize
+    ):
+        try:
+            archived_path = reinitialize_database()
+
+            if archived_path:
+                st.success(
+                    f"Database archived as {archived_path}. "
+                    "A new empty database was created."
+                )
+            else:
+                st.success("A new empty database was created.")
+
+            st.rerun()
+
+        except Exception as error:
+            st.error(f"Database reinitialization failed: {error}")
 
     st.divider()
 
@@ -91,3 +128,28 @@ def render_export_import_tab():
 
         except Exception as error:
             st.error(f"MongoDB sync failed: {error}")
+
+    col_pull, col_push = st.columns(2)
+
+    with col_pull:
+        if st.button("Pull MongoDB to local"):
+            try:
+                result = pull_mongo_to_local()
+                st.success("Pulled MongoDB backup into local SQLite.")
+                st.json(result)
+                st.rerun()
+
+            except Exception as error:
+                st.error(f"MongoDB pull failed: {error}")
+
+    with col_push:
+        if st.button("Push local to MongoDB"):
+            try:
+                timestamp = push_local_to_mongo()
+                st.success(
+                    f"Uploaded local SQLite data to MongoDB at {timestamp}."
+                )
+                st.rerun()
+
+            except Exception as error:
+                st.error(f"MongoDB push failed: {error}")

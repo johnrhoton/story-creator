@@ -206,6 +206,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         )
 
         cursor.execute("""
+            DELETE FROM characters
+            WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))
+        """, (
+            character.get("name", ""),
+        ))
+
+        cursor.execute("""
             INSERT INTO characters
             (
                 created_at,
@@ -247,9 +254,12 @@ def import_database_from_json(uploaded_file, replace_existing=False):
 
     for template in story_templates:
         old_id = template.get("id")
+        template_name = template.get("template_name", "")
+
+        delete_existing_template_by_name(cursor, template_name)
 
         cursor.execute("""
-            INSERT OR REPLACE INTO story_templates
+            INSERT INTO story_templates
             (
                 created_at,
                 template_name,
@@ -262,7 +272,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             template.get("created_at")
             or datetime.now().isoformat(timespec="seconds"),
 
-            template.get("template_name", ""),
+            template_name,
             template.get("overview", ""),
             template.get("setting_background", ""),
             template.get("tone_style", "")
@@ -312,14 +322,17 @@ def import_database_from_json(uploaded_file, replace_existing=False):
     for story in stories:
         old_id = story.get("id")
         old_template_id = story.get("template_id")
+        story_name = story.get("story_name", "")
 
         new_template_id = template_id_map.get(
             old_template_id,
             old_template_id
         )
 
+        delete_existing_story_by_name(cursor, story_name)
+
         cursor.execute("""
-            INSERT OR REPLACE INTO stories
+            INSERT INTO stories
             (
                 created_at,
                 story_name,
@@ -335,7 +348,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             story.get("created_at")
             or datetime.now().isoformat(timespec="seconds"),
 
-            story.get("story_name", ""),
+            story_name,
             new_template_id,
             story.get("overview", ""),
             story.get("setting_background", ""),
@@ -444,3 +457,71 @@ def clear_exported_tables(cursor):
     cursor.execute("DELETE FROM story_templates")
     cursor.execute("DELETE FROM characters")
     cursor.execute("DELETE FROM profiles")
+
+
+def delete_existing_template_by_name(cursor, template_name):
+    if not template_name:
+        return
+
+    cursor.execute("""
+        SELECT id
+        FROM story_templates
+        WHERE template_name = ?
+    """, (
+        template_name,
+    ))
+
+    row = cursor.fetchone()
+
+    if not row:
+        return
+
+    template_id = row[0]
+
+    cursor.execute("""
+        DELETE FROM story_template_chapters
+        WHERE template_id = ?
+    """, (
+        template_id,
+    ))
+
+    cursor.execute("""
+        DELETE FROM story_templates
+        WHERE id = ?
+    """, (
+        template_id,
+    ))
+
+
+def delete_existing_story_by_name(cursor, story_name):
+    if not story_name:
+        return
+
+    cursor.execute("""
+        SELECT id
+        FROM stories
+        WHERE story_name = ?
+    """, (
+        story_name,
+    ))
+
+    row = cursor.fetchone()
+
+    if not row:
+        return
+
+    story_id = row[0]
+
+    cursor.execute("""
+        DELETE FROM story_chapters
+        WHERE story_id = ?
+    """, (
+        story_id,
+    ))
+
+    cursor.execute("""
+        DELETE FROM stories
+        WHERE id = ?
+    """, (
+        story_id,
+    ))

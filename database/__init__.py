@@ -18,6 +18,8 @@ from database.llm_calls import (
     save_llm_call,
 )
 
+from database.maintenance import reinitialize_database
+
 from database.metadata import (
     get_sync_metadata,
     mark_local_data_modified,
