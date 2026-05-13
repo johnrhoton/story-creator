@@ -8,8 +8,6 @@ class StoryTemplate:
     overview: str
     setting_background: str
     tone_style: str
-    male_characters: str
-    female_characters: str
     created_at: str | None = None
 
 

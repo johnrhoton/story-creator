@@ -24,6 +24,8 @@ from database.metadata import (
     set_sync_metadata,
 )
 
+from database.migrations import run_migrations
+
 from database.profiles import (
     add_profile,
     clone_profile,

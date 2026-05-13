@@ -25,9 +25,7 @@ def create_template(
         template_name,
         overview,
         setting_background,
-        tone_style,
-        [],
-        []
+        tone_style
     )
 
 
@@ -43,9 +41,7 @@ def edit_template(
         template_name,
         overview,
         setting_background,
-        tone_style,
-        [],
-        []
+        tone_style
     )
 
 

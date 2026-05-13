@@ -52,9 +52,7 @@ def create_tables():
             template_name TEXT NOT NULL UNIQUE,
             overview TEXT,
             setting_background TEXT,
-            tone_style TEXT,
-            male_characters TEXT,
-            female_characters TEXT
+            tone_style TEXT
         )
     """)
 

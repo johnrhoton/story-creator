@@ -1,6 +1,6 @@
 import streamlit as st
 
-from database import create_tables, seed_common_names
+from database import create_tables, run_migrations, seed_common_names
 from views.characters_view import render_characters_tab
 from views.export_import_view import render_export_import_tab
 from views.history_view import render_history_tab
@@ -9,6 +9,7 @@ from views.stories_view import render_stories_tab
 from views.templates_view import render_templates_tab
 
 
+run_migrations()
 create_tables()
 seed_common_names()
 

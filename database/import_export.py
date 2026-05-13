@@ -255,11 +255,9 @@ def import_database_from_json(uploaded_file, replace_existing=False):
                 template_name,
                 overview,
                 setting_background,
-                tone_style,
-                male_characters,
-                female_characters
+                tone_style
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         """, (
             template.get("created_at")
             or datetime.now().isoformat(timespec="seconds"),
@@ -267,9 +265,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             template.get("template_name", ""),
             template.get("overview", ""),
             template.get("setting_background", ""),
-            template.get("tone_style", ""),
-            template.get("male_characters", "[]"),
-            template.get("female_characters", "[]")
+            template.get("tone_style", "")
         ))
 
         new_id = cursor.lastrowid

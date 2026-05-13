@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 
 from database.connection import get_connection
@@ -9,9 +8,7 @@ def add_story_template(
     template_name,
     overview,
     setting_background,
-    tone_style,
-    male_characters,
-    female_characters
+    tone_style
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -23,19 +20,15 @@ def add_story_template(
             template_name,
             overview,
             setting_background,
-            tone_style,
-            male_characters,
-            female_characters
+            tone_style
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
         template_name,
         overview,
         setting_background,
-        tone_style,
-        json.dumps(male_characters, ensure_ascii=False),
-        json.dumps(female_characters, ensure_ascii=False)
+        tone_style
     ))
 
     template_id = cursor.lastrowid
@@ -52,9 +45,7 @@ def update_story_template(
     template_name,
     overview,
     setting_background,
-    tone_style,
-    male_characters,
-    female_characters
+    tone_style
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -65,17 +56,13 @@ def update_story_template(
             template_name = ?,
             overview = ?,
             setting_background = ?,
-            tone_style = ?,
-            male_characters = ?,
-            female_characters = ?
+            tone_style = ?
         WHERE id = ?
     """, (
         template_name,
         overview,
         setting_background,
         tone_style,
-        json.dumps(male_characters, ensure_ascii=False),
-        json.dumps(female_characters, ensure_ascii=False),
         template_id
     ))
 
@@ -95,9 +82,7 @@ def clone_story_template(template_id):
             template_name,
             overview,
             setting_background,
-            tone_style,
-            male_characters,
-            female_characters
+            tone_style
         FROM story_templates
         WHERE id = ?
     """, (template_id,))
@@ -112,9 +97,7 @@ def clone_story_template(template_id):
         template_name,
         overview,
         setting_background,
-        tone_style,
-        male_characters,
-        female_characters
+        tone_style
     ) = row
 
     base_name = f"{template_name}_copy"
@@ -140,19 +123,15 @@ def clone_story_template(template_id):
             template_name,
             overview,
             setting_background,
-            tone_style,
-            male_characters,
-            female_characters
+            tone_style
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
         new_name,
         overview,
         setting_background,
-        tone_style,
-        male_characters,
-        female_characters
+        tone_style
     ))
 
     new_template_id = cursor.lastrowid
@@ -223,9 +202,7 @@ def get_story_templates():
             template_name,
             overview,
             setting_background,
-            tone_style,
-            male_characters,
-            female_characters
+            tone_style
         FROM story_templates
         ORDER BY template_name
     """)
@@ -247,9 +224,7 @@ def get_story_template(template_id):
             template_name,
             overview,
             setting_background,
-            tone_style,
-            male_characters,
-            female_characters
+            tone_style
         FROM story_templates
         WHERE id = ?
     """, (template_id,))

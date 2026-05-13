@@ -74,9 +74,7 @@ def render_template_expander(template):
         template_name,
         overview,
         setting_background,
-        tone_style,
-        _male_characters,
-        _female_characters
+        tone_style
     ) = template
 
     with st.expander(template_name):
