@@ -4,8 +4,6 @@ from database.metadata import mark_local_data_modified
 
 def add_profile(
     profile_name,
-    name,
-    age,
     gender,
     physical_traits,
     personality_traits,
@@ -18,18 +16,14 @@ def add_profile(
         INSERT OR REPLACE INTO profiles
         (
             profile_name,
-            name,
-            age,
             gender,
             physical_traits,
             personality_traits,
             notes
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     """, (
         profile_name.lower(),
-        name,
-        age,
         gender,
         physical_traits,
         personality_traits,
@@ -44,8 +38,6 @@ def add_profile(
 
 def update_profile(
     profile_name,
-    name,
-    age,
     gender,
     physical_traits,
     personality_traits,
@@ -57,16 +49,12 @@ def update_profile(
     cursor.execute("""
         UPDATE profiles
         SET
-            name = ?,
-            age = ?,
             gender = ?,
             physical_traits = ?,
             personality_traits = ?,
             notes = ?
         WHERE profile_name = ?
     """, (
-        name,
-        age,
         gender,
         physical_traits,
         personality_traits,
@@ -121,8 +109,6 @@ def clone_profile(profile_name):
 
     cursor.execute("""
         SELECT
-            name,
-            age,
             gender,
             physical_traits,
             personality_traits,
@@ -137,7 +123,7 @@ def clone_profile(profile_name):
         conn.close()
         return None
 
-    name, age, gender, physical_traits, personality_traits, notes = row
+    gender, physical_traits, personality_traits, notes = row
 
     base_name = f"{profile_name.lower()}_copy"
     new_name = base_name
@@ -159,18 +145,14 @@ def clone_profile(profile_name):
         INSERT INTO profiles
         (
             profile_name,
-            name,
-            age,
             gender,
             physical_traits,
             personality_traits,
             notes
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     """, (
         new_name,
-        name,
-        age,
         gender,
         physical_traits,
         personality_traits,
@@ -208,8 +190,6 @@ def get_profiles():
     cursor.execute("""
         SELECT
             profile_name,
-            name,
-            age,
             gender,
             physical_traits,
             personality_traits,

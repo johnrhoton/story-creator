@@ -1,7 +1,12 @@
+from pathlib import Path
+
+from config import DB_NAME
 from database.connection import get_connection
 
 
 def run_migrations():
+    migrate_20260513110000_database_file_name()
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -23,6 +28,14 @@ def run_migrations():
         (
             "20260513100000_remove_template_characters",
             migrate_20260513100000_remove_template_characters
+        ),
+        (
+            "20260513110000_database_file_name",
+            migrate_20260513110000_database_file_name_applied
+        ),
+        (
+            "20260513111000_remove_profile_character_defaults",
+            migrate_20260513111000_remove_profile_character_defaults
         ),
     ]
 
@@ -341,4 +354,76 @@ def migrate_20260513100000_remove_template_characters(cursor):
 
     cursor.execute("""
         DROP TABLE story_templates_old
+    """)
+
+
+# 2026-05-13 11:00
+# Rename the app database file from the older character-generation name to the
+# broader story-builder name before opening the SQLite connection.
+def migrate_20260513110000_database_file_name():
+    old_path = Path("character_generations_v3.db")
+    new_path = Path(DB_NAME)
+
+    if new_path.exists() or not old_path.exists():
+        return
+
+    old_path.rename(new_path)
+
+
+def migrate_20260513110000_database_file_name_applied(cursor):
+    # The file rename must happen before opening SQLite, so this no-op records
+    # that startup has passed the rename migration.
+    return
+
+
+# 2026-05-13 11:10
+# Profiles now describe reusable traits only. Character name and age are chosen
+# when creating an individual character, so remove default name/age from profiles.
+def migrate_20260513111000_remove_profile_character_defaults(cursor):
+    columns = get_columns(cursor, "profiles")
+
+    if not columns:
+        return
+
+    if "name" not in columns and "age" not in columns:
+        return
+
+    cursor.execute("""
+        ALTER TABLE profiles
+        RENAME TO profiles_old
+    """)
+
+    cursor.execute("""
+        CREATE TABLE profiles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            profile_name TEXT NOT NULL UNIQUE,
+            gender TEXT,
+            physical_traits TEXT,
+            personality_traits TEXT,
+            notes TEXT
+        )
+    """)
+
+    cursor.execute("""
+        INSERT OR REPLACE INTO profiles
+        (
+            id,
+            profile_name,
+            gender,
+            physical_traits,
+            personality_traits,
+            notes
+        )
+        SELECT
+            id,
+            profile_name,
+            gender,
+            physical_traits,
+            personality_traits,
+            notes
+        FROM profiles_old
+    """)
+
+    cursor.execute("""
+        DROP TABLE profiles_old
     """)

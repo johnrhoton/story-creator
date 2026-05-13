@@ -1,4 +1,4 @@
-DB_NAME = "character_generations_v3.db"
+DB_NAME = "story_builder.db"
 
 GENDER_OPTIONS = ["female", "male"]
 

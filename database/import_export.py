@@ -160,18 +160,14 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             INSERT OR REPLACE INTO profiles
             (
                 profile_name,
-                name,
-                age,
                 gender,
                 physical_traits,
                 personality_traits,
                 notes
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         """, (
             profile_name,
-            profile.get("name", ""),
-            profile.get("age", ""),
             gender,
             physical_traits,
             personality_traits,

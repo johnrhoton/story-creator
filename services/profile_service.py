@@ -14,8 +14,6 @@ def list_profiles():
 
 def create_profile(
     profile_name,
-    name,
-    age,
     gender,
     physical_traits,
     personality_traits,
@@ -23,8 +21,6 @@ def create_profile(
 ):
     add_profile(
         profile_name,
-        name,
-        age,
         gender,
         physical_traits,
         personality_traits,
@@ -34,8 +30,6 @@ def create_profile(
 
 def edit_profile(
     profile_name,
-    name,
-    age,
     gender,
     physical_traits,
     personality_traits,
@@ -43,8 +37,6 @@ def edit_profile(
 ):
     update_profile(
         profile_name,
-        name,
-        age,
         gender,
         physical_traits,
         personality_traits,

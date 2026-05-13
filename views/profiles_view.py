@@ -16,8 +16,6 @@ def render_profiles_tab():
 
     with st.form("profile_form"):
         profile_name = st.text_input("Profile name").lower()
-        profile_character_name = st.text_input("Default character name, optional")
-        profile_age = st.text_input("Default age")
 
         profile_gender = st.selectbox(
             "Default gender",
@@ -46,8 +44,6 @@ def render_profiles_tab():
         else:
             create_profile(
                 profile_name,
-                profile_character_name,
-                profile_age,
                 profile_gender,
                 profile_physical_traits,
                 profile_personality_traits,
@@ -64,7 +60,7 @@ def render_profiles_tab():
     for gender_group in GENDER_OPTIONS:
         grouped_profiles = [
             profile for profile in profiles
-            if profile[3] == gender_group
+            if profile[1] == gender_group
         ]
 
         st.markdown(f"### {gender_group.capitalize()}")
@@ -76,8 +72,6 @@ def render_profiles_tab():
         for profile in grouped_profiles:
             (
                 profile_name,
-                name,
-                age,
                 gender,
                 physical_traits,
                 personality_traits,
@@ -91,16 +85,6 @@ def render_profiles_tab():
                         "Profile name",
                         value=profile_name
                     ).lower()
-
-                    edited_name = st.text_input(
-                        "Name",
-                        value=name or ""
-                    )
-
-                    edited_age = st.text_input(
-                        "Age",
-                        value=age or ""
-                    )
 
                     edited_gender = st.selectbox(
                         "Gender",
@@ -141,8 +125,6 @@ def render_profiles_tab():
 
                         edit_profile(
                             edited_profile_name,
-                            edited_name,
-                            edited_age,
                             edited_gender,
                             edited_physical_traits,
                             edited_personality_traits,

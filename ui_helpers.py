@@ -25,24 +25,22 @@ def combine_profile_defaults(selected_profiles, profiles):
 
     last_profile = selected_profile_rows[-1]
 
-    defaults["name"] = last_profile[1] or ""
-    defaults["age"] = last_profile[2] or ""
     defaults["gender"] = (
-        last_profile[3]
-        if last_profile[3] in GENDER_OPTIONS
+        last_profile[1]
+        if last_profile[1] in GENDER_OPTIONS
         else "female"
     )
 
     defaults["physical_traits"] = ", ".join(
-        profile[4] for profile in selected_profile_rows if profile[4]
+        profile[2] for profile in selected_profile_rows if profile[2]
     )
 
     defaults["personality_traits"] = ", ".join(
-        profile[5] for profile in selected_profile_rows if profile[5]
+        profile[3] for profile in selected_profile_rows if profile[3]
     )
 
     defaults["notes"] = ", ".join(
-        profile[6] for profile in selected_profile_rows if profile[6]
+        profile[4] for profile in selected_profile_rows if profile[4]
     )
 
     defaults["profile_name"] = ", ".join(selected_profiles)
@@ -76,15 +74,15 @@ def append_profile_data_to_character(
     ]
 
     profile_physical_traits = [
-        profile[4] for profile in selected_profile_rows if profile[4]
+        profile[2] for profile in selected_profile_rows if profile[2]
     ]
 
     profile_personality_traits = [
-        profile[5] for profile in selected_profile_rows if profile[5]
+        profile[3] for profile in selected_profile_rows if profile[3]
     ]
 
     profile_notes = [
-        profile[6] for profile in selected_profile_rows if profile[6]
+        profile[4] for profile in selected_profile_rows if profile[4]
     ]
 
     combined_physical_traits = ", ".join(

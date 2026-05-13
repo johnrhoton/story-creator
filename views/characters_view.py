@@ -79,7 +79,7 @@ def render_characters_tab():
 
     gender_profiles = [
         profile for profile in profiles
-        if profile[3] == creation_gender
+        if profile[1] == creation_gender
     ]
 
     profile_options = [

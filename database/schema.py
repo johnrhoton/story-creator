@@ -26,8 +26,6 @@ def create_tables():
         CREATE TABLE IF NOT EXISTS profiles (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             profile_name TEXT NOT NULL UNIQUE,
-            name TEXT,
-            age TEXT,
             gender TEXT,
             physical_traits TEXT,
             personality_traits TEXT,
