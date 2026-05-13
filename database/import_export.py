@@ -60,6 +60,13 @@ def export_database_to_json():
         for row in cursor.fetchall()
     ]
 
+    cursor.execute("SELECT * FROM failed_llm_calls ORDER BY id")
+    failed_llm_call_columns = [column[0] for column in cursor.description]
+    failed_llm_calls = [
+        dict(zip(failed_llm_call_columns, row))
+        for row in cursor.fetchall()
+    ]
+
     conn.close()
 
     export_data = {
@@ -70,7 +77,8 @@ def export_database_to_json():
         "story_template_chapters": story_template_chapters,
         "stories": stories,
         "story_chapters": story_chapters,
-        "llm_calls": llm_calls
+        "llm_calls": llm_calls,
+        "failed_llm_calls": failed_llm_calls
     }
 
     return json.dumps(
@@ -115,6 +123,11 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         []
     )
 
+    failed_llm_calls = data.get(
+        "failed_llm_calls",
+        []
+    )
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -128,6 +141,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
     imported_stories = 0
     imported_story_chapters = 0
     imported_llm_calls = 0
+    imported_failed_llm_calls = 0
 
     # -------------------------
     # Profiles
@@ -418,6 +432,40 @@ def import_database_from_json(uploaded_file, replace_existing=False):
 
         imported_llm_calls += 1
 
+    # -------------------------
+    # Failed LLM Calls
+    # -------------------------
+
+    for failed_call in failed_llm_calls:
+        cursor.execute("""
+            INSERT INTO failed_llm_calls
+            (
+                created_at,
+                provider,
+                model,
+                prompt,
+                response,
+                error_type,
+                error_codes,
+                error_message,
+                error_details
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            failed_call.get("created_at")
+            or datetime.now().isoformat(timespec="seconds"),
+            failed_call.get("provider", ""),
+            failed_call.get("model", ""),
+            failed_call.get("prompt", ""),
+            failed_call.get("response", ""),
+            failed_call.get("error_type", ""),
+            failed_call.get("error_codes", ""),
+            failed_call.get("error_message", ""),
+            failed_call.get("error_details", "")
+        ))
+
+        imported_failed_llm_calls += 1
+
     total_imported = (
         imported_profiles
         + imported_characters
@@ -426,6 +474,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         + imported_stories
         + imported_story_chapters
         + imported_llm_calls
+        + imported_failed_llm_calls
     )
 
     if total_imported or replace_existing:
@@ -441,11 +490,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         "story_template_chapters": imported_template_chapters,
         "stories": imported_stories,
         "story_chapters": imported_story_chapters,
-        "llm_calls": imported_llm_calls
+        "llm_calls": imported_llm_calls,
+        "failed_llm_calls": imported_failed_llm_calls
     }
 
 
 def clear_exported_tables(cursor):
+    cursor.execute("DELETE FROM failed_llm_calls")
     cursor.execute("DELETE FROM llm_calls")
     cursor.execute("DELETE FROM story_chapters")
     cursor.execute("DELETE FROM stories")

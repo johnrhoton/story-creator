@@ -2,6 +2,7 @@ import json
 
 import streamlit as st
 
+from config import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from database import (
     add_story_chapter,
     clone_story,
@@ -62,8 +63,8 @@ def create_from_template(
 
 def call_selected_llm(prompt):
     return generate_text(
-        st.session_state.get("llm_provider", "Gemini"),
-        st.session_state.get("llm_model", "gemini-2.5-flash"),
+        st.session_state.get("llm_provider", DEFAULT_LLM_PROVIDER),
+        st.session_state.get("llm_model", DEFAULT_LLM_MODEL),
         prompt
     )
 

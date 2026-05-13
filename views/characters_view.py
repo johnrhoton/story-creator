@@ -35,7 +35,8 @@ def render_characters_tab():
     )
 
     creation_age = st.text_input(
-        "Age"
+        "Age",
+        value="18"
     )
 
     suggested_name = suggest_name(

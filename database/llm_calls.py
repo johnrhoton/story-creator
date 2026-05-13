@@ -32,6 +32,51 @@ def save_llm_call(provider, model, prompt, response):
     conn.close()
 
 
+def save_failed_llm_call(
+    provider,
+    model,
+    prompt,
+    response,
+    error_type,
+    error_codes,
+    error_message,
+    error_details
+):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO failed_llm_calls
+        (
+            created_at,
+            provider,
+            model,
+            prompt,
+            response,
+            error_type,
+            error_codes,
+            error_message,
+            error_details
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        datetime.now().isoformat(timespec="seconds"),
+        provider,
+        model,
+        prompt,
+        response,
+        error_type,
+        error_codes,
+        error_message,
+        error_details
+    ))
+
+    mark_local_data_modified(cursor)
+
+    conn.commit()
+    conn.close()
+
+
 def get_llm_calls():
     conn = get_connection()
     cursor = conn.cursor()
@@ -45,6 +90,32 @@ def get_llm_calls():
             prompt,
             response
         FROM llm_calls
+        ORDER BY id DESC
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows
+
+
+def get_failed_llm_calls():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            id,
+            created_at,
+            provider,
+            model,
+            prompt,
+            response,
+            error_type,
+            error_codes,
+            error_message,
+            error_details
+        FROM failed_llm_calls
         ORDER BY id DESC
     """)
 

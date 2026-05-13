@@ -14,7 +14,9 @@ from database.import_export import (
 )
 
 from database.llm_calls import (
+    get_failed_llm_calls,
     get_llm_calls,
+    save_failed_llm_call,
     save_llm_call,
 )
 

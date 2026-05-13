@@ -1,5 +1,6 @@
 import streamlit as st
 
+from config import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from database import create_tables, run_migrations, seed_common_names
 from views.characters_view import render_characters_tab
 from views.export_import_view import render_export_import_tab
@@ -33,7 +34,7 @@ with st.sidebar:
 
     current_provider = st.session_state.get(
         "llm_provider",
-        "Gemini"
+        DEFAULT_LLM_PROVIDER
     )
 
     selected_provider = st.selectbox(
@@ -53,8 +54,32 @@ with st.sidebar:
         "Model",
         value=st.session_state.get(
             "llm_model",
-            default_models[selected_provider]
+            DEFAULT_LLM_MODEL
+            if selected_provider == DEFAULT_LLM_PROVIDER
+            else default_models[selected_provider]
         )
+    )
+
+    throttle_settings = st.session_state.setdefault(
+        "llm_throttle_intervals",
+        {}
+    )
+
+    throttle_key = (
+        f"{st.session_state['llm_provider']}:"
+        f"{st.session_state['llm_model']}"
+    )
+
+    st.session_state["llm_throttle_interval_seconds"] = st.number_input(
+        "Throttle interval in seconds",
+        min_value=0.0,
+        value=float(throttle_settings.get(throttle_key, 0.0)),
+        step=1.0,
+        key=f"llm_throttle_input_{throttle_key}"
+    )
+
+    throttle_settings[throttle_key] = (
+        st.session_state["llm_throttle_interval_seconds"]
     )
 
 tab_characters, tab_profiles, tab_templates, tab_stories, tab_history, tab_export_import = st.tabs(

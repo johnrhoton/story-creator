@@ -37,6 +37,10 @@ def run_migrations():
             "20260513111000_remove_profile_character_defaults",
             migrate_20260513111000_remove_profile_character_defaults
         ),
+        (
+            "20260513112000_failed_llm_calls",
+            migrate_20260513112000_failed_llm_calls
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -426,4 +430,24 @@ def migrate_20260513111000_remove_profile_character_defaults(cursor):
 
     cursor.execute("""
         DROP TABLE profiles_old
+    """)
+
+
+# 2026-05-13 11:20
+# Add an audit log for failed LLM calls so prompts, provider/model choices,
+# and provider error details are visible in History and included in sync.
+def migrate_20260513112000_failed_llm_calls(cursor):
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS failed_llm_calls (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
+            provider TEXT NOT NULL,
+            model TEXT NOT NULL,
+            prompt TEXT NOT NULL,
+            response TEXT,
+            error_type TEXT,
+            error_codes TEXT,
+            error_message TEXT,
+            error_details TEXT
+        )
     """)

@@ -1,6 +1,6 @@
 import streamlit as st
 
-from database import get_llm_calls
+from database import get_failed_llm_calls, get_llm_calls
 from services.character_service import list_characters
 
 
@@ -51,6 +51,10 @@ def render_history_tab():
 
     render_llm_call_history()
 
+    st.divider()
+
+    render_failed_llm_call_history()
+
 
 def render_llm_call_history():
     st.header("LLM call history")
@@ -83,3 +87,48 @@ def render_llm_call_history():
 
             st.write("**Response:**")
             st.write(response or "")
+
+
+def render_failed_llm_call_history():
+    st.header("Failed LLM calls")
+
+    rows = get_failed_llm_calls()
+
+    if not rows:
+        st.info("No failed LLM calls logged yet.")
+        return
+
+    for row in rows:
+        (
+            record_id,
+            created_at,
+            provider,
+            model,
+            prompt,
+            response,
+            error_type,
+            error_codes,
+            error_message,
+            error_details
+        ) = row
+
+        with st.expander(
+            f"#{record_id} — {provider} — {model} — {created_at}"
+        ):
+            st.write(f"**Created:** {created_at}")
+            st.write(f"**Provider:** {provider}")
+            st.write(f"**Model:** {model}")
+            st.write(f"**Error type:** {error_type or ''}")
+            st.write(f"**Error code(s):** {error_codes or ''}")
+
+            st.write("**Prompt:**")
+            st.code(prompt or "")
+
+            st.write("**Response:**")
+            st.write(response or "")
+
+            st.write("**Error message:**")
+            st.write(error_message or "")
+
+            st.write("**Informational details:**")
+            st.code(error_details or "")
