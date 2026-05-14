@@ -3,16 +3,21 @@ import sqlite3
 import tempfile
 import unittest
 from contextlib import contextmanager
+from io import StringIO
 from pathlib import Path
 
 from config import DB_NAME
 from database.characters import get_characters, save_character
 from database.db_encryption import (
+    DATABASE_ENCRYPTION_EXPORT_KEY,
     DATABASE_ENCRYPTED_VALUE_PREFIX,
     enable_database_encryption,
     set_active_database_password,
 )
-from database.import_export import export_database_to_json
+from database.import_export import (
+    export_database_to_json,
+    import_database_from_json,
+)
 from database.migrations import run_migrations
 from database.schema import create_tables
 
@@ -64,9 +69,7 @@ class DatabaseEncryptionTests(unittest.TestCase):
             conn.close()
 
             self.assertEqual(raw_row[0], "Alice")
-            self.assertTrue(
-                raw_row[1].startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
-            )
+            self.assertEqual(raw_row[1], "quick")
             self.assertTrue(
                 raw_row[2].startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
             )
@@ -98,6 +101,59 @@ class DatabaseEncryptionTests(unittest.TestCase):
 
             self.assertIn('"physical_traits": "quick"', export_json)
             self.assertNotIn(DATABASE_ENCRYPTED_VALUE_PREFIX, export_json)
+
+    def test_encrypted_export_preserves_database_encrypted_values(self):
+        with isolated_database_directory():
+            save_character(
+                None,
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "kind",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+
+            enable_database_encryption("password")
+
+            export_json = export_database_to_json(encrypt_values=True)
+
+            self.assertIn(DATABASE_ENCRYPTION_EXPORT_KEY, export_json)
+            self.assertIn(DATABASE_ENCRYPTED_VALUE_PREFIX, export_json)
+            self.assertIn('"name": "Alice"', export_json)
+            self.assertIn('"physical_traits": "quick"', export_json)
+            self.assertNotIn('"summary": "summary"', export_json)
+
+    def test_database_encrypted_export_import_round_trips_after_unlock(self):
+        with isolated_database_directory():
+            save_character(
+                None,
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "kind",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+            enable_database_encryption("password")
+
+            export_json = export_database_to_json(encrypt_values=True)
+
+        with isolated_database_directory():
+            import_database_from_json(StringIO(export_json))
+            set_active_database_password("password")
+
+            character = get_characters()[0]
+
+            self.assertEqual(character[3], "Alice")
+            self.assertEqual(character[6], "quick")
+            self.assertEqual(character[10], "summary")
 
 
 if __name__ == "__main__":

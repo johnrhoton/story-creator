@@ -8,6 +8,7 @@ from database import (
     export_database_to_yaml,
     import_database_from_json,
     import_database_from_yaml,
+    is_database_encryption_enabled,
     reinitialize_database,
 )
 from services.sync_service import (
@@ -38,15 +39,17 @@ def render_export_import_tab():
 
     password = st.session_state.get("import_export_password", "")
     encrypt_values = export_contents == "Encrypted values"
+    database_encryption_enabled = is_database_encryption_enabled()
     export_signature = {
         "format": export_format,
         "contents": export_contents,
+        "database_encryption_enabled": database_encryption_enabled,
     }
 
-    if encrypt_values and not password:
+    if encrypt_values and not database_encryption_enabled and not password:
         st.warning(
-            "Enter an import/export password in the sidebar before "
-            "exporting encrypted values."
+            "Enter an export password in the sidebar before exporting "
+            "encrypted values from an unencrypted database."
         )
     else:
         if st.button("Prepare export file"):

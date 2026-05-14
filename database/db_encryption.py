@@ -1,5 +1,6 @@
 import base64
 import copy
+import hashlib
 import json
 import os
 import zlib
@@ -8,6 +9,7 @@ from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
+from config import DATABASE_ENCRYPTION_KDF_ITERATIONS
 from database.connection import get_connection
 from database.metadata import (
     get_metadata_value,
@@ -17,29 +19,28 @@ from database.metadata import (
 
 
 DATABASE_ENCRYPTION_ENABLED = "database_encryption_enabled"
+DATABASE_ENCRYPTION_ITERATIONS = "database_encryption_iterations"
 DATABASE_ENCRYPTION_SALT = "database_encryption_salt"
-DATABASE_ENCRYPTED_VALUE_PREFIX = "db-encrypted:v1:"
+DATABASE_ENCRYPTION_EXPORT_KEY = "__database_encryption"
+DATABASE_ENCRYPTED_VALUE_PREFIX_V1 = "db-encrypted:v1:"
+DATABASE_ENCRYPTED_VALUE_PREFIX_V2 = "db-encrypted:v2:"
+DATABASE_ENCRYPTED_VALUE_PREFIX = DATABASE_ENCRYPTED_VALUE_PREFIX_V2
 SALT_BYTES = 16
-KDF_ITERATIONS = 390000
+LEGACY_KDF_ITERATIONS = 390000
 
 ENCRYPTED_TABLE_FIELDS = {
     "characters": {
-        "physical_traits",
-        "personality_traits",
         "notes",
         "prompt",
         "response",
         "summary",
     },
     "profiles": {
-        "physical_traits",
-        "personality_traits",
         "notes",
     },
     "story_templates": {
         "overview",
         "setting_background",
-        "tone_style",
     },
     "story_template_chapters": {
         "chapter_description",
@@ -47,12 +48,8 @@ ENCRYPTED_TABLE_FIELDS = {
     "stories": {
         "overview",
         "setting_background",
-        "tone_style",
-        "male_characters",
-        "female_characters",
     },
     "story_chapters": {
-        "chapter_description",
         "chapter_body",
         "chapter_summary",
     },
@@ -68,18 +65,57 @@ ENCRYPTED_TABLE_FIELDS = {
     },
 }
 
+DECRYPT_TABLE_FIELDS = {
+    table_name: set(field_names)
+    for table_name, field_names in ENCRYPTED_TABLE_FIELDS.items()
+}
+
+DECRYPT_TABLE_FIELDS["characters"].update({
+    "physical_traits",
+    "personality_traits",
+})
+DECRYPT_TABLE_FIELDS["profiles"].update({
+    "physical_traits",
+    "personality_traits",
+})
+DECRYPT_TABLE_FIELDS["story_templates"].add("tone_style")
+DECRYPT_TABLE_FIELDS["stories"].update({
+    "tone_style",
+    "male_characters",
+    "female_characters",
+})
+DECRYPT_TABLE_FIELDS["story_chapters"].add("chapter_description")
+
 _active_fernet = None
+_active_password_signature = None
 
 
 def set_active_database_password(password):
     global _active_fernet
+    global _active_password_signature
 
     if not password:
         _active_fernet = None
+        _active_password_signature = None
         return
 
     salt = get_or_create_database_encryption_salt()
-    _active_fernet = build_fernet(password, salt)
+    iterations = get_database_encryption_iterations()
+    password_signature = build_password_signature(
+        password,
+        salt,
+        iterations
+    )
+
+    if _active_password_signature == password_signature and _active_fernet:
+        return
+
+    _active_fernet = build_fernet(
+        password,
+        salt,
+        iterations
+    )
+    _active_password_signature = password_signature
 
 
 def get_database_encryption_status():
@@ -87,6 +123,40 @@ def get_database_encryption_status():
         "enabled": is_database_encryption_enabled(),
         "unlocked": _active_fernet is not None,
     }
+
+
+def get_database_encryption_export_metadata():
+    if not is_database_encryption_enabled():
+        return None
+
+    return {
+        "version": 1,
+        "salt": get_metadata_value(DATABASE_ENCRYPTION_SALT),
+        "kdf": "PBKDF2HMAC-SHA256",
+        "iterations": get_database_encryption_iterations(),
+        "value_prefix": DATABASE_ENCRYPTED_VALUE_PREFIX,
+    }
+
+
+def apply_database_encryption_export_metadata(metadata, cursor):
+    global _active_fernet
+    global _active_password_signature
+
+    if not metadata:
+        return
+
+    if metadata.get("version") != 1 or not metadata.get("salt"):
+        raise ValueError("Unsupported database encryption metadata.")
+
+    set_metadata_value(cursor, DATABASE_ENCRYPTION_ENABLED, "true")
+    set_metadata_value(cursor, DATABASE_ENCRYPTION_SALT, metadata["salt"])
+    set_metadata_value(
+        cursor,
+        DATABASE_ENCRYPTION_ITERATIONS,
+        str(metadata.get("iterations") or LEGACY_KDF_ITERATIONS)
+    )
+    _active_fernet = None
+    _active_password_signature = None
 
 
 def is_database_encryption_enabled():
@@ -97,13 +167,22 @@ def enable_database_encryption(password):
     if not password:
         raise ValueError("A database encryption password is required.")
 
-    set_active_database_password(password)
-
     conn = get_connection()
     cursor = conn.cursor()
 
     set_metadata_value(cursor, DATABASE_ENCRYPTION_ENABLED, "true")
+    set_metadata_value(
+        cursor,
+        DATABASE_ENCRYPTION_ITERATIONS,
+        str(DATABASE_ENCRYPTION_KDF_ITERATIONS)
+    )
     conn.commit()
+    conn.close()
+
+    set_active_database_password(password)
+
+    conn = get_connection()
+    cursor = conn.cursor()
 
     for table_name, field_names in ENCRYPTED_TABLE_FIELDS.items():
         encrypt_table_fields(cursor, table_name, field_names)
@@ -158,6 +237,18 @@ def get_or_create_database_encryption_salt():
     return salt
 
 
+def get_database_encryption_iterations():
+    iterations = get_metadata_value(DATABASE_ENCRYPTION_ITERATIONS)
+
+    if not iterations:
+        return LEGACY_KDF_ITERATIONS
+
+    try:
+        return int(iterations)
+    except ValueError:
+        return LEGACY_KDF_ITERATIONS
+
+
 def encrypt_database_row(table_name, row_data):
     encrypted_row = copy.deepcopy(row_data)
 
@@ -180,7 +271,7 @@ def encrypt_database_field(table_name, field_name, value):
 def decrypt_database_row(table_name, row_data):
     decrypted_row = copy.deepcopy(row_data)
 
-    for field_name in ENCRYPTED_TABLE_FIELDS.get(table_name, set()):
+    for field_name in DECRYPT_TABLE_FIELDS.get(table_name, set()):
         if field_name in decrypted_row:
             decrypted_row[field_name] = decrypt_database_value_if_needed(
                 decrypted_row[field_name]
@@ -218,8 +309,7 @@ def encrypt_database_value(value):
         ensure_ascii=False
     ).encode("utf-8")
 
-    compressed_value = zlib.compress(value_json)
-    encrypted_value = _active_fernet.encrypt(compressed_value)
+    encrypted_value = _active_fernet.encrypt(value_json)
 
     return (
         f"{DATABASE_ENCRYPTED_VALUE_PREFIX}"
@@ -237,13 +327,18 @@ def decrypt_database_value_if_needed(value):
             "sidebar to unlock it."
         )
 
-    encrypted_value = value.removeprefix(
-        DATABASE_ENCRYPTED_VALUE_PREFIX
-    ).encode("ascii")
-
     try:
-        compressed_value = _active_fernet.decrypt(encrypted_value)
-        value_json = zlib.decompress(compressed_value)
+        if value.startswith(DATABASE_ENCRYPTED_VALUE_PREFIX_V2):
+            encrypted_value = value.removeprefix(
+                DATABASE_ENCRYPTED_VALUE_PREFIX_V2
+            ).encode("ascii")
+            value_json = _active_fernet.decrypt(encrypted_value)
+        else:
+            encrypted_value = value.removeprefix(
+                DATABASE_ENCRYPTED_VALUE_PREFIX_V1
+            ).encode("ascii")
+            compressed_value = _active_fernet.decrypt(encrypted_value)
+            value_json = zlib.decompress(compressed_value)
 
         return json.loads(value_json.decode("utf-8"))
 
@@ -256,16 +351,19 @@ def decrypt_database_value_if_needed(value):
 def is_database_encrypted_value(value):
     return (
         isinstance(value, str)
-        and value.startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
+        and (
+            value.startswith(DATABASE_ENCRYPTED_VALUE_PREFIX_V1)
+            or value.startswith(DATABASE_ENCRYPTED_VALUE_PREFIX_V2)
+        )
     )
 
 
-def build_fernet(password, salt):
+def build_fernet(password, salt, iterations):
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
         salt=salt,
-        iterations=KDF_ITERATIONS,
+        iterations=iterations,
     )
 
     key = base64.urlsafe_b64encode(
@@ -273,3 +371,11 @@ def build_fernet(password, salt):
     )
 
     return Fernet(key)
+
+
+def build_password_signature(password, salt, iterations):
+    return hashlib.sha256(
+        salt
+        + str(iterations).encode("ascii")
+        + password.encode("utf-8")
+    ).hexdigest()

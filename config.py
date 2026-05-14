@@ -1,5 +1,7 @@
 DB_NAME = "story_builder.db"
 
+DATABASE_ENCRYPTION_KDF_ITERATIONS = 100000
+
 EXPORT_FILENAME_PREFIX = "story_builder_export"
 
 MONGODB_DEFAULT_DATABASE = "story_builder"

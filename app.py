@@ -25,7 +25,8 @@ st.title("Story Builder")
 
 render_llm_settings_sidebar()
 
-tab_characters, tab_profiles, tab_templates, tab_stories, tab_models, tab_history, tab_export_import = st.tabs(
+active_view = st.radio(
+    "View",
     [
         "Characters",
         "Profiles",
@@ -34,26 +35,29 @@ tab_characters, tab_profiles, tab_templates, tab_stories, tab_models, tab_histor
         "Models",
         "History",
         "Export / Import"
-    ]
+    ],
+    horizontal=True,
+    label_visibility="collapsed",
+    key="active_view"
 )
 
-with tab_characters:
+if active_view == "Characters":
     render_characters_tab()
 
-with tab_profiles:
+elif active_view == "Profiles":
     render_profiles_tab()
 
-with tab_templates:
+elif active_view == "Templates":
     render_templates_tab()
 
-with tab_stories:
+elif active_view == "Stories":
     render_stories_tab()
 
-with tab_models:
+elif active_view == "Models":
     render_models_tab()
 
-with tab_history:
+elif active_view == "History":
     render_history_tab()
 
-with tab_export_import:
+elif active_view == "Export / Import":
     render_export_import_tab()

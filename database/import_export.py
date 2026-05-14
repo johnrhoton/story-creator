@@ -6,8 +6,12 @@ import yaml
 from config import GENDER_OPTIONS
 from database.connection import get_connection
 from database.db_encryption import (
+    DATABASE_ENCRYPTION_EXPORT_KEY,
+    apply_database_encryption_export_metadata,
     decrypt_database_row,
     encrypt_database_row,
+    get_database_encryption_export_metadata,
+    is_database_encryption_enabled,
 )
 from database.export_crypto import (
     decrypt_export_values,
@@ -77,18 +81,35 @@ def serialize_export_to_yaml(export_data):
 
 def prepare_export_data(encrypt_values=False, password=""):
     export_data = export_database_to_dict()
-    export_data = decrypt_database_export_data(export_data)
-
-    if password:
-        export_data = decrypt_export_values(export_data, password)
 
     if encrypt_values:
+        if is_database_encryption_enabled():
+            return add_database_encryption_export_metadata(export_data)
+
         if not password:
             raise ValueError(
                 "A password is required to export encrypted values."
             )
 
         export_data = encrypt_export_values(export_data, password)
+        return export_data
+
+    export_data = decrypt_database_export_data(export_data)
+
+    if password:
+        export_data = decrypt_export_values(export_data, password)
+
+    return export_data
+
+
+def add_database_encryption_export_metadata(export_data):
+    metadata = get_database_encryption_export_metadata()
+
+    if not metadata:
+        return export_data
+
+    export_data = dict(export_data)
+    export_data[DATABASE_ENCRYPTION_EXPORT_KEY] = metadata
 
     return export_data
 
@@ -194,6 +215,11 @@ def import_database_from_dict(data, replace_existing=False):
 
     if replace_existing:
         clear_exported_tables(cursor)
+
+    apply_database_encryption_export_metadata(
+        data.get(DATABASE_ENCRYPTION_EXPORT_KEY),
+        cursor
+    )
 
     counts = empty_import_counts()
 
