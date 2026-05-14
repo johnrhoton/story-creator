@@ -5,6 +5,7 @@ import json
 import streamlit as st
 
 from services.story_service import (
+    build_full_story_markdown,
     clone_existing_story,
     create_from_template,
     create_story_chapter,
@@ -41,15 +42,24 @@ def render_stories_tab():
         if story[2]
     }
 
+    male_character_rows = list_male_characters()
+    female_character_rows = list_female_characters()
+
     male_character_options = [
         row[1]
-        for row in list_male_characters()
+        for row in male_character_rows
     ]
+    male_character_labels = build_character_option_labels(
+        male_character_rows
+    )
 
     female_character_options = [
         row[1]
-        for row in list_female_characters()
+        for row in female_character_rows
     ]
+    female_character_labels = build_character_option_labels(
+        female_character_rows
+    )
 
     st.subheader("Create story from template")
 
@@ -63,12 +73,14 @@ def render_stories_tab():
 
         selected_male_characters = st.multiselect(
             "Male characters",
-            male_character_options
+            male_character_options,
+            format_func=lambda name: male_character_labels.get(name, name)
         )
 
         selected_female_characters = st.multiselect(
             "Female characters",
-            female_character_options
+            female_character_options,
+            format_func=lambda name: female_character_labels.get(name, name)
         )
 
         create_story = st.form_submit_button(
@@ -250,10 +262,24 @@ def render_story_chapters_section(story_id):
     st.subheader("Chapters")
 
     chapters = list_story_chapters(story_id)
+    story_markdown = build_full_story_markdown(chapters)
 
     if not chapters:
         st.info("No chapters yet.")
     else:
+        with st.expander("Full story markdown"):
+            if story_markdown:
+                st.markdown(story_markdown)
+                st.download_button(
+                    "Download full story markdown",
+                    data=story_markdown,
+                    file_name=f"story_{story_id}.md",
+                    mime="text/markdown",
+                    key=f"download_story_markdown_{story_id}"
+                )
+            else:
+                st.info("No chapter body text yet.")
+
         for chapter in chapters:
             render_story_chapter_expander(chapter)
 
@@ -372,6 +398,19 @@ def safe_json_loads(value):
         return json.loads(value)
     except Exception:
         return []
+
+
+def build_character_option_labels(character_rows):
+    labels = {}
+
+    for row in character_rows:
+        name = row[1]
+        age = row[2] or "Unknown age"
+        profile_name = row[5] or "No profile"
+
+        labels[name] = f"{name} — {age} — {profile_name}"
+
+    return labels
 
 
 def split_csv(value):

@@ -260,6 +260,31 @@ def list_story_chapters(story_id):
     return get_story_chapters(story_id)
 
 
+def build_full_story_markdown(chapters):
+    sections = []
+
+    sorted_chapters = sorted(
+        chapters,
+        key=lambda chapter: chapter[2]
+    )
+
+    for chapter in sorted_chapters:
+        chapter_number = chapter[2]
+        chapter_body = (chapter[4] or "").strip()
+
+        if chapter_number < 0:
+            continue
+
+        if chapter_body:
+            sections.append(
+                f"## Chapter {chapter_number}\n\n{chapter_body}"
+            )
+        else:
+            sections.append(f"## Chapter {chapter_number}")
+
+    return "\n\n".join(sections).strip()
+
+
 def create_story_chapter(
     story_id,
     chapter_number,

@@ -299,7 +299,8 @@ def get_characters_by_gender(gender):
             name,
             age,
             gender,
-            summary
+            summary,
+            profile_name
         FROM characters
         WHERE gender = ?
         ORDER BY name
