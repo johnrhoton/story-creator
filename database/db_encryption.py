@@ -32,17 +32,24 @@ LEGACY_KDF_ITERATIONS = 390000
 
 ENCRYPTED_TABLE_FIELDS = {
     "characters": {
+        "profile_name",
+        "physical_traits",
+        "personality_traits",
         "notes",
         "prompt",
         "response",
         "summary",
     },
     "profiles": {
+        "profile_name",
+        "physical_traits",
+        "personality_traits",
         "notes",
     },
     "story_templates": {
         "overview",
         "setting_background",
+        "tone_style",
     },
     "story_template_chapters": {
         "chapter_description",
@@ -50,8 +57,10 @@ ENCRYPTED_TABLE_FIELDS = {
     "stories": {
         "overview",
         "setting_background",
+        "tone_style",
     },
     "story_chapters": {
+        "chapter_description",
         "chapter_body",
         "chapter_summary",
     },

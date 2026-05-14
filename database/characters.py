@@ -41,7 +41,11 @@ def save_character(
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
-        profile_name.lower() if profile_name else None,
+        encrypt_database_field(
+            "characters",
+            "profile_name",
+            profile_name.lower() if profile_name else None
+        ),
         name,
         age,
         gender,
@@ -92,7 +96,11 @@ def update_character(
             summary = ?
         WHERE id = ?
     """, (
-        profile_name.lower() if profile_name else None,
+        encrypt_database_field(
+            "characters",
+            "profile_name",
+            profile_name.lower() if profile_name else None
+        ),
         name,
         age,
         gender,
@@ -172,7 +180,7 @@ def clone_character(record_id):
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
-        profile_name,
+        encrypt_database_field("characters", "profile_name", profile_name),
         name,
         age,
         gender,

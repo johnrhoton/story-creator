@@ -304,14 +304,17 @@ def import_database_from_dict(
         profile_row = encrypt_database_row(
             "profiles",
             {
+                "profile_name": profile_name,
                 "physical_traits": physical_traits,
                 "personality_traits": personality_traits,
                 "notes": profile.get("notes", ""),
             }
         )
 
+        delete_existing_profile_by_name(cursor, profile_name)
+
         cursor.execute("""
-            INSERT OR REPLACE INTO profiles
+            INSERT INTO profiles
             (
                 profile_name,
                 gender,
@@ -321,7 +324,7 @@ def import_database_from_dict(
             )
             VALUES (?, ?, ?, ?, ?)
         """, (
-            profile_name,
+            profile_row["profile_name"],
             gender,
             profile_row["physical_traits"],
             profile_row["personality_traits"],
@@ -357,6 +360,7 @@ def import_database_from_dict(
         character_row = encrypt_database_row(
             "characters",
             {
+                "profile_name": profile_name,
                 "physical_traits": physical_traits,
                 "personality_traits": personality_traits,
                 "notes": character.get("notes", ""),
@@ -393,7 +397,7 @@ def import_database_from_dict(
             character.get("created_at")
             or datetime.now().isoformat(timespec="seconds"),
 
-            profile_name,
+            character_row["profile_name"],
             character.get("name", ""),
             character.get("age", ""),
             gender,
@@ -723,6 +727,43 @@ def clear_exported_tables(cursor):
     cursor.execute("DELETE FROM story_templates")
     cursor.execute("DELETE FROM characters")
     cursor.execute("DELETE FROM profiles")
+
+
+def delete_existing_profile_by_name(cursor, profile_name):
+    if not profile_name:
+        return
+
+    cursor.execute("""
+        SELECT
+            id,
+            profile_name
+        FROM profiles
+    """)
+
+    columns = [column[0] for column in cursor.description]
+    rows = [
+        decrypt_database_row(
+            "profiles",
+            dict(zip(columns, row))
+        )
+        for row in cursor.fetchall()
+    ]
+
+    profile_ids = [
+        row["id"]
+        for row in rows
+        if row["profile_name"] == profile_name
+    ]
+
+    if not profile_ids:
+        return
+
+    placeholders = ", ".join("?" for _profile_id in profile_ids)
+
+    cursor.execute(f"""
+        DELETE FROM profiles
+        WHERE id IN ({placeholders})
+    """, tuple(profile_ids))
 
 
 def delete_existing_template_by_name(cursor, template_name):

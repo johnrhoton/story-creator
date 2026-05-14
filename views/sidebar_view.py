@@ -138,6 +138,14 @@ def render_llm_settings_sidebar():
         st.divider()
         st.header("Import / Export")
 
+        st.toggle(
+            "Encrypt downloads",
+            key="encrypt_export_downloads",
+            help=(
+                "Download encrypted values when preparing database exports."
+            )
+        )
+
         st.text_input(
             "Export password",
             type="password",

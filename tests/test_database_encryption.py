@@ -8,6 +8,7 @@ from pathlib import Path
 
 from config import DB_NAME
 from database.characters import get_characters, save_character
+from database.profiles import add_profile, get_profiles
 from database.db_encryption import (
     DATABASE_ENCRYPTION_EXPORT_KEY,
     DATABASE_ENCRYPTED_VALUE_PREFIX,
@@ -63,6 +64,7 @@ class DatabaseEncryptionTests(unittest.TestCase):
             cursor.execute("""
                 SELECT
                     name,
+                    profile_name,
                     physical_traits,
                     summary
                 FROM characters
@@ -71,9 +73,14 @@ class DatabaseEncryptionTests(unittest.TestCase):
             conn.close()
 
             self.assertEqual(raw_row[0], "Alice")
-            self.assertEqual(raw_row[1], "quick")
+            self.assertTrue(
+                raw_row[1].startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
+            )
             self.assertTrue(
                 raw_row[2].startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
+            )
+            self.assertTrue(
+                raw_row[3].startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
             )
 
             character = get_characters()[0]
@@ -81,6 +88,41 @@ class DatabaseEncryptionTests(unittest.TestCase):
             self.assertEqual(character[3], "Alice")
             self.assertEqual(character[6], "quick")
             self.assertEqual(character[10], "summary")
+
+    def test_profile_names_are_encrypted_and_readable_when_unlocked(self):
+        with isolated_database_directory():
+            add_profile(
+                "Hero",
+                "female",
+                "quick",
+                "kind",
+                "note"
+            )
+
+            enable_database_encryption("password")
+
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT
+                    profile_name,
+                    physical_traits,
+                    personality_traits,
+                    notes
+                FROM profiles
+            """)
+            raw_row = cursor.fetchone()
+            conn.close()
+
+            for value in raw_row:
+                self.assertTrue(
+                    value.startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
+                )
+
+            self.assertEqual(
+                get_profiles(),
+                [("hero", "female", "quick", "kind", "note")]
+            )
 
     def test_wrong_database_password_does_not_unlock_database(self):
         with isolated_database_directory():
@@ -154,7 +196,7 @@ class DatabaseEncryptionTests(unittest.TestCase):
             self.assertIn('"verifier"', export_json)
             self.assertIn(DATABASE_ENCRYPTED_VALUE_PREFIX, export_json)
             self.assertIn('"name": "Alice"', export_json)
-            self.assertIn('"physical_traits": "quick"', export_json)
+            self.assertNotIn('"physical_traits": "quick"', export_json)
             self.assertNotIn('"summary": "summary"', export_json)
 
     def test_database_encrypted_export_import_round_trips_after_unlock(self):

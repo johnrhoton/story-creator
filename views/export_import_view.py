@@ -27,13 +27,7 @@ def render_export_import_tab():
 
     export_format = st.radio(
         "Export format",
-        ["JSON", "YAML"],
-        horizontal=True
-    )
-
-    export_contents = st.radio(
-        "Export contents",
-        ["Plain text", "Encrypted values"],
+        ["YAML", "JSON"],
         horizontal=True
     )
 
@@ -42,11 +36,11 @@ def render_export_import_tab():
         "database_encryption_password",
         ""
     )
-    encrypt_values = export_contents == "Encrypted values"
+    encrypt_values = st.session_state.get("encrypt_export_downloads", False)
     database_encryption_enabled = is_database_encryption_enabled()
     export_signature = {
         "format": export_format,
-        "contents": export_contents,
+        "encrypt_values": encrypt_values,
         "database_encryption_enabled": database_encryption_enabled,
     }
 
