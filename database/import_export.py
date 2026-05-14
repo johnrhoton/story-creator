@@ -6,94 +6,52 @@ from database.connection import get_connection
 from database.metadata import mark_local_data_modified
 
 
+EXPORT_TABLES = [
+    ("characters", "characters"),
+    ("profiles", "profiles"),
+    ("story_templates", "story_templates"),
+    ("story_template_chapters", "story_template_chapters"),
+    ("stories", "stories"),
+    ("story_chapters", "story_chapters"),
+    ("llm_calls", "llm_calls"),
+    ("failed_llm_calls", "failed_llm_calls"),
+    ("llm_models", "llm_models"),
+]
+
+
 def export_database_to_json():
     conn = get_connection()
     conn.row_factory = None
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM characters ORDER BY id")
-    character_columns = [column[0] for column in cursor.description]
-    characters = [
-        dict(zip(character_columns, row))
-        for row in cursor.fetchall()
-    ]
+    export_data = {
+        "exported_at": datetime.now().isoformat(timespec="seconds")
+    }
 
-    cursor.execute("SELECT * FROM profiles ORDER BY id")
-    profile_columns = [column[0] for column in cursor.description]
-    profiles = [
-        dict(zip(profile_columns, row))
-        for row in cursor.fetchall()
-    ]
-
-    cursor.execute("SELECT * FROM story_templates ORDER BY id")
-    template_columns = [column[0] for column in cursor.description]
-    story_templates = [
-        dict(zip(template_columns, row))
-        for row in cursor.fetchall()
-    ]
-
-    cursor.execute("SELECT * FROM story_template_chapters ORDER BY id")
-    chapter_columns = [column[0] for column in cursor.description]
-    story_template_chapters = [
-        dict(zip(chapter_columns, row))
-        for row in cursor.fetchall()
-    ]
-
-    cursor.execute("SELECT * FROM stories ORDER BY id")
-    story_columns = [column[0] for column in cursor.description]
-    stories = [
-        dict(zip(story_columns, row))
-        for row in cursor.fetchall()
-    ]
-
-    cursor.execute("SELECT * FROM story_chapters ORDER BY id")
-    story_chapter_columns = [column[0] for column in cursor.description]
-    story_chapters = [
-        dict(zip(story_chapter_columns, row))
-        for row in cursor.fetchall()
-    ]
-
-    cursor.execute("SELECT * FROM llm_calls ORDER BY id")
-    llm_call_columns = [column[0] for column in cursor.description]
-    llm_calls = [
-        dict(zip(llm_call_columns, row))
-        for row in cursor.fetchall()
-    ]
-
-    cursor.execute("SELECT * FROM failed_llm_calls ORDER BY id")
-    failed_llm_call_columns = [column[0] for column in cursor.description]
-    failed_llm_calls = [
-        dict(zip(failed_llm_call_columns, row))
-        for row in cursor.fetchall()
-    ]
-
-    cursor.execute("SELECT * FROM llm_models ORDER BY id")
-    llm_model_columns = [column[0] for column in cursor.description]
-    llm_models = [
-        dict(zip(llm_model_columns, row))
-        for row in cursor.fetchall()
-    ]
+    for export_key, table_name in EXPORT_TABLES:
+        export_data[export_key] = fetch_table_rows(cursor, table_name)
 
     conn.close()
-
-    export_data = {
-        "exported_at": datetime.now().isoformat(timespec="seconds"),
-        "characters": characters,
-        "profiles": profiles,
-        "story_templates": story_templates,
-        "story_template_chapters": story_template_chapters,
-        "stories": stories,
-        "story_chapters": story_chapters,
-        "llm_calls": llm_calls,
-        "failed_llm_calls": failed_llm_calls,
-        "llm_models": llm_models
-    }
 
     return json.dumps(
         export_data,
         indent=2,
         ensure_ascii=False
     )
+
+
+def fetch_table_rows(cursor, table_name):
+    cursor.execute(f"SELECT * FROM {table_name} ORDER BY id")
+
+    columns = [
+        column[0]
+        for column in cursor.description
+    ]
+
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
 
 
 def import_database_from_json(uploaded_file, replace_existing=False):
