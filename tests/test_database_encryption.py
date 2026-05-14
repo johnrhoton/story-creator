@@ -12,6 +12,7 @@ from database.db_encryption import (
     DATABASE_ENCRYPTION_EXPORT_KEY,
     DATABASE_ENCRYPTED_VALUE_PREFIX,
     enable_database_encryption,
+    get_database_encryption_status,
     set_active_database_password,
 )
 from database.import_export import (
@@ -80,6 +81,33 @@ class DatabaseEncryptionTests(unittest.TestCase):
             self.assertEqual(character[6], "quick")
             self.assertEqual(character[10], "summary")
 
+    def test_wrong_database_password_does_not_unlock_database(self):
+        with isolated_database_directory():
+            save_character(
+                None,
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "kind",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+            enable_database_encryption("password")
+            set_active_database_password("")
+
+            set_active_database_password("wrong")
+
+            self.assertEqual(
+                get_database_encryption_status(),
+                {
+                    "enabled": True,
+                    "unlocked": False,
+                }
+            )
+
     def test_plain_export_decrypts_encrypted_database_fields_when_unlocked(self):
         with isolated_database_directory():
             save_character(
@@ -122,6 +150,7 @@ class DatabaseEncryptionTests(unittest.TestCase):
             export_json = export_database_to_json(encrypt_values=True)
 
             self.assertIn(DATABASE_ENCRYPTION_EXPORT_KEY, export_json)
+            self.assertIn('"verifier"', export_json)
             self.assertIn(DATABASE_ENCRYPTED_VALUE_PREFIX, export_json)
             self.assertIn('"name": "Alice"', export_json)
             self.assertIn('"physical_traits": "quick"', export_json)

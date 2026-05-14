@@ -21,10 +21,12 @@ from database.metadata import (
 DATABASE_ENCRYPTION_ENABLED = "database_encryption_enabled"
 DATABASE_ENCRYPTION_ITERATIONS = "database_encryption_iterations"
 DATABASE_ENCRYPTION_SALT = "database_encryption_salt"
+DATABASE_ENCRYPTION_VERIFIER = "database_encryption_verifier"
 DATABASE_ENCRYPTION_EXPORT_KEY = "__database_encryption"
 DATABASE_ENCRYPTED_VALUE_PREFIX_V1 = "db-encrypted:v1:"
 DATABASE_ENCRYPTED_VALUE_PREFIX_V2 = "db-encrypted:v2:"
 DATABASE_ENCRYPTED_VALUE_PREFIX = DATABASE_ENCRYPTED_VALUE_PREFIX_V2
+DATABASE_ENCRYPTION_VERIFIER_VALUE = "story-builder-database-encryption"
 SALT_BYTES = 16
 LEGACY_KDF_ITERATIONS = 390000
 
@@ -110,11 +112,18 @@ def set_active_database_password(password):
     if _active_password_signature == password_signature and _active_fernet:
         return
 
-    _active_fernet = build_fernet(
+    fernet = build_fernet(
         password,
         salt,
         iterations
     )
+
+    if not database_password_matches_verifier(fernet):
+        _active_fernet = None
+        _active_password_signature = None
+        return
+
+    _active_fernet = fernet
     _active_password_signature = password_signature
 
 
@@ -135,6 +144,7 @@ def get_database_encryption_export_metadata():
         "kdf": "PBKDF2HMAC-SHA256",
         "iterations": get_database_encryption_iterations(),
         "value_prefix": DATABASE_ENCRYPTED_VALUE_PREFIX,
+        "verifier": get_metadata_value(DATABASE_ENCRYPTION_VERIFIER),
     }
 
 
@@ -155,6 +165,14 @@ def apply_database_encryption_export_metadata(metadata, cursor):
         DATABASE_ENCRYPTION_ITERATIONS,
         str(metadata.get("iterations") or LEGACY_KDF_ITERATIONS)
     )
+
+    if metadata.get("verifier"):
+        set_metadata_value(
+            cursor,
+            DATABASE_ENCRYPTION_VERIFIER,
+            metadata["verifier"]
+        )
+
     _active_fernet = None
     _active_password_signature = None
 
@@ -187,6 +205,7 @@ def enable_database_encryption(password):
     for table_name, field_names in ENCRYPTED_TABLE_FIELDS.items():
         encrypt_table_fields(cursor, table_name, field_names)
 
+    set_database_encryption_verifier(cursor)
     mark_local_data_modified(cursor)
 
     conn.commit()
@@ -247,6 +266,29 @@ def get_database_encryption_iterations():
         return int(iterations)
     except ValueError:
         return LEGACY_KDF_ITERATIONS
+
+
+def database_password_matches_verifier(fernet):
+    verifier = get_metadata_value(DATABASE_ENCRYPTION_VERIFIER)
+
+    if not verifier:
+        return True
+
+    try:
+        return (
+            decrypt_database_value_with_fernet(verifier, fernet)
+            == DATABASE_ENCRYPTION_VERIFIER_VALUE
+        )
+    except ValueError:
+        return False
+
+
+def set_database_encryption_verifier(cursor):
+    set_metadata_value(
+        cursor,
+        DATABASE_ENCRYPTION_VERIFIER,
+        encrypt_database_value(DATABASE_ENCRYPTION_VERIFIER_VALUE)
+    )
 
 
 def encrypt_database_row(table_name, row_data):
@@ -327,17 +369,21 @@ def decrypt_database_value_if_needed(value):
             "sidebar to unlock it."
         )
 
+    return decrypt_database_value_with_fernet(value, _active_fernet)
+
+
+def decrypt_database_value_with_fernet(value, fernet):
     try:
         if value.startswith(DATABASE_ENCRYPTED_VALUE_PREFIX_V2):
             encrypted_value = value.removeprefix(
                 DATABASE_ENCRYPTED_VALUE_PREFIX_V2
             ).encode("ascii")
-            value_json = _active_fernet.decrypt(encrypted_value)
+            value_json = fernet.decrypt(encrypted_value)
         else:
             encrypted_value = value.removeprefix(
                 DATABASE_ENCRYPTED_VALUE_PREFIX_V1
             ).encode("ascii")
-            compressed_value = _active_fernet.decrypt(encrypted_value)
+            compressed_value = fernet.decrypt(encrypted_value)
             value_json = zlib.decompress(compressed_value)
 
         return json.loads(value_json.decode("utf-8"))
