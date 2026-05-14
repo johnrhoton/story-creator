@@ -1,6 +1,11 @@
 import streamlit as st
 
-from database import create_tables, run_migrations, seed_common_names
+from database import (
+    create_tables,
+    get_database_encryption_status,
+    run_migrations,
+    seed_common_names,
+)
 from views.characters_view import render_characters_tab
 from views.export_import_view import render_export_import_tab
 from views.history_view import render_history_tab
@@ -24,6 +29,16 @@ st.set_page_config(
 st.title("Story Builder")
 
 render_llm_settings_sidebar()
+
+database_encryption_status = get_database_encryption_status()
+
+if (
+    database_encryption_status["enabled"]
+    and not database_encryption_status["unlocked"]
+):
+    st.warning("Database fields are encrypted and currently locked.")
+    st.info("Enter the database password in the sidebar to continue.")
+    st.stop()
 
 active_view = st.radio(
     "View",
