@@ -8,6 +8,12 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
+from config import (
+    MONGODB_DEFAULT_DATABASE,
+    MONGODB_LEGACY_SYNC_DOCUMENT_ID,
+    MONGODB_SYNC_COLLECTION,
+    MONGODB_SYNC_DOCUMENT_ID,
+)
 from database import (
     export_database_to_json,
     get_sync_metadata,
@@ -16,9 +22,9 @@ from database import (
 )
 
 
-SYNC_DOCUMENT_ID = "story_builder_main"
-LEGACY_SYNC_DOCUMENT_ID = "story_creator_main"
-SYNC_COLLECTION = "database_backups"
+SYNC_DOCUMENT_ID = MONGODB_SYNC_DOCUMENT_ID
+LEGACY_SYNC_DOCUMENT_ID = MONGODB_LEGACY_SYNC_DOCUMENT_ID
+SYNC_COLLECTION = MONGODB_SYNC_COLLECTION
 
 
 def get_utc_timestamp():
@@ -53,7 +59,7 @@ def get_mongo_collection():
 
     database_name = os.getenv(
         "MONGODB_DATABASE",
-        "story_builder"
+        MONGODB_DEFAULT_DATABASE
     )
 
     if not uri:

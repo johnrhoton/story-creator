@@ -2,6 +2,7 @@ from datetime import datetime
 
 import streamlit as st
 
+from config import EXPORT_FILENAME_PREFIX
 from database import (
     export_database_to_json,
     import_database_from_json,
@@ -20,7 +21,7 @@ def render_export_import_tab():
     st.header("Export / Import Database")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    export_filename = f"story_builder_export_{timestamp}.json"
+    export_filename = f"{EXPORT_FILENAME_PREFIX}_{timestamp}.json"
 
     json_data = export_database_to_json()
 
