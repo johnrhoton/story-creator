@@ -17,6 +17,7 @@ from database.llm_models import (
 )
 from database.migrations import run_migrations
 from database.schema import create_tables
+from services import sync_service
 from services.sync_service import get_content_hash
 from scripts.seed_llm_models import seed_llm_models
 
@@ -325,6 +326,45 @@ class DatabaseBehaviourTests(unittest.TestCase):
         self.assertEqual(
             get_content_hash(first_export),
             get_content_hash(second_export)
+        )
+
+    def test_sync_uses_story_builder_document_id_with_legacy_fallback(self):
+        class FakeCollection:
+            def __init__(self):
+                self.queries = []
+
+            def find_one(self, query):
+                self.queries.append(query)
+
+                if query == {"_id": sync_service.LEGACY_SYNC_DOCUMENT_ID}:
+                    return {
+                        "_id": sync_service.LEGACY_SYNC_DOCUMENT_ID,
+                        "data": {
+                            "characters": []
+                        }
+                    }
+
+                return None
+
+        original_get_mongo_collection = sync_service.get_mongo_collection
+        fake_collection = FakeCollection()
+        sync_service.get_mongo_collection = lambda: fake_collection
+
+        try:
+            mongo_doc = sync_service.get_mongo_backup()
+        finally:
+            sync_service.get_mongo_collection = original_get_mongo_collection
+
+        self.assertEqual(
+            mongo_doc["_id"],
+            sync_service.LEGACY_SYNC_DOCUMENT_ID
+        )
+        self.assertEqual(
+            fake_collection.queries,
+            [
+                {"_id": sync_service.SYNC_DOCUMENT_ID},
+                {"_id": sync_service.LEGACY_SYNC_DOCUMENT_ID}
+            ]
         )
 
 

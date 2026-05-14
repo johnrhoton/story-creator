@@ -20,7 +20,7 @@ def render_export_import_tab():
     st.header("Export / Import Database")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    export_filename = f"story_creator_export_{timestamp}.json"
+    export_filename = f"story_builder_export_{timestamp}.json"
 
     json_data = export_database_to_json()
 

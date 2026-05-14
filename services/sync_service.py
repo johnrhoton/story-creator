@@ -16,7 +16,8 @@ from database import (
 )
 
 
-SYNC_DOCUMENT_ID = "story_creator_main"
+SYNC_DOCUMENT_ID = "story_builder_main"
+LEGACY_SYNC_DOCUMENT_ID = "story_creator_main"
 SYNC_COLLECTION = "database_backups"
 
 
@@ -52,7 +53,7 @@ def get_mongo_collection():
 
     database_name = os.getenv(
         "MONGODB_DATABASE",
-        "story_creator"
+        "story_builder"
     )
 
     if not uri:
@@ -142,8 +143,15 @@ def normalise_rows(rows, ignored_keys):
 def get_mongo_backup():
     collection = get_mongo_collection()
 
-    return collection.find_one(
+    mongo_doc = collection.find_one(
         {"_id": SYNC_DOCUMENT_ID}
+    )
+
+    if mongo_doc:
+        return mongo_doc
+
+    return collection.find_one(
+        {"_id": LEGACY_SYNC_DOCUMENT_ID}
     )
 
 
