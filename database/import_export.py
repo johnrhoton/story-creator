@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 
+import yaml
+
 from config import GENDER_OPTIONS
 from database.connection import get_connection
 from database.metadata import mark_local_data_modified
@@ -57,8 +59,22 @@ def serialize_export_to_json(export_data):
     )
 
 
+def serialize_export_to_yaml(export_data):
+    return yaml.safe_dump(
+        export_data,
+        allow_unicode=True,
+        sort_keys=False
+    )
+
+
 def export_database_to_json():
     return serialize_export_to_json(
+        export_database_to_dict()
+    )
+
+
+def export_database_to_yaml():
+    return serialize_export_to_yaml(
         export_database_to_dict()
     )
 
@@ -86,8 +102,30 @@ def import_database_from_json(uploaded_file, replace_existing=False):
     )
 
 
+def import_database_from_yaml(uploaded_file, replace_existing=False):
+    data = deserialize_import_yaml(uploaded_file)
+
+    return import_database_from_dict(
+        data,
+        replace_existing=replace_existing
+    )
+
+
 def deserialize_import_json(uploaded_file):
-    return json.load(uploaded_file)
+    return json.loads(read_uploaded_text(uploaded_file))
+
+
+def deserialize_import_yaml(uploaded_file):
+    return yaml.safe_load(read_uploaded_text(uploaded_file)) or {}
+
+
+def read_uploaded_text(uploaded_file):
+    content = uploaded_file.read()
+
+    if isinstance(content, bytes):
+        return content.decode("utf-8")
+
+    return content
 
 
 def import_database_from_dict(data, replace_existing=False):

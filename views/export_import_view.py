@@ -5,7 +5,9 @@ import streamlit as st
 from config import EXPORT_FILENAME_PREFIX
 from database import (
     export_database_to_json,
+    export_database_to_yaml,
     import_database_from_json,
+    import_database_from_yaml,
     reinitialize_database,
 )
 from services.sync_service import (
@@ -21,21 +23,35 @@ def render_export_import_tab():
     st.header("Export / Import Database")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    export_filename = f"{EXPORT_FILENAME_PREFIX}_{timestamp}.json"
-
-    json_data = export_database_to_json()
 
     st.subheader("Export")
 
-    st.download_button(
-        label="Download database as JSON",
-        data=json_data,
-        file_name=export_filename,
-        mime="application/json"
+    export_format = st.radio(
+        "Export format",
+        ["JSON", "YAML"],
+        horizontal=True
     )
 
-    with st.expander("Preview JSON"):
-        st.code(json_data, language="json")
+    if export_format == "YAML":
+        export_data = export_database_to_yaml()
+        export_filename = f"{EXPORT_FILENAME_PREFIX}_{timestamp}.yaml"
+        export_mime = "application/x-yaml"
+        preview_language = "yaml"
+    else:
+        export_data = export_database_to_json()
+        export_filename = f"{EXPORT_FILENAME_PREFIX}_{timestamp}.json"
+        export_mime = "application/json"
+        preview_language = "json"
+
+    st.download_button(
+        label=f"Download database as {export_format}",
+        data=export_data,
+        file_name=export_filename,
+        mime=export_mime
+    )
+
+    with st.expander(f"Preview {export_format}"):
+        st.code(export_data, language=preview_language)
 
     st.divider()
 
@@ -70,16 +86,19 @@ def render_export_import_tab():
     st.subheader("Import")
 
     uploaded_file = st.file_uploader(
-        "Choose a JSON export file",
-        type=["json"]
+        "Choose a JSON or YAML export file",
+        type=["json", "yaml", "yml"]
     )
 
     if uploaded_file is not None:
-        if st.button("Import JSON into database"):
+        if st.button("Import file into database"):
             try:
-                result = import_database_from_json(
-                    uploaded_file
-                )
+                uploaded_name = uploaded_file.name.lower()
+
+                if uploaded_name.endswith((".yaml", ".yml")):
+                    result = import_database_from_yaml(uploaded_file)
+                else:
+                    result = import_database_from_json(uploaded_file)
 
                 st.success("Import complete.")
                 st.json(result)

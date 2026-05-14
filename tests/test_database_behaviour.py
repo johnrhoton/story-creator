@@ -12,9 +12,12 @@ from database.characters import save_character
 from database.import_export import (
     export_database_to_dict,
     export_database_to_json,
+    export_database_to_yaml,
     import_database_from_dict,
     import_database_from_json,
+    import_database_from_yaml,
     serialize_export_to_json,
+    serialize_export_to_yaml,
 )
 from database.llm_models import (
     add_llm_model,
@@ -220,6 +223,34 @@ class DatabaseBehaviourTests(unittest.TestCase):
                 "Alice"
             )
 
+    def test_export_yaml_uses_export_dictionary(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            save_character(
+                None,
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "kind",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+
+            export_data = export_database_to_dict()
+            export_yaml = export_database_to_yaml()
+
+            self.assertEqual(
+                serialize_export_to_yaml(export_data),
+                export_yaml
+            )
+            self.assertIn("characters:", export_yaml)
+            self.assertIn("name: Alice", export_yaml)
+
     def test_import_database_from_dict_matches_json_import(self):
         with isolated_database_directory():
             run_migrations()
@@ -238,6 +269,43 @@ class DatabaseBehaviourTests(unittest.TestCase):
             }
 
             result = import_database_from_dict(import_payload)
+
+            self.assertEqual(result["profiles"], 1)
+
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT
+                    profile_name,
+                    physical_traits,
+                    personality_traits
+                FROM profiles
+            """)
+            rows = cursor.fetchall()
+            conn.close()
+
+            self.assertEqual(
+                rows,
+                [("hero", "quick", "kind")]
+            )
+
+    def test_import_database_from_yaml(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            import_payload = """
+profiles:
+  - profile_name: Hero
+    gender: female
+    physical_traits: quick
+    personality_traits: kind
+    notes: note
+"""
+
+            result = import_database_from_yaml(
+                StringIO(import_payload)
+            )
 
             self.assertEqual(result["profiles"], 1)
 
