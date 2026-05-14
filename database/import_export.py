@@ -11,6 +11,7 @@ from database.db_encryption import (
     decrypt_database_row,
     encrypt_database_row,
     get_database_encryption_export_metadata,
+    initialize_database_encryption,
     is_database_encryption_enabled,
 )
 from database.export_crypto import (
@@ -161,7 +162,8 @@ def fetch_table_rows(cursor, table_name):
 def import_database_from_json(
     uploaded_file,
     replace_existing=False,
-    password=""
+    password="",
+    database_password=""
 ):
     data = deserialize_import_json(uploaded_file)
 
@@ -170,14 +172,16 @@ def import_database_from_json(
 
     return import_database_from_dict(
         data,
-        replace_existing=replace_existing
+        replace_existing=replace_existing,
+        database_password=database_password
     )
 
 
 def import_database_from_yaml(
     uploaded_file,
     replace_existing=False,
-    password=""
+    password="",
+    database_password=""
 ):
     data = deserialize_import_yaml(uploaded_file)
 
@@ -186,7 +190,8 @@ def import_database_from_yaml(
 
     return import_database_from_dict(
         data,
-        replace_existing=replace_existing
+        replace_existing=replace_existing,
+        database_password=database_password
     )
 
 
@@ -207,8 +212,15 @@ def read_uploaded_text(uploaded_file):
     return content
 
 
-def import_database_from_dict(data, replace_existing=False):
+def import_database_from_dict(
+    data,
+    replace_existing=False,
+    database_password=""
+):
     sections = get_import_sections(data)
+
+    if database_password and DATABASE_ENCRYPTION_EXPORT_KEY not in data:
+        initialize_database_encryption(database_password)
 
     conn = get_connection()
     cursor = conn.cursor()

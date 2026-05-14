@@ -143,6 +143,7 @@ def render_llm_settings_sidebar():
             type="password",
             key="import_export_password",
             help=(
-                "Used for encrypted export files and encrypted imports."
+                "Used only for password-wrapped export files from an "
+                "unencrypted database."
             )
         )

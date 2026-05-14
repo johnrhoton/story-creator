@@ -38,6 +38,10 @@ def render_export_import_tab():
     )
 
     password = st.session_state.get("import_export_password", "")
+    database_password = st.session_state.get(
+        "database_encryption_password",
+        ""
+    )
     encrypt_values = export_contents == "Encrypted values"
     database_encryption_enabled = is_database_encryption_enabled()
     export_signature = {
@@ -142,6 +146,16 @@ def render_export_import_tab():
 
     st.subheader("Import")
 
+    if database_password:
+        st.caption(
+            "Imported plain-text values will be stored with database "
+            "field encryption."
+        )
+    else:
+        st.caption(
+            "Imported plain-text values will be stored as plain text."
+        )
+
     uploaded_file = st.file_uploader(
         "Choose a JSON or YAML export file",
         type=["json", "yaml", "yml"]
@@ -155,12 +169,14 @@ def render_export_import_tab():
                 if uploaded_name.endswith((".yaml", ".yml")):
                     result = import_database_from_yaml(
                         uploaded_file,
-                        password=password
+                        password=password,
+                        database_password=database_password
                     )
                 else:
                     result = import_database_from_json(
                         uploaded_file,
-                        password=password
+                        password=password,
+                        database_password=database_password
                     )
 
                 st.success("Import complete.")

@@ -109,6 +109,7 @@ from database.db_encryption import (
     apply_database_encryption_export_metadata,
     get_database_encryption_export_metadata,
     get_database_encryption_status,
+    initialize_database_encryption,
     is_database_encrypted_value,
     is_database_encryption_enabled,
     set_active_database_password,

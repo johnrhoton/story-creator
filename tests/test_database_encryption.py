@@ -17,6 +17,7 @@ from database.db_encryption import (
 )
 from database.import_export import (
     export_database_to_json,
+    import_database_from_dict,
     import_database_from_json,
 )
 from database.migrations import run_migrations
@@ -182,6 +183,57 @@ class DatabaseEncryptionTests(unittest.TestCase):
 
             self.assertEqual(character[3], "Alice")
             self.assertEqual(character[6], "quick")
+            self.assertEqual(character[10], "summary")
+
+    def test_clear_import_without_database_password_stores_plain_text(self):
+        with isolated_database_directory():
+            import_database_from_dict({
+                "characters": [
+                    {
+                        "name": "Alice",
+                        "age": "18",
+                        "gender": "female",
+                        "summary": "summary",
+                    }
+                ]
+            })
+
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+            cursor.execute("SELECT summary FROM characters")
+            raw_summary = cursor.fetchone()[0]
+            conn.close()
+
+            self.assertEqual(raw_summary, "summary")
+
+    def test_clear_import_with_database_password_stores_encrypted_text(self):
+        with isolated_database_directory():
+            import_database_from_dict(
+                {
+                    "characters": [
+                        {
+                            "name": "Alice",
+                            "age": "18",
+                            "gender": "female",
+                            "summary": "summary",
+                        }
+                    ]
+                },
+                database_password="password"
+            )
+
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+            cursor.execute("SELECT summary FROM characters")
+            raw_summary = cursor.fetchone()[0]
+            conn.close()
+
+            self.assertTrue(
+                raw_summary.startswith(DATABASE_ENCRYPTED_VALUE_PREFIX)
+            )
+
+            character = get_characters()[0]
+
             self.assertEqual(character[10], "summary")
 
 

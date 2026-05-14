@@ -185,6 +185,24 @@ def enable_database_encryption(password):
     if not password:
         raise ValueError("A database encryption password is required.")
 
+    initialize_database_encryption(password)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    for table_name, field_names in ENCRYPTED_TABLE_FIELDS.items():
+        encrypt_table_fields(cursor, table_name, field_names)
+
+    mark_local_data_modified(cursor)
+
+    conn.commit()
+    conn.close()
+
+
+def initialize_database_encryption(password):
+    if not password:
+        raise ValueError("A database encryption password is required.")
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -201,13 +219,7 @@ def enable_database_encryption(password):
 
     conn = get_connection()
     cursor = conn.cursor()
-
-    for table_name, field_names in ENCRYPTED_TABLE_FIELDS.items():
-        encrypt_table_fields(cursor, table_name, field_names)
-
     set_database_encryption_verifier(cursor)
-    mark_local_data_modified(cursor)
-
     conn.commit()
     conn.close()
 
