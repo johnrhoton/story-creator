@@ -14,6 +14,7 @@ from database.db_encryption import (
     initialize_database_encryption,
     is_database_encrypted_value,
     is_database_encryption_enabled,
+    set_active_database_password,
 )
 from database.export_crypto import (
     decrypt_export_values,
@@ -224,6 +225,9 @@ def import_database_from_dict(
         cursor
     )
 
+    if database_password and DATABASE_ENCRYPTION_EXPORT_KEY in data:
+        set_active_database_password(database_password)
+
     counts = empty_import_counts()
 
     # -------------------------
@@ -305,7 +309,11 @@ def import_database_from_dict(
             }
         )
 
-        delete_existing_profile_by_name(cursor, profile_name)
+        if (
+            not replace_existing
+            and not is_database_encrypted_value(profile_name)
+        ):
+            delete_existing_profile_by_name(cursor, profile_name)
 
         cursor.execute("""
             INSERT INTO profiles
@@ -426,7 +434,8 @@ def import_database_from_dict(
             }
         )
 
-        delete_existing_template_by_name(cursor, template_name)
+        if not replace_existing:
+            delete_existing_template_by_name(cursor, template_name)
 
         cursor.execute("""
             INSERT INTO story_templates
@@ -518,7 +527,8 @@ def import_database_from_dict(
             old_template_id
         )
 
-        delete_existing_story_by_name(cursor, story_name)
+        if not replace_existing:
+            delete_existing_story_by_name(cursor, story_name)
 
         cursor.execute("""
             INSERT INTO stories

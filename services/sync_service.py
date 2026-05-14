@@ -314,7 +314,7 @@ def push_local_to_mongo():
     return sync_timestamp
 
 
-def pull_mongo_to_local():
+def pull_mongo_to_local(database_password=""):
     mongo_doc = get_mongo_backup()
 
     if not mongo_doc:
@@ -351,7 +351,8 @@ def pull_mongo_to_local():
 
     result = import_database_from_json(
         UploadedFileLike(),
-        replace_existing=True
+        replace_existing=True,
+        database_password=database_password
     )
 
     sync_timestamp = get_utc_timestamp()
@@ -365,7 +366,7 @@ def pull_mongo_to_local():
     return result
 
 
-def sync_now():
+def sync_now(database_password=""):
     status = get_sync_status()
 
     direction = status["direction"]
@@ -383,7 +384,7 @@ def sync_now():
         }
 
     if direction == "pull":
-        result = pull_mongo_to_local()
+        result = pull_mongo_to_local(database_password=database_password)
 
         return {
             "direction": "pull",

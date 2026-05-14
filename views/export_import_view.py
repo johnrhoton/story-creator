@@ -208,7 +208,7 @@ def render_export_import_tab():
 
     if st.button("Sync now"):
         try:
-            result = sync_now()
+            result = sync_now(database_password=database_password)
 
             if result["direction"] == "conflict":
                 st.warning(result["message"])
@@ -228,7 +228,9 @@ def render_export_import_tab():
     with col_pull:
         if st.button("Pull MongoDB to local"):
             try:
-                result = pull_mongo_to_local()
+                result = pull_mongo_to_local(
+                    database_password=database_password
+                )
                 st.success("Pulled MongoDB backup into local SQLite.")
                 st.json(result)
                 st.rerun()

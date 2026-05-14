@@ -32,6 +32,7 @@ from database.llm_models import (
     set_default_llm_model,
 )
 from database.migrations import run_migrations
+from database.profiles import add_profile, get_profiles
 from database.schema import create_tables
 from services import sync_service
 from services.sync_service import get_content_hash
@@ -691,6 +692,20 @@ profiles:
                 "response",
                 "summary"
             )
+            add_profile(
+                "hero",
+                "female",
+                "quick",
+                "curious",
+                "note"
+            )
+            add_profile(
+                "mentor",
+                "male",
+                "older",
+                "patient",
+                "guides"
+            )
             enable_database_encryption("password")
             mongo_data = sync_service.get_local_export()
             mongo_hash = sync_service.get_content_hash(mongo_data)
@@ -730,6 +745,10 @@ profiles:
             self.assertEqual(
                 get_characters()[0][6],
                 "quick"
+            )
+            self.assertEqual(
+                [profile[0] for profile in get_profiles()],
+                ["hero", "mentor"]
             )
 
 
