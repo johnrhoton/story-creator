@@ -1,4 +1,3 @@
-import json
 import os
 import sqlite3
 import tempfile
@@ -6,11 +5,18 @@ import unittest
 from contextlib import contextmanager
 from pathlib import Path
 
+import yaml
+
 from config import DB_NAME
 from database.characters import (
     delete_characters,
     get_characters_for_export,
     save_character,
+)
+from database.db_encryption import (
+    DATABASE_ENCRYPTED_VALUE_PREFIX,
+    enable_database_encryption,
+    set_active_database_password,
 )
 from database.llm_models import (
     add_llm_model,
@@ -52,6 +58,7 @@ def isolated_database_directory():
             create_tables()
             yield Path(temp_dir)
         finally:
+            set_active_database_password("")
             os.chdir(original_cwd)
 
 
@@ -67,7 +74,7 @@ def fetch_count(table_name):
 
 class BulkHelperTests(unittest.TestCase):
     def test_build_export_data_adds_timestamp_and_payload(self):
-        export_json = build_export_data({
+        export_yaml = build_export_data({
             "characters": [
                 {
                     "name": "Alice"
@@ -75,9 +82,32 @@ class BulkHelperTests(unittest.TestCase):
             ]
         })
 
-        export_data = json.loads(export_json)
+        export_data = yaml.safe_load(export_yaml)
 
         self.assertIn("exported_at", export_data)
+        self.assertEqual(
+            export_data["characters"],
+            [
+                {
+                    "name": "Alice"
+                }
+            ]
+        )
+
+    def test_build_export_data_does_not_reencrypt_yaml_payload(self):
+        export_yaml = build_export_data(
+            {
+                "characters": [
+                    {
+                        "name": "Alice"
+                    }
+                ]
+            },
+            include_database_encryption_metadata=True
+        )
+
+        export_data = yaml.safe_load(export_yaml)
+
         self.assertEqual(
             export_data["characters"],
             [
@@ -122,6 +152,37 @@ class BulkHelperTests(unittest.TestCase):
 
             self.assertEqual(delete_characters([1, 2]), 2)
             self.assertEqual(fetch_count("characters"), 0)
+
+    def test_character_raw_export_keeps_ids_clear_and_db_fields_encrypted(self):
+        with isolated_database_directory():
+            save_character(
+                "hero",
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "curious",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+            enable_database_encryption("password")
+
+            exported = get_characters_for_export([1], decrypt_values=False)
+
+            self.assertEqual(exported[0]["id"], 1)
+            self.assertEqual(exported[0]["name"], "Alice")
+            self.assertTrue(
+                exported[0]["physical_traits"].startswith(
+                    DATABASE_ENCRYPTED_VALUE_PREFIX
+                )
+            )
+            self.assertTrue(
+                exported[0]["profile_name"].startswith(
+                    DATABASE_ENCRYPTED_VALUE_PREFIX
+                )
+            )
 
     def test_profile_bulk_export_and_delete_helpers(self):
         with isolated_database_directory():

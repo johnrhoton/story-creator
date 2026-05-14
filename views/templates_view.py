@@ -80,7 +80,7 @@ def render_template_bulk_actions(templates):
         "selected_template_bulk_actions",
         build_template_option_label,
         lambda row: row[0],
-        list_templates_for_export,
+        list_templates_for_bulk_export,
         "exported_templates",
         delete_templates,
         "Delete selected templates",
@@ -88,6 +88,16 @@ def render_template_bulk_actions(templates):
         "Export selected templates",
         "export_selected_templates",
         "template"
+    )
+
+
+def list_templates_for_bulk_export(template_ids):
+    return list_templates_for_export(
+        template_ids,
+        decrypt_values=not st.session_state.get(
+            "encrypt_export_downloads",
+            False
+        )
     )
 
 

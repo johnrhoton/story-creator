@@ -326,7 +326,7 @@ profiles:
                 [("hero", "quick", "kind")]
             )
 
-    def test_encrypted_json_export_import_round_trip(self):
+    def test_raw_json_export_import_round_trip(self):
         with isolated_database_directory():
             run_migrations()
             create_tables()
@@ -350,8 +350,8 @@ profiles:
             )
 
             self.assertIn("characters", encrypted_json)
-            self.assertIn("encrypted:v2:", encrypted_json)
-            self.assertNotIn('"Alice"', encrypted_json)
+            self.assertIn('"Alice"', encrypted_json)
+            self.assertNotIn("encrypted:v2:", encrypted_json)
 
         with isolated_database_directory():
             run_migrations()
@@ -381,7 +381,7 @@ profiles:
                 [("Alice", "18", "summary")]
             )
 
-    def test_encrypted_yaml_export_import_round_trip(self):
+    def test_raw_yaml_export_import_round_trip(self):
         with isolated_database_directory():
             run_migrations()
             create_tables()
@@ -405,8 +405,8 @@ profiles:
             )
 
             self.assertIn("characters:", encrypted_yaml)
-            self.assertIn("encrypted:v2:", encrypted_yaml)
-            self.assertNotIn("Alice", encrypted_yaml)
+            self.assertIn("Alice", encrypted_yaml)
+            self.assertNotIn("encrypted:v2:", encrypted_yaml)
 
         with isolated_database_directory():
             run_migrations()
@@ -436,16 +436,17 @@ profiles:
                 [("Alice", "18", "summary")]
             )
 
-    def test_encrypted_export_requires_password(self):
+    def test_raw_export_does_not_require_password(self):
         with isolated_database_directory():
             run_migrations()
             create_tables()
 
-            with self.assertRaisesRegex(ValueError, "password is required"):
-                export_database_to_json(
-                    encrypt_values=True,
-                    password=""
-                )
+            export_json = export_database_to_json(
+                encrypt_values=True,
+                password=""
+            )
+
+            self.assertIn("characters", export_json)
 
     def test_seeded_models_have_one_default_per_provider(self):
         with isolated_database_directory():

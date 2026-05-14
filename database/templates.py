@@ -296,7 +296,7 @@ def get_story_template(template_id):
     return row
 
 
-def get_story_templates_for_export(template_ids):
+def get_story_templates_for_export(template_ids, decrypt_values=True):
     if not template_ids:
         return {
             "story_templates": [],
@@ -322,13 +322,18 @@ def get_story_templates_for_export(template_ids):
     """, tuple(template_ids))
 
     template_columns = [column[0] for column in cursor.description]
-    templates = [
-        dict(zip(template_columns, row))
-        for row in decrypt_database_rows(
+    template_rows = cursor.fetchall()
+
+    if decrypt_values:
+        template_rows = decrypt_database_rows(
             "story_templates",
-            cursor.fetchall(),
+            template_rows,
             template_columns
         )
+
+    templates = [
+        dict(zip(template_columns, row))
+        for row in template_rows
     ]
 
     cursor.execute(f"""
@@ -343,13 +348,18 @@ def get_story_templates_for_export(template_ids):
     """, tuple(template_ids))
 
     chapter_columns = [column[0] for column in cursor.description]
-    chapters = [
-        dict(zip(chapter_columns, row))
-        for row in decrypt_database_rows(
+    chapter_rows = cursor.fetchall()
+
+    if decrypt_values:
+        chapter_rows = decrypt_database_rows(
             "story_template_chapters",
-            cursor.fetchall(),
+            chapter_rows,
             chapter_columns
         )
+
+    chapters = [
+        dict(zip(chapter_columns, row))
+        for row in chapter_rows
     ]
 
     conn.close()

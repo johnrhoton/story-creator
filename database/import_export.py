@@ -16,7 +16,6 @@ from database.db_encryption import (
 )
 from database.export_crypto import (
     decrypt_export_values,
-    encrypt_export_values,
 )
 from database.metadata import mark_local_data_modified
 
@@ -84,16 +83,7 @@ def prepare_export_data(encrypt_values=False, password=""):
     export_data = export_database_to_dict()
 
     if encrypt_values:
-        if is_database_encryption_enabled():
-            return add_database_encryption_export_metadata(export_data)
-
-        if not password:
-            raise ValueError(
-                "A password is required to export encrypted values."
-            )
-
-        export_data = encrypt_export_values(export_data, password)
-        return export_data
+        return add_database_encryption_export_metadata(export_data)
 
     export_data = decrypt_database_export_data(export_data)
 

@@ -408,7 +408,7 @@ def get_story(story_id):
     return row
 
 
-def get_stories_for_export(story_ids):
+def get_stories_for_export(story_ids, decrypt_values=True):
     if not story_ids:
         return {
             "stories": [],
@@ -437,13 +437,18 @@ def get_stories_for_export(story_ids):
     """, tuple(story_ids))
 
     story_columns = [column[0] for column in cursor.description]
-    stories = [
-        dict(zip(story_columns, row))
-        for row in decrypt_database_rows(
+    story_rows = cursor.fetchall()
+
+    if decrypt_values:
+        story_rows = decrypt_database_rows(
             "stories",
-            cursor.fetchall(),
+            story_rows,
             story_columns
         )
+
+    stories = [
+        dict(zip(story_columns, row))
+        for row in story_rows
     ]
 
     cursor.execute(f"""
@@ -460,13 +465,18 @@ def get_stories_for_export(story_ids):
     """, tuple(story_ids))
 
     chapter_columns = [column[0] for column in cursor.description]
-    chapters = [
-        dict(zip(chapter_columns, row))
-        for row in decrypt_database_rows(
+    chapter_rows = cursor.fetchall()
+
+    if decrypt_values:
+        chapter_rows = decrypt_database_rows(
             "story_chapters",
-            cursor.fetchall(),
+            chapter_rows,
             chapter_columns
         )
+
+    chapters = [
+        dict(zip(chapter_columns, row))
+        for row in chapter_rows
     ]
 
     conn.close()

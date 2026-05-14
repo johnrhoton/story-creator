@@ -1,7 +1,13 @@
-import json
 from datetime import datetime
 
 import streamlit as st
+import yaml
+
+from database import (
+    get_database_encryption_export_metadata,
+    is_database_encryption_enabled,
+)
+from database.db_encryption import DATABASE_ENCRYPTION_EXPORT_KEY
 
 
 def render_bulk_actions(
@@ -39,16 +45,22 @@ def render_bulk_actions(
 
     selected_count = len(selected_values)
     st.caption(f"{selected_count} {item_label}(s) selected.")
+    encrypt_download = st.session_state.get(
+        "encrypt_export_downloads",
+        False
+    )
+    export_disabled = not selected_values
 
-    if selected_values:
+    if selected_values and not export_disabled:
         export_data = build_export_data(
-            build_export_payload(selected_values)
+            build_export_payload(selected_values),
+            include_database_encryption_metadata=encrypt_download
         )
     else:
         export_data = ""
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"{export_filename_prefix}_{timestamp}.json"
+    file_name = f"{export_filename_prefix}_{timestamp}.yaml"
 
     col_delete, col_export = st.columns(2)
 
@@ -67,20 +79,28 @@ def render_bulk_actions(
             export_button_label,
             data=export_data,
             file_name=file_name,
-            mime="application/json",
+            mime="application/x-yaml",
             key=export_button_key,
-            disabled=not selected_values
+            disabled=export_disabled
         )
 
 
-def build_export_data(payload):
+def build_export_data(payload, include_database_encryption_metadata=False):
     export_data = {
         "exported_at": datetime.now().isoformat(timespec="seconds"),
         **payload
     }
 
-    return json.dumps(
+    if (
+        include_database_encryption_metadata
+        and is_database_encryption_enabled()
+    ):
+        export_data[DATABASE_ENCRYPTION_EXPORT_KEY] = (
+            get_database_encryption_export_metadata()
+        )
+
+    return yaml.safe_dump(
         export_data,
-        indent=2,
-        ensure_ascii=False
+        allow_unicode=True,
+        sort_keys=False
     )

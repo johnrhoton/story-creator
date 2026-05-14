@@ -180,7 +180,13 @@ def render_profile_bulk_actions(profiles):
 
 
 def build_selected_profiles_export_payload(selected_profiles):
-    profiles = list_profiles_for_export(selected_profiles)
+    profiles = list_profiles_for_export(
+        selected_profiles,
+        decrypt_values=not st.session_state.get(
+            "encrypt_export_downloads",
+            False
+        )
+    )
 
     return {
         "profiles": profiles

@@ -17,8 +17,11 @@ def list_templates():
     return get_story_templates()
 
 
-def list_templates_for_export(template_ids):
-    return get_story_templates_for_export(template_ids)
+def list_templates_for_export(template_ids, decrypt_values=True):
+    return get_story_templates_for_export(
+        template_ids,
+        decrypt_values=decrypt_values
+    )
 
 
 def create_template(

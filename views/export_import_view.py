@@ -31,7 +31,6 @@ def render_export_import_tab():
         horizontal=True
     )
 
-    password = st.session_state.get("import_export_password", "")
     database_password = st.session_state.get(
         "database_encryption_password",
         ""
@@ -44,69 +43,63 @@ def render_export_import_tab():
         "database_encryption_enabled": database_encryption_enabled,
     }
 
-    if encrypt_values and not database_encryption_enabled and not password:
-        st.warning(
-            "Enter an export password in the sidebar before exporting "
-            "encrypted values from an unencrypted database."
-        )
-    else:
-        if st.button("Prepare export file"):
-            try:
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename_suffix = "_encrypted" if encrypt_values else ""
+    if st.button("Prepare export file"):
+        try:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename_suffix = "_encrypted" if encrypt_values else ""
 
-                if export_format == "YAML":
-                    export_data = export_database_to_yaml(
-                        encrypt_values=encrypt_values,
-                        password=password
-                    )
-                    export_filename = (
-                        f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
-                        f"{filename_suffix}.yaml"
-                    )
-                    export_mime = "application/x-yaml"
-                    preview_language = "yaml"
-                else:
-                    export_data = export_database_to_json(
-                        encrypt_values=encrypt_values,
-                        password=password
-                    )
-                    export_filename = (
-                        f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
-                        f"{filename_suffix}.json"
-                    )
-                    export_mime = "application/json"
-                    preview_language = "json"
-
-                st.session_state["prepared_export"] = {
-                    "data": export_data,
-                    "filename": export_filename,
-                    "mime": export_mime,
-                    "language": preview_language,
-                    "signature": export_signature,
-                }
-
-            except Exception as error:
-                st.error(f"Export failed: {error}")
-
-        prepared_export = st.session_state.get("prepared_export")
-
-        if (
-            prepared_export
-            and prepared_export.get("signature") == export_signature
-        ):
-            st.download_button(
-                label=f"Download database as {export_format}",
-                data=prepared_export["data"],
-                file_name=prepared_export["filename"],
-                mime=prepared_export["mime"]
-            )
-
-            with st.expander(f"Preview {export_format}"):
-                st.code(
-                    prepared_export["data"],
-                    language=prepared_export["language"]
+            if export_format == "YAML":
+                export_data = export_database_to_yaml(
+                    encrypt_values=encrypt_values,
+                    password=database_password
                 )
+                export_filename = (
+                    f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
+                    f"{filename_suffix}.yaml"
+                )
+                export_mime = "application/x-yaml"
+                preview_language = "yaml"
+            else:
+                export_data = export_database_to_json(
+                    encrypt_values=encrypt_values,
+                    password=database_password
+                )
+                export_filename = (
+                    f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
+                    f"{filename_suffix}.json"
+                )
+                export_mime = "application/json"
+                preview_language = "json"
+
+            st.session_state["prepared_export"] = {
+                "data": export_data,
+                "filename": export_filename,
+                "mime": export_mime,
+                "language": preview_language,
+                "signature": export_signature,
+            }
+
+        except Exception as error:
+            st.error(f"Export failed: {error}")
+
+    prepared_export = st.session_state.get("prepared_export")
+
+    if (
+        prepared_export
+        and prepared_export.get("signature") == export_signature
+    ):
+        st.download_button(
+            label=f"Download database as {export_format}",
+            data=prepared_export["data"],
+            file_name=prepared_export["filename"],
+            mime=prepared_export["mime"]
+        )
+
+        with st.expander(f"Preview {export_format}"):
+            st.code(
+                prepared_export["data"],
+                language=prepared_export["language"]
+            )
 
     st.divider()
 
@@ -163,13 +156,13 @@ def render_export_import_tab():
                 if uploaded_name.endswith((".yaml", ".yml")):
                     result = import_database_from_yaml(
                         uploaded_file,
-                        password=password,
+                        password=database_password,
                         database_password=database_password
                     )
                 else:
                     result = import_database_from_json(
                         uploaded_file,
-                        password=password,
+                        password=database_password,
                         database_password=database_password
                     )
 

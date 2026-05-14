@@ -36,8 +36,8 @@ def list_stories():
     return get_stories()
 
 
-def list_stories_for_export(story_ids):
-    return get_stories_for_export(story_ids)
+def list_stories_for_export(story_ids, decrypt_values=True):
+    return get_stories_for_export(story_ids, decrypt_values=decrypt_values)
 
 
 def list_male_characters():

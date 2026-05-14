@@ -138,7 +138,7 @@ def render_story_bulk_actions(stories):
         "selected_story_bulk_actions",
         build_story_option_label,
         lambda row: row[0],
-        list_stories_for_export,
+        list_stories_for_bulk_export,
         "exported_stories",
         delete_existing_stories,
         "Delete selected stories",
@@ -146,6 +146,16 @@ def render_story_bulk_actions(stories):
         "Export selected stories",
         "export_selected_stories",
         "story"
+    )
+
+
+def list_stories_for_bulk_export(story_ids):
+    return list_stories_for_export(
+        story_ids,
+        decrypt_values=not st.session_state.get(
+            "encrypt_export_downloads",
+            False
+        )
     )
 
 

@@ -262,7 +262,13 @@ def build_character_option_label(row):
 
 
 def build_selected_characters_export_payload(selected_ids):
-    characters = list_characters_for_export(selected_ids)
+    characters = list_characters_for_export(
+        selected_ids,
+        decrypt_values=not st.session_state.get(
+            "encrypt_export_downloads",
+            False
+        )
+    )
 
     return {
         "characters": characters

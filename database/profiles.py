@@ -255,7 +255,7 @@ def get_profiles():
     return rows
 
 
-def get_profiles_for_export(profile_names):
+def get_profiles_for_export(profile_names, decrypt_values=True):
     if not profile_names:
         return []
 
@@ -284,13 +284,18 @@ def get_profiles_for_export(profile_names):
     """, tuple(profile_ids))
 
     columns = [column[0] for column in cursor.description]
-    rows = [
-        dict(zip(columns, row))
-        for row in decrypt_database_rows(
+    fetched_rows = cursor.fetchall()
+
+    if decrypt_values:
+        fetched_rows = decrypt_database_rows(
             "profiles",
-            cursor.fetchall(),
+            fetched_rows,
             columns
         )
+
+    rows = [
+        dict(zip(columns, row))
+        for row in fetched_rows
     ]
 
     conn.close()

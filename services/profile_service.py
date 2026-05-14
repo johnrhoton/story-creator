@@ -14,8 +14,8 @@ def list_profiles():
     return get_profiles()
 
 
-def list_profiles_for_export(profile_names):
-    return get_profiles_for_export(profile_names)
+def list_profiles_for_export(profile_names, decrypt_values=True):
+    return get_profiles_for_export(profile_names, decrypt_values=decrypt_values)
 
 
 def create_profile(

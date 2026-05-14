@@ -121,19 +121,28 @@ def render_llm_settings_sidebar():
         else:
             st.info("Database field encryption is not enabled.")
 
-        if st.button(
-            "Enable field encryption",
-            disabled=(
-                encryption_status["enabled"]
-                or not database_password
+        encryption_button_label = (
+            "Encrypt clear fields"
+            if encryption_status["enabled"]
+            else "Enable field encryption"
+        )
+        encryption_button_disabled = not database_password
+        if encryption_status["enabled"]:
+            encryption_button_disabled = (
+                not database_password
+                or not encryption_status["unlocked"]
             )
+
+        if st.button(
+            encryption_button_label,
+            disabled=encryption_button_disabled
         ):
             try:
                 enable_database_encryption(database_password)
-                st.success("Database field encryption enabled.")
+                st.success("Configured database fields encrypted.")
                 st.rerun()
             except Exception as error:
-                st.error(f"Could not enable database encryption: {error}")
+                st.error(f"Could not update database encryption: {error}")
 
         st.divider()
         st.header("Import / Export")
@@ -143,15 +152,5 @@ def render_llm_settings_sidebar():
             key="encrypt_export_downloads",
             help=(
                 "Download encrypted values when preparing database exports."
-            )
-        )
-
-        st.text_input(
-            "Export password",
-            type="password",
-            key="import_export_password",
-            help=(
-                "Used only for password-wrapped export files from an "
-                "unencrypted database."
             )
         )

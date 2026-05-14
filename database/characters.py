@@ -279,7 +279,7 @@ def get_characters():
     return rows
 
 
-def get_characters_for_export(record_ids):
+def get_characters_for_export(record_ids, decrypt_values=True):
     if not record_ids:
         return []
 
@@ -308,13 +308,18 @@ def get_characters_for_export(record_ids):
     """, tuple(record_ids))
 
     columns = [column[0] for column in cursor.description]
-    rows = [
-        dict(zip(columns, row))
-        for row in decrypt_database_rows(
+    fetched_rows = cursor.fetchall()
+
+    if decrypt_values:
+        fetched_rows = decrypt_database_rows(
             "characters",
-            cursor.fetchall(),
+            fetched_rows,
             columns
         )
+
+    rows = [
+        dict(zip(columns, row))
+        for row in fetched_rows
     ]
 
     conn.close()
