@@ -2,7 +2,9 @@ from database import (
     add_profile,
     clone_profile,
     delete_profile,
+    delete_profiles,
     get_profiles,
+    get_profiles_for_export,
     rename_profile,
     update_profile,
 )
@@ -10,6 +12,10 @@ from database import (
 
 def list_profiles():
     return get_profiles()
+
+
+def list_profiles_for_export(profile_names):
+    return get_profiles_for_export(profile_names)
 
 
 def create_profile(
@@ -60,3 +66,7 @@ def clone_existing_profile(profile_name):
 
 def delete_existing_profile(profile_name):
     delete_profile(profile_name)
+
+
+def delete_existing_profiles(profile_names):
+    return delete_profiles(profile_names)

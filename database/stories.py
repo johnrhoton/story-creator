@@ -146,6 +146,36 @@ def delete_story(story_id):
     conn.close()
 
 
+def delete_stories(story_ids):
+    if not story_ids:
+        return 0
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    placeholders = ", ".join("?" for _story_id in story_ids)
+
+    cursor.execute(f"""
+        DELETE FROM story_chapters
+        WHERE story_id IN ({placeholders})
+    """, tuple(story_ids))
+
+    cursor.execute(f"""
+        DELETE FROM stories
+        WHERE id IN ({placeholders})
+    """, tuple(story_ids))
+
+    deleted_count = cursor.rowcount
+
+    if deleted_count:
+        mark_local_data_modified(cursor)
+
+    conn.commit()
+    conn.close()
+
+    return deleted_count
+
+
 def clone_story(story_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -318,6 +348,67 @@ def get_story(story_id):
     conn.close()
 
     return row
+
+
+def get_stories_for_export(story_ids):
+    if not story_ids:
+        return {
+            "stories": [],
+            "story_chapters": []
+        }
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    placeholders = ", ".join("?" for _story_id in story_ids)
+
+    cursor.execute(f"""
+        SELECT
+            id,
+            created_at,
+            story_name,
+            template_id,
+            overview,
+            setting_background,
+            tone_style,
+            male_characters,
+            female_characters
+        FROM stories
+        WHERE id IN ({placeholders})
+        ORDER BY story_name
+    """, tuple(story_ids))
+
+    story_columns = [column[0] for column in cursor.description]
+    stories = [
+        dict(zip(story_columns, row))
+        for row in cursor.fetchall()
+    ]
+
+    cursor.execute(f"""
+        SELECT
+            id,
+            story_id,
+            chapter_number,
+            chapter_description,
+            chapter_body,
+            chapter_summary
+        FROM story_chapters
+        WHERE story_id IN ({placeholders})
+        ORDER BY story_id, chapter_number
+    """, tuple(story_ids))
+
+    chapter_columns = [column[0] for column in cursor.description]
+    chapters = [
+        dict(zip(chapter_columns, row))
+        for row in cursor.fetchall()
+    ]
+
+    conn.close()
+
+    return {
+        "stories": stories,
+        "story_chapters": chapters
+    }
 
 
 def create_story_from_template(

@@ -1,6 +1,7 @@
 # views/stories_view.py
 
 import json
+from datetime import datetime
 
 import streamlit as st
 
@@ -8,16 +9,19 @@ from services.story_service import (
     clone_existing_story,
     create_from_template,
     create_story_chapter,
+    delete_existing_stories,
     delete_existing_story,
     delete_existing_story_chapter,
     edit_story,
     edit_story_chapter,
     list_female_characters,
     list_male_characters,
+    list_stories_for_export,
     list_stories,
     list_story_chapters,
     list_templates,
 )
+from ui_helpers import format_display_timestamp
 
 
 def render_stories_tab():
@@ -109,8 +113,77 @@ def render_stories_tab():
         st.info("No stories created yet.")
         return
 
+    render_story_bulk_actions(stories)
+
     for story in stories:
         render_story_expander(story)
+
+
+def render_story_bulk_actions(stories):
+    story_options = {
+        build_story_option_label(story): story[0]
+        for story in stories
+    }
+
+    selected_labels = st.multiselect(
+        "Select stories",
+        list(story_options.keys()),
+        key="selected_story_bulk_actions"
+    )
+
+    selected_ids = [
+        story_options[label]
+        for label in selected_labels
+    ]
+
+    if not selected_ids:
+        return
+
+    export_data = build_selected_stories_export(selected_ids)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"exported_stories_{timestamp}.json"
+
+    col_delete, col_export = st.columns(2)
+
+    with col_delete:
+        if st.button(
+            "Delete selected stories",
+            key="delete_selected_stories"
+        ):
+            deleted_count = delete_existing_stories(selected_ids)
+            st.success(f"Deleted {deleted_count} story/stories.")
+            st.rerun()
+
+    with col_export:
+        st.download_button(
+            "Export selected stories",
+            data=export_data,
+            file_name=file_name,
+            mime="application/json",
+            key="export_selected_stories"
+        )
+
+
+def build_story_option_label(story):
+    story_id = story[0]
+    story_name = story[2] or "Untitled story"
+
+    return f"#{story_id} - {story_name}"
+
+
+def build_selected_stories_export(selected_ids):
+    export_sections = list_stories_for_export(selected_ids)
+
+    export_data = {
+        "exported_at": datetime.now().isoformat(timespec="seconds"),
+        **export_sections
+    }
+
+    return json.dumps(
+        export_data,
+        indent=2,
+        ensure_ascii=False
+    )
 
 
 def render_story_expander(story):
@@ -130,7 +203,9 @@ def render_story_expander(story):
     female_character_values = safe_json_loads(female_characters)
 
     with st.expander(story_name):
-        st.write(f"**Created:** {created_at}")
+        st.write(
+            f"**Created:** {format_display_timestamp(created_at)}"
+        )
         st.write(f"**Template ID:** {template_id or 'None'}")
 
         with st.form(f"edit_story_{story_id}"):

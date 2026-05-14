@@ -191,6 +191,36 @@ def delete_story_template(template_id):
     conn.close()
 
 
+def delete_story_templates(template_ids):
+    if not template_ids:
+        return 0
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    placeholders = ", ".join("?" for _template_id in template_ids)
+
+    cursor.execute(f"""
+        DELETE FROM story_template_chapters
+        WHERE template_id IN ({placeholders})
+    """, tuple(template_ids))
+
+    cursor.execute(f"""
+        DELETE FROM story_templates
+        WHERE id IN ({placeholders})
+    """, tuple(template_ids))
+
+    deleted_count = cursor.rowcount
+
+    if deleted_count:
+        mark_local_data_modified(cursor)
+
+    conn.commit()
+    conn.close()
+
+    return deleted_count
+
+
 def get_story_templates():
     conn = get_connection()
     cursor = conn.cursor()
@@ -233,6 +263,62 @@ def get_story_template(template_id):
     conn.close()
 
     return row
+
+
+def get_story_templates_for_export(template_ids):
+    if not template_ids:
+        return {
+            "story_templates": [],
+            "story_template_chapters": []
+        }
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    placeholders = ", ".join("?" for _template_id in template_ids)
+
+    cursor.execute(f"""
+        SELECT
+            id,
+            created_at,
+            template_name,
+            overview,
+            setting_background,
+            tone_style
+        FROM story_templates
+        WHERE id IN ({placeholders})
+        ORDER BY template_name
+    """, tuple(template_ids))
+
+    template_columns = [column[0] for column in cursor.description]
+    templates = [
+        dict(zip(template_columns, row))
+        for row in cursor.fetchall()
+    ]
+
+    cursor.execute(f"""
+        SELECT
+            id,
+            template_id,
+            chapter_number,
+            chapter_description
+        FROM story_template_chapters
+        WHERE template_id IN ({placeholders})
+        ORDER BY template_id, chapter_number
+    """, tuple(template_ids))
+
+    chapter_columns = [column[0] for column in cursor.description]
+    chapters = [
+        dict(zip(chapter_columns, row))
+        for row in cursor.fetchall()
+    ]
+
+    conn.close()
+
+    return {
+        "story_templates": templates,
+        "story_template_chapters": chapters
+    }
 
 
 def add_story_template_chapter(

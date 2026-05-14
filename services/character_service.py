@@ -4,7 +4,9 @@ from database import (
     character_name_exists,
     clone_character,
     delete_character,
+    delete_characters,
     get_characters,
+    get_characters_for_export,
     get_profiles,
     save_character,
     suggest_character_name,
@@ -16,6 +18,10 @@ from prompts import build_character_summary_prompt, build_prompt
 
 def list_characters():
     return get_characters()
+
+
+def list_characters_for_export(record_ids):
+    return get_characters_for_export(record_ids)
 
 
 def list_profiles_for_character_creation():
@@ -129,3 +135,7 @@ def clone_existing_character(record_id):
 
 def delete_existing_character(record_id):
     delete_character(record_id)
+
+
+def delete_existing_characters(record_ids):
+    return delete_characters(record_ids)

@@ -121,6 +121,17 @@ def create_tables():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS llm_models (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            provider TEXT NOT NULL,
+            model TEXT NOT NULL,
+            best_use TEXT,
+            is_default INTEGER NOT NULL DEFAULT 0,
+            UNIQUE(provider, model)
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS sync_metadata (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL

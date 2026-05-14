@@ -1,13 +1,18 @@
+import json
+from datetime import datetime
+
 import streamlit as st
 
 from config import GENDER_OPTIONS
 from services.character_service import (
     clone_existing_character,
     create_character,
+    delete_existing_characters,
     delete_existing_character,
     edit_character,
     generate_character_description,
     generate_character_summary,
+    list_characters_for_export,
     list_characters,
     list_profiles_for_character_creation,
     name_exists,
@@ -17,6 +22,7 @@ from ui_helpers import (
     append_profile_data_to_character,
     build_character_header,
     combine_profile_defaults,
+    format_display_timestamp,
 )
 
 
@@ -208,6 +214,8 @@ def render_characters_tab():
         st.info("No characters saved yet.")
         return
 
+    render_character_bulk_actions(character_rows)
+
     for gender_group in GENDER_OPTIONS:
         grouped_characters = [
             row for row in character_rows
@@ -226,6 +234,75 @@ def render_characters_tab():
                 profiles,
                 all_profile_options
             )
+
+
+def render_character_bulk_actions(character_rows):
+    character_options = {
+        build_character_option_label(row): row[0]
+        for row in character_rows
+    }
+
+    selected_labels = st.multiselect(
+        "Select characters",
+        list(character_options.keys()),
+        key="selected_character_bulk_actions"
+    )
+
+    selected_ids = [
+        character_options[label]
+        for label in selected_labels
+    ]
+
+    if not selected_ids:
+        return
+
+    export_data = build_selected_characters_export(selected_ids)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"exported_characters_{timestamp}.json"
+
+    col_delete, col_export = st.columns(2)
+
+    with col_delete:
+        if st.button(
+            "Delete selected characters",
+            key="delete_selected_characters"
+        ):
+            deleted_count = delete_existing_characters(selected_ids)
+            st.success(f"Deleted {deleted_count} character(s).")
+            st.rerun()
+
+    with col_export:
+        st.download_button(
+            "Export selected characters",
+            data=export_data,
+            file_name=file_name,
+            mime="application/json",
+            key="export_selected_characters"
+        )
+
+
+def build_character_option_label(row):
+    record_id = row[0]
+    name = row[3] or "Unnamed character"
+    age = row[4] or "Unknown age"
+    gender = row[5] or "Unknown gender"
+
+    return f"#{record_id} - {name} - {age} - {gender}"
+
+
+def build_selected_characters_export(selected_ids):
+    characters = list_characters_for_export(selected_ids)
+
+    export_data = {
+        "exported_at": datetime.now().isoformat(timespec="seconds"),
+        "characters": characters
+    }
+
+    return json.dumps(
+        export_data,
+        indent=2,
+        ensure_ascii=False
+    )
 
 
 def render_character_expander(
@@ -254,7 +331,9 @@ def render_character_expander(
     )
 
     with st.expander(header_text):
-        st.write(f"**Created:** {created_at}")
+        st.write(
+            f"**Created:** {format_display_timestamp(created_at)}"
+        )
         st.write(f"**Stored profile(s):** {profile_name or 'No profile'}")
 
         current_profile_values = (

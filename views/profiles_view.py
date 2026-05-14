@@ -1,11 +1,16 @@
+import json
+from datetime import datetime
+
 import streamlit as st
 
 from config import GENDER_OPTIONS
 from services.profile_service import (
     clone_existing_profile,
     create_profile,
+    delete_existing_profiles,
     delete_existing_profile,
     edit_profile,
+    list_profiles_for_export,
     list_profiles,
     rename_existing_profile,
 )
@@ -56,6 +61,9 @@ def render_profiles_tab():
     st.subheader("Saved profiles by gender")
 
     profiles = list_profiles()
+
+    if profiles:
+        render_profile_bulk_actions(profiles)
 
     for gender_group in GENDER_OPTIONS:
         grouped_profiles = [
@@ -153,3 +161,58 @@ def render_profiles_tab():
                         delete_existing_profile(profile_name)
                         st.success(f"Profile '{profile_name}' deleted.")
                         st.rerun()
+
+
+def render_profile_bulk_actions(profiles):
+    profile_options = [
+        profile[0]
+        for profile in profiles
+    ]
+
+    selected_profiles = st.multiselect(
+        "Select profiles",
+        profile_options,
+        key="selected_profile_bulk_actions"
+    )
+
+    if not selected_profiles:
+        return
+
+    export_data = build_selected_profiles_export(selected_profiles)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"exported_profiles_{timestamp}.json"
+
+    col_delete, col_export = st.columns(2)
+
+    with col_delete:
+        if st.button(
+            "Delete selected profiles",
+            key="delete_selected_profiles"
+        ):
+            deleted_count = delete_existing_profiles(selected_profiles)
+            st.success(f"Deleted {deleted_count} profile(s).")
+            st.rerun()
+
+    with col_export:
+        st.download_button(
+            "Export selected profiles",
+            data=export_data,
+            file_name=file_name,
+            mime="application/json",
+            key="export_selected_profiles"
+        )
+
+
+def build_selected_profiles_export(selected_profiles):
+    profiles = list_profiles_for_export(selected_profiles)
+
+    export_data = {
+        "exported_at": datetime.now().isoformat(timespec="seconds"),
+        "profiles": profiles
+    }
+
+    return json.dumps(
+        export_data,
+        indent=2,
+        ensure_ascii=False
+    )

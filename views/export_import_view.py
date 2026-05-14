@@ -13,6 +13,7 @@ from services.sync_service import (
     push_local_to_mongo,
     sync_now,
 )
+from ui_helpers import format_display_timestamp
 
 
 def render_export_import_tab():
@@ -105,8 +106,14 @@ def render_export_import_tab():
             else:
                 st.info(status["message"])
 
-            st.write("Local timestamp:", status["local_timestamp"])
-            st.write("MongoDB timestamp:", status["mongo_timestamp"])
+            st.write(
+                "Local timestamp:",
+                format_display_timestamp(status["local_timestamp"])
+            )
+            st.write(
+                "MongoDB timestamp:",
+                format_display_timestamp(status["mongo_timestamp"])
+            )
             st.write("Direction:", status["direction"])
 
         except Exception as error:
@@ -119,7 +126,7 @@ def render_export_import_tab():
             if result["direction"] == "conflict":
                 st.warning(result["message"])
             else:
-                st.success(result["message"])
+                st.success(format_display_timestamp(result["message"]))
 
             if result["details"]:
                 st.json(result["details"])
@@ -147,7 +154,8 @@ def render_export_import_tab():
             try:
                 timestamp = push_local_to_mongo()
                 st.success(
-                    f"Uploaded local SQLite data to MongoDB at {timestamp}."
+                    "Uploaded local SQLite data to MongoDB at "
+                    f"{format_display_timestamp(timestamp)}."
                 )
                 st.rerun()
 

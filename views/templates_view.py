@@ -1,18 +1,24 @@
 # views/templates_view.py
 
+import json
+from datetime import datetime
+
 import streamlit as st
 
 from services.template_service import (
     clone_template,
     create_template,
+    delete_templates,
     create_template_chapter,
     delete_template,
     delete_template_chapter,
     edit_template,
     edit_template_chapter,
+    list_templates_for_export,
     list_template_chapters,
     list_templates,
 )
+from ui_helpers import format_display_timestamp
 
 
 def render_templates_tab():
@@ -63,8 +69,77 @@ def render_templates_tab():
         st.info("No templates created yet.")
         return
 
+    render_template_bulk_actions(templates)
+
     for template in templates:
         render_template_expander(template)
+
+
+def render_template_bulk_actions(templates):
+    template_options = {
+        build_template_option_label(template): template[0]
+        for template in templates
+    }
+
+    selected_labels = st.multiselect(
+        "Select templates",
+        list(template_options.keys()),
+        key="selected_template_bulk_actions"
+    )
+
+    selected_ids = [
+        template_options[label]
+        for label in selected_labels
+    ]
+
+    if not selected_ids:
+        return
+
+    export_data = build_selected_templates_export(selected_ids)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"exported_templates_{timestamp}.json"
+
+    col_delete, col_export = st.columns(2)
+
+    with col_delete:
+        if st.button(
+            "Delete selected templates",
+            key="delete_selected_templates"
+        ):
+            deleted_count = delete_templates(selected_ids)
+            st.success(f"Deleted {deleted_count} template(s).")
+            st.rerun()
+
+    with col_export:
+        st.download_button(
+            "Export selected templates",
+            data=export_data,
+            file_name=file_name,
+            mime="application/json",
+            key="export_selected_templates"
+        )
+
+
+def build_template_option_label(template):
+    template_id = template[0]
+    template_name = template[2] or "Untitled template"
+
+    return f"#{template_id} - {template_name}"
+
+
+def build_selected_templates_export(selected_ids):
+    export_sections = list_templates_for_export(selected_ids)
+
+    export_data = {
+        "exported_at": datetime.now().isoformat(timespec="seconds"),
+        **export_sections
+    }
+
+    return json.dumps(
+        export_data,
+        indent=2,
+        ensure_ascii=False
+    )
 
 
 def render_template_expander(template):
@@ -78,7 +153,9 @@ def render_template_expander(template):
     ) = template
 
     with st.expander(template_name):
-        st.write(f"**Created:** {created_at}")
+        st.write(
+            f"**Created:** {format_display_timestamp(created_at)}"
+        )
 
         with st.form(f"edit_template_{template_id}"):
             edited_template_name = st.text_input(

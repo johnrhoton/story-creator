@@ -9,10 +9,12 @@ from database import (
     create_story_from_template,
     delete_story,
     delete_story_chapter,
+    delete_stories,
     get_character_summaries_by_names,
     get_characters_by_gender,
     get_story,
     get_stories,
+    get_stories_for_export,
     get_story_chapters,
     get_story_templates,
     update_story,
@@ -32,6 +34,10 @@ def list_templates():
 
 def list_stories():
     return get_stories()
+
+
+def list_stories_for_export(story_ids):
+    return get_stories_for_export(story_ids)
 
 
 def list_male_characters():
@@ -244,6 +250,10 @@ def clone_existing_story(story_id):
 
 def delete_existing_story(story_id):
     delete_story(story_id)
+
+
+def delete_existing_stories(story_ids):
+    return delete_stories(story_ids)
 
 
 def list_story_chapters(story_id):

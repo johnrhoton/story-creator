@@ -1,6 +1,13 @@
 from config import GENDER_OPTIONS
 
 
+def format_display_timestamp(value):
+    if not value:
+        return ""
+
+    return str(value).replace("T", " ")
+
+
 def combine_profile_defaults(selected_profiles, profiles):
     defaults = {
         "name": "",

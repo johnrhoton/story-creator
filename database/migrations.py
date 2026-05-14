@@ -41,6 +41,14 @@ def run_migrations():
             "20260513112000_failed_llm_calls",
             migrate_20260513112000_failed_llm_calls
         ),
+        (
+            "20260514100000_llm_models",
+            migrate_20260514100000_llm_models
+        ),
+        (
+            "20260514101000_llm_model_defaults",
+            migrate_20260514101000_llm_model_defaults
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -451,3 +459,30 @@ def migrate_20260513112000_failed_llm_calls(cursor):
             error_details TEXT
         )
     """)
+
+
+# 2026-05-14 10:00
+# Store selectable LLM models in SQLite so the UI can manage provider-specific
+# model lists without code changes.
+def migrate_20260514100000_llm_models(cursor):
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS llm_models (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            provider TEXT NOT NULL,
+            model TEXT NOT NULL,
+            best_use TEXT,
+            is_default INTEGER NOT NULL DEFAULT 0,
+            UNIQUE(provider, model)
+        )
+    """)
+
+
+# 2026-05-14 10:10
+# Allow one default LLM model to be selected per provider.
+def migrate_20260514101000_llm_model_defaults(cursor):
+    add_column_if_missing(
+        cursor,
+        "llm_models",
+        "is_default",
+        "INTEGER NOT NULL DEFAULT 0"
+    )

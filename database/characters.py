@@ -198,6 +198,31 @@ def delete_character(record_id):
     conn.close()
 
 
+def delete_characters(record_ids):
+    if not record_ids:
+        return 0
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    placeholders = ", ".join("?" for _record_id in record_ids)
+
+    cursor.execute(f"""
+        DELETE FROM characters
+        WHERE id IN ({placeholders})
+    """, tuple(record_ids))
+
+    deleted_count = cursor.rowcount
+
+    if deleted_count:
+        mark_local_data_modified(cursor)
+
+    conn.commit()
+    conn.close()
+
+    return deleted_count
+
+
 def get_characters():
     conn = get_connection()
     cursor = conn.cursor()
@@ -220,6 +245,45 @@ def get_characters():
     """)
 
     rows = cursor.fetchall()
+    conn.close()
+
+    return rows
+
+
+def get_characters_for_export(record_ids):
+    if not record_ids:
+        return []
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    placeholders = ", ".join("?" for _record_id in record_ids)
+
+    cursor.execute(f"""
+        SELECT
+            id,
+            created_at,
+            profile_name,
+            name,
+            age,
+            gender,
+            physical_traits,
+            personality_traits,
+            notes,
+            prompt,
+            response,
+            summary
+        FROM characters
+        WHERE id IN ({placeholders})
+        ORDER BY id
+    """, tuple(record_ids))
+
+    columns = [column[0] for column in cursor.description]
+    rows = [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
+
     conn.close()
 
     return rows

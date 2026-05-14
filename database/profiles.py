@@ -183,6 +183,36 @@ def delete_profile(profile_name):
     conn.close()
 
 
+def delete_profiles(profile_names):
+    if not profile_names:
+        return 0
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    normalized_names = [
+        profile_name.lower()
+        for profile_name in profile_names
+    ]
+
+    placeholders = ", ".join("?" for _profile_name in normalized_names)
+
+    cursor.execute(f"""
+        DELETE FROM profiles
+        WHERE profile_name IN ({placeholders})
+    """, tuple(normalized_names))
+
+    deleted_count = cursor.rowcount
+
+    if deleted_count:
+        mark_local_data_modified(cursor)
+
+    conn.commit()
+    conn.close()
+
+    return deleted_count
+
+
 def get_profiles():
     conn = get_connection()
     cursor = conn.cursor()
@@ -199,6 +229,44 @@ def get_profiles():
     """)
 
     rows = cursor.fetchall()
+    conn.close()
+
+    return rows
+
+
+def get_profiles_for_export(profile_names):
+    if not profile_names:
+        return []
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    normalized_names = [
+        profile_name.lower()
+        for profile_name in profile_names
+    ]
+
+    placeholders = ", ".join("?" for _profile_name in normalized_names)
+
+    cursor.execute(f"""
+        SELECT
+            id,
+            profile_name,
+            gender,
+            physical_traits,
+            personality_traits,
+            notes
+        FROM profiles
+        WHERE profile_name IN ({placeholders})
+        ORDER BY profile_name
+    """, tuple(normalized_names))
+
+    columns = [column[0] for column in cursor.description]
+    rows = [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
+
     conn.close()
 
     return rows

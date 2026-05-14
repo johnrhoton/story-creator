@@ -4,7 +4,9 @@ from database import (
     clone_story_template,
     delete_story_template,
     delete_story_template_chapter,
+    delete_story_templates,
     get_story_template_chapters,
+    get_story_templates_for_export,
     get_story_templates,
     update_story_template,
     update_story_template_chapter,
@@ -13,6 +15,10 @@ from database import (
 
 def list_templates():
     return get_story_templates()
+
+
+def list_templates_for_export(template_ids):
+    return get_story_templates_for_export(template_ids)
 
 
 def create_template(
@@ -51,6 +57,10 @@ def clone_template(template_id):
 
 def delete_template(template_id):
     delete_story_template(template_id)
+
+
+def delete_templates(template_ids):
+    return delete_story_templates(template_ids)
 
 
 def list_template_chapters(template_id):

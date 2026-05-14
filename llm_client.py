@@ -1,6 +1,7 @@
 import os
 import time
 
+import requests
 import streamlit as st
 from dotenv import load_dotenv
 from google import genai
@@ -12,7 +13,7 @@ from database import save_failed_llm_call, save_llm_call
 
 def generate_text(provider, model, prompt):
     try:
-        if provider not in ["Gemini", "Groq"]:
+        if provider not in ["Gemini", "Groq", "OpenRouter"]:
             st.error(f"Unsupported LLM provider: {provider}")
             log_failed_llm_call(
                 provider,
@@ -58,6 +59,24 @@ def generate_text(provider, model, prompt):
                     "NoResponse",
                     "NO_RESPONSE",
                     "Groq did not return a response.",
+                    "Check the API key, model name, quota, or request format."
+                )
+                return None
+
+            log_llm_call(provider, model, prompt, response)
+            return response
+
+        if provider == "OpenRouter":
+            response = generate_with_openrouter(model, prompt)
+            if response is None:
+                log_failed_llm_call(
+                    provider,
+                    model,
+                    prompt,
+                    None,
+                    "NoResponse",
+                    "NO_RESPONSE",
+                    "OpenRouter did not return a response.",
                     "Check the API key, model name, quota, or request format."
                 )
                 return None
@@ -190,6 +209,41 @@ def generate_with_groq(model, prompt):
     return response.choices[0].message.content
 
 
+def generate_with_openrouter(model, prompt):
+    load_dotenv()
+
+    api_key = os.getenv("OPENROUTER_API_KEY")
+
+    if not api_key:
+        st.error("OPENROUTER_API_KEY not found. Check your .env file.")
+        return None
+
+    response = requests.post(
+        "https://openrouter.ai/api/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "X-Title": "Story Builder"
+        },
+        json={
+            "model": model,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        },
+        timeout=60
+    )
+
+    response.raise_for_status()
+
+    data = response.json()
+
+    return data["choices"][0]["message"]["content"]
+
+
 def log_llm_call(provider, model, prompt, response):
     if response is None:
         return
@@ -256,6 +310,14 @@ def extract_error_codes(error):
         if value is not None:
             codes.append(f"{attribute_name}: {value}")
 
+    response = getattr(error, "response", None)
+
+    if response is not None:
+        status_code = getattr(response, "status_code", None)
+
+        if status_code is not None:
+            codes.append(f"response.status_code: {status_code}")
+
     error_text = str(error)
 
     for known_code in [
@@ -289,6 +351,14 @@ def extract_error_details(error):
 
         if value:
             detail_parts.append(f"{attribute_name}: {value}")
+
+    response = getattr(error, "response", None)
+
+    if response is not None:
+        response_text = getattr(response, "text", None)
+
+        if response_text:
+            detail_parts.append(f"response.text: {response_text}")
 
     detail_parts.append(f"text: {error}")
 

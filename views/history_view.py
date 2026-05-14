@@ -2,6 +2,7 @@ import streamlit as st
 
 from database import get_failed_llm_calls, get_llm_calls
 from services.character_service import list_characters
+from ui_helpers import format_display_timestamp
 
 
 def render_history_tab():
@@ -28,12 +29,13 @@ def render_history_tab():
             ) = row
 
             profile_display = profile_name or "No profile"
+            display_created_at = format_display_timestamp(created_at)
 
             with st.expander(
                 f"#{record_id} — {name or 'Unnamed character'} — "
-                f"{age} — {profile_display} — {created_at}"
+                f"{age} — {profile_display} — {display_created_at}"
             ):
-                st.write(f"**Created:** {created_at}")
+                st.write(f"**Created:** {display_created_at}")
                 st.write(f"**Profile:** {profile_display}")
                 st.write(f"**Age:** {age}")
                 st.write(f"**Gender:** {gender}")
@@ -74,11 +76,12 @@ def render_llm_call_history():
             prompt,
             response
         ) = row
+        display_created_at = format_display_timestamp(created_at)
 
         with st.expander(
-            f"#{record_id} — {provider} — {model} — {created_at}"
+            f"#{record_id} — {provider} — {model} — {display_created_at}"
         ):
-            st.write(f"**Created:** {created_at}")
+            st.write(f"**Created:** {display_created_at}")
             st.write(f"**Provider:** {provider}")
             st.write(f"**Model:** {model}")
 
@@ -111,11 +114,12 @@ def render_failed_llm_call_history():
             error_message,
             error_details
         ) = row
+        display_created_at = format_display_timestamp(created_at)
 
         with st.expander(
-            f"#{record_id} — {provider} — {model} — {created_at}"
+            f"#{record_id} — {provider} — {model} — {display_created_at}"
         ):
-            st.write(f"**Created:** {created_at}")
+            st.write(f"**Created:** {display_created_at}")
             st.write(f"**Provider:** {provider}")
             st.write(f"**Model:** {model}")
             st.write(f"**Error type:** {error_type or ''}")

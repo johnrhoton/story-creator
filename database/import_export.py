@@ -67,6 +67,13 @@ def export_database_to_json():
         for row in cursor.fetchall()
     ]
 
+    cursor.execute("SELECT * FROM llm_models ORDER BY id")
+    llm_model_columns = [column[0] for column in cursor.description]
+    llm_models = [
+        dict(zip(llm_model_columns, row))
+        for row in cursor.fetchall()
+    ]
+
     conn.close()
 
     export_data = {
@@ -78,7 +85,8 @@ def export_database_to_json():
         "stories": stories,
         "story_chapters": story_chapters,
         "llm_calls": llm_calls,
-        "failed_llm_calls": failed_llm_calls
+        "failed_llm_calls": failed_llm_calls,
+        "llm_models": llm_models
     }
 
     return json.dumps(
@@ -128,6 +136,11 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         []
     )
 
+    llm_models = data.get(
+        "llm_models",
+        []
+    )
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -142,6 +155,47 @@ def import_database_from_json(uploaded_file, replace_existing=False):
     imported_story_chapters = 0
     imported_llm_calls = 0
     imported_failed_llm_calls = 0
+    imported_llm_models = 0
+
+    # -------------------------
+    # LLM Models
+    # -------------------------
+
+    for llm_model in llm_models:
+        provider = llm_model.get("provider", "")
+        model = llm_model.get("model", "")
+
+        if not provider or not model:
+            continue
+
+        is_default = 1 if llm_model.get("is_default") else 0
+
+        if is_default:
+            cursor.execute("""
+                UPDATE llm_models
+                SET is_default = 0
+                WHERE provider = ?
+            """, (
+                provider,
+            ))
+
+        cursor.execute("""
+            INSERT OR REPLACE INTO llm_models
+            (
+                provider,
+                model,
+                best_use,
+                is_default
+            )
+            VALUES (?, ?, ?, ?)
+        """, (
+            provider,
+            model,
+            llm_model.get("best_use", ""),
+            is_default
+        ))
+
+        imported_llm_models += 1
 
     # -------------------------
     # Profiles
@@ -475,6 +529,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         + imported_story_chapters
         + imported_llm_calls
         + imported_failed_llm_calls
+        + imported_llm_models
     )
 
     if total_imported or replace_existing:
@@ -491,11 +546,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         "stories": imported_stories,
         "story_chapters": imported_story_chapters,
         "llm_calls": imported_llm_calls,
-        "failed_llm_calls": imported_failed_llm_calls
+        "failed_llm_calls": imported_failed_llm_calls,
+        "llm_models": imported_llm_models
     }
 
 
 def clear_exported_tables(cursor):
+    cursor.execute("DELETE FROM llm_models")
     cursor.execute("DELETE FROM failed_llm_calls")
     cursor.execute("DELETE FROM llm_calls")
     cursor.execute("DELETE FROM story_chapters")
