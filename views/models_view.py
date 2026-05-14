@@ -50,8 +50,9 @@ def render_models_tab():
 
     if not models:
         st.info(
-            "No models saved yet. Run `./venv/bin/python seed_llm_models.py` "
-            "to pre-fill the starter list."
+            "No models saved yet. Run this from the project root to "
+            "pre-fill the starter list:\n\n"
+            "`./venv/bin/python scripts/seed_llm_models.py`"
         )
         return
 

@@ -17,8 +17,8 @@ from database.llm_models import (
 )
 from database.migrations import run_migrations
 from database.schema import create_tables
-from seed_llm_models import seed_llm_models
 from services.sync_service import get_content_hash
+from scripts.seed_llm_models import seed_llm_models
 
 
 @contextmanager
