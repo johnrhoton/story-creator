@@ -3,6 +3,7 @@ from datetime import datetime
 import streamlit as st
 import yaml
 
+from config import EXPORT_FILENAME_PREFIX
 from database import (
     get_database_encryption_export_metadata,
     is_database_encryption_enabled,
@@ -60,7 +61,11 @@ def render_bulk_actions(
         export_data = ""
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"{export_filename_prefix}_{timestamp}.yaml"
+    file_name = build_bulk_export_file_name(
+        export_filename_prefix,
+        timestamp,
+        encrypt_download
+    )
 
     col_delete, col_export = st.columns(2)
 
@@ -104,3 +109,21 @@ def build_export_data(payload, include_database_encryption_metadata=False):
         allow_unicode=True,
         sort_keys=False
     )
+
+
+def build_bulk_export_file_name(export_filename_prefix, timestamp, encrypted):
+    item_name = normalize_export_item_name(export_filename_prefix)
+    encrypted_suffix = "_encrypted" if encrypted else ""
+    return (
+        f"{EXPORT_FILENAME_PREFIX}__{item_name}_{timestamp}"
+        f"{encrypted_suffix}.yaml"
+    )
+
+
+def normalize_export_item_name(export_filename_prefix):
+    item_name = export_filename_prefix
+    if item_name.startswith("exported_"):
+        item_name = item_name.removeprefix("exported_")
+    if item_name.startswith("export_"):
+        item_name = item_name.removeprefix("export_")
+    return item_name

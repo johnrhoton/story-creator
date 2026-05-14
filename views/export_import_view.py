@@ -46,16 +46,16 @@ def render_export_import_tab():
     if st.button("Prepare export file"):
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename_suffix = "_encrypted" if encrypt_values else ""
 
             if export_format == "YAML":
                 export_data = export_database_to_yaml(
                     encrypt_values=encrypt_values,
                     password=database_password
                 )
-                export_filename = (
-                    f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
-                    f"{filename_suffix}.yaml"
+                export_filename = build_full_export_file_name(
+                    timestamp,
+                    encrypt_values,
+                    "yaml"
                 )
                 export_mime = "application/x-yaml"
                 preview_language = "yaml"
@@ -64,9 +64,10 @@ def render_export_import_tab():
                     encrypt_values=encrypt_values,
                     password=database_password
                 )
-                export_filename = (
-                    f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
-                    f"{filename_suffix}.json"
+                export_filename = build_full_export_file_name(
+                    timestamp,
+                    encrypt_values,
+                    "json"
                 )
                 export_mime = "application/json"
                 preview_language = "json"
@@ -247,3 +248,11 @@ def render_export_import_tab():
 
             except Exception as error:
                 st.error(f"MongoDB push failed: {error}")
+
+
+def build_full_export_file_name(timestamp, encrypted, extension):
+    encrypted_suffix = "_encrypted" if encrypted else ""
+    return (
+        f"{EXPORT_FILENAME_PREFIX}_full_{timestamp}"
+        f"{encrypted_suffix}.{extension}"
+    )

@@ -43,7 +43,8 @@ from database.templates import (
     delete_story_templates,
     get_story_templates_for_export,
 )
-from views.bulk_actions import build_export_data
+from views.bulk_actions import build_bulk_export_file_name, build_export_data
+from views.export_import_view import build_full_export_file_name
 
 
 @contextmanager
@@ -115,6 +116,54 @@ class BulkHelperTests(unittest.TestCase):
                     "name": "Alice"
                 }
             ]
+        )
+
+    def test_build_bulk_export_file_name_uses_item_and_encrypted_suffix(self):
+        file_name = build_bulk_export_file_name(
+            "exported_characters",
+            "20260514_175346",
+            True
+        )
+
+        self.assertEqual(
+            file_name,
+            "story_builder_export__characters_20260514_175346_encrypted.yaml"
+        )
+
+    def test_build_bulk_export_file_name_omits_encrypted_suffix(self):
+        file_name = build_bulk_export_file_name(
+            "exported_profiles",
+            "20260514_175346",
+            False
+        )
+
+        self.assertEqual(
+            file_name,
+            "story_builder_export__profiles_20260514_175346.yaml"
+        )
+
+    def test_build_full_export_file_name_uses_full_and_encrypted_suffix(self):
+        file_name = build_full_export_file_name(
+            "20260514_175346",
+            True,
+            "yaml"
+        )
+
+        self.assertEqual(
+            file_name,
+            "story_builder_export_full_20260514_175346_encrypted.yaml"
+        )
+
+    def test_build_full_export_file_name_omits_encrypted_suffix(self):
+        file_name = build_full_export_file_name(
+            "20260514_175346",
+            False,
+            "json"
+        )
+
+        self.assertEqual(
+            file_name,
+            "story_builder_export_full_20260514_175346.json"
         )
 
     def test_character_bulk_export_and_delete_helpers(self):
