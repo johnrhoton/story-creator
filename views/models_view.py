@@ -1,6 +1,3 @@
-import json
-from datetime import datetime
-
 import streamlit as st
 
 from services.model_service import (
@@ -11,6 +8,7 @@ from services.model_service import (
     list_llm_models,
     set_existing_llm_model_as_default,
 )
+from views.bulk_actions import render_bulk_actions
 
 
 PROVIDER_OPTIONS = ["Gemini", "Groq", "OpenRouter"]
@@ -108,48 +106,21 @@ def render_models_tab():
 
 
 def render_model_bulk_actions(models):
-    model_options = {
-        build_model_option_label(row): row[0]
-        for row in models
-    }
-
-    selected_labels = st.multiselect(
+    render_bulk_actions(
+        models,
         "Select models",
-        list(model_options.keys()),
-        key="selected_model_bulk_actions"
+        "selected_model_bulk_actions",
+        build_model_option_label,
+        lambda row: row[0],
+        build_selected_models_export_payload,
+        "exported_models",
+        delete_existing_llm_models,
+        "Delete selected models",
+        "delete_selected_models",
+        "Export selected models",
+        "export_selected_models",
+        "model"
     )
-
-    selected_ids = [
-        model_options[label]
-        for label in selected_labels
-    ]
-
-    if not selected_ids:
-        return
-
-    export_data = build_selected_models_export(selected_ids)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"exported_models_{timestamp}.json"
-
-    col_delete, col_export = st.columns(2)
-
-    with col_delete:
-        if st.button(
-            "Delete selected models",
-            key="delete_selected_models"
-        ):
-            deleted_count = delete_existing_llm_models(selected_ids)
-            st.success(f"Deleted {deleted_count} model(s).")
-            st.rerun()
-
-    with col_export:
-        st.download_button(
-            "Export selected models",
-            data=export_data,
-            file_name=file_name,
-            mime="application/json",
-            key="export_selected_models"
-        )
 
 
 def build_model_option_label(row):
@@ -163,16 +134,9 @@ def build_model_option_label(row):
     return f"#{model_id} - {provider} - {model}{default_label}"
 
 
-def build_selected_models_export(selected_ids):
+def build_selected_models_export_payload(selected_ids):
     models = list_llm_models_for_export(selected_ids)
 
-    export_data = {
-        "exported_at": datetime.now().isoformat(timespec="seconds"),
+    return {
         "llm_models": models
     }
-
-    return json.dumps(
-        export_data,
-        indent=2,
-        ensure_ascii=False
-    )

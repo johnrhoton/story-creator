@@ -1,6 +1,3 @@
-import json
-from datetime import datetime
-
 import streamlit as st
 
 from config import GENDER_OPTIONS
@@ -24,6 +21,7 @@ from ui_helpers import (
     combine_profile_defaults,
     format_display_timestamp,
 )
+from views.bulk_actions import render_bulk_actions
 
 
 def render_characters_tab():
@@ -237,48 +235,21 @@ def render_characters_tab():
 
 
 def render_character_bulk_actions(character_rows):
-    character_options = {
-        build_character_option_label(row): row[0]
-        for row in character_rows
-    }
-
-    selected_labels = st.multiselect(
+    render_bulk_actions(
+        character_rows,
         "Select characters",
-        list(character_options.keys()),
-        key="selected_character_bulk_actions"
+        "selected_character_bulk_actions",
+        build_character_option_label,
+        lambda row: row[0],
+        build_selected_characters_export_payload,
+        "exported_characters",
+        delete_existing_characters,
+        "Delete selected characters",
+        "delete_selected_characters",
+        "Export selected characters",
+        "export_selected_characters",
+        "character"
     )
-
-    selected_ids = [
-        character_options[label]
-        for label in selected_labels
-    ]
-
-    if not selected_ids:
-        return
-
-    export_data = build_selected_characters_export(selected_ids)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"exported_characters_{timestamp}.json"
-
-    col_delete, col_export = st.columns(2)
-
-    with col_delete:
-        if st.button(
-            "Delete selected characters",
-            key="delete_selected_characters"
-        ):
-            deleted_count = delete_existing_characters(selected_ids)
-            st.success(f"Deleted {deleted_count} character(s).")
-            st.rerun()
-
-    with col_export:
-        st.download_button(
-            "Export selected characters",
-            data=export_data,
-            file_name=file_name,
-            mime="application/json",
-            key="export_selected_characters"
-        )
 
 
 def build_character_option_label(row):
@@ -290,19 +261,12 @@ def build_character_option_label(row):
     return f"#{record_id} - {name} - {age} - {gender}"
 
 
-def build_selected_characters_export(selected_ids):
+def build_selected_characters_export_payload(selected_ids):
     characters = list_characters_for_export(selected_ids)
 
-    export_data = {
-        "exported_at": datetime.now().isoformat(timespec="seconds"),
+    return {
         "characters": characters
     }
-
-    return json.dumps(
-        export_data,
-        indent=2,
-        ensure_ascii=False
-    )
 
 
 def render_character_expander(
