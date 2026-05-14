@@ -7,6 +7,7 @@ import streamlit as st
 from services.story_service import (
     build_full_story_markdown,
     clone_existing_story,
+    create_and_generate_story_chapter,
     create_from_template,
     create_story_chapter,
     delete_existing_stories,
@@ -14,6 +15,7 @@ from services.story_service import (
     delete_existing_story_chapter,
     edit_story,
     edit_story_chapter,
+    generate_story_chapter_body_and_summary,
     list_female_characters,
     list_male_characters,
     list_stories_for_export,
@@ -318,7 +320,15 @@ def render_story_chapters_section(story_id):
             height=120
         )
 
-        add_chapter = st.form_submit_button("Add chapter")
+        col_add, col_generate = st.columns(2)
+
+        with col_add:
+            add_chapter = st.form_submit_button("Add chapter")
+
+        with col_generate:
+            add_and_generate_chapter = st.form_submit_button(
+                "Add and generate"
+            )
 
     if add_chapter:
         create_story_chapter(
@@ -331,6 +341,28 @@ def render_story_chapters_section(story_id):
 
         st.success("Chapter added.")
         st.rerun()
+
+    if add_and_generate_chapter:
+        try:
+            with st.spinner("Adding and generating chapter..."):
+                _chapter_id, result = create_and_generate_story_chapter(
+                    story_id,
+                    int(new_chapter_number),
+                    new_chapter_description,
+                    new_chapter_body,
+                    new_chapter_summary
+                )
+
+            if result:
+                st.success("Chapter added and generated.")
+            else:
+                st.warning(
+                    "Chapter was added, but generation did not return text."
+                )
+            st.rerun()
+
+        except Exception as error:
+            st.error(f"Chapter generation failed: {error}")
 
 
 def render_story_chapter_expander(chapter):
@@ -390,6 +422,29 @@ def render_story_chapter_expander(chapter):
 
             st.success("Chapter updated.")
             st.rerun()
+
+        if st.button(
+            "Generate body and summary",
+            key=f"generate_story_chapter_{chapter_id}"
+        ):
+            try:
+                with st.spinner(
+                    "Generating chapter body and summary..."
+                ):
+                    result = generate_story_chapter_body_and_summary(
+                        story_id,
+                        chapter_id
+                    )
+
+                if result:
+                    st.success("Chapter body and summary generated.")
+                    st.rerun()
+                else:
+                    st.warning(
+                        "Chapter generation did not return any text."
+                    )
+            except Exception as error:
+                st.error(f"Chapter generation failed: {error}")
 
         if st.button(
             "Delete chapter",
