@@ -1,6 +1,8 @@
 import unittest
 
 from database.export_crypto import (
+    ENCRYPTION_METADATA_KEY,
+    ENCRYPTED_VALUE_PREFIX_V2,
     decrypt_export_values,
     encrypt_export_values,
     is_encrypted_value,
@@ -26,9 +28,19 @@ class ExportCryptoTests(unittest.TestCase):
         )
 
         self.assertIn("characters", encrypted_data)
+        self.assertIn(ENCRYPTION_METADATA_KEY, encrypted_data)
         self.assertIn("name", encrypted_data["characters"][0])
+        self.assertEqual(
+            encrypted_data[ENCRYPTION_METADATA_KEY]["version"],
+            2
+        )
         self.assertTrue(
             is_encrypted_value(encrypted_data["characters"][0]["name"])
+        )
+        self.assertTrue(
+            encrypted_data["characters"][0]["name"].startswith(
+                ENCRYPTED_VALUE_PREFIX_V2
+            )
         )
         self.assertTrue(
             is_encrypted_value(encrypted_data["characters"][0]["id"])

@@ -9,7 +9,10 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
-ENCRYPTED_VALUE_PREFIX = "encrypted:v1:"
+ENCRYPTION_METADATA_KEY = "__export_encryption"
+ENCRYPTED_VALUE_PREFIX_V1 = "encrypted:v1:"
+ENCRYPTED_VALUE_PREFIX_V2 = "encrypted:v2:"
+ENCRYPTED_VALUE_PREFIX = ENCRYPTED_VALUE_PREFIX_V2
 SALT_BYTES = 16
 KDF_ITERATIONS = 390000
 
@@ -18,19 +21,44 @@ def encrypt_export_values(data, password):
     if not password:
         return copy.deepcopy(data)
 
-    return transform_export_values(
+    salt = os.urandom(SALT_BYTES)
+    fernet = build_fernet(password, salt)
+
+    encrypted_data = transform_export_values(
         data,
-        lambda value: encrypt_value(value, password)
+        lambda value: encrypt_value(value, fernet)
     )
+
+    encrypted_data[ENCRYPTION_METADATA_KEY] = {
+        "version": 2,
+        "salt": base64.urlsafe_b64encode(salt).decode("ascii"),
+        "kdf": "PBKDF2HMAC-SHA256",
+        "iterations": KDF_ITERATIONS
+    }
+
+    return encrypted_data
 
 
 def decrypt_export_values(data, password):
     if not password:
         return copy.deepcopy(data)
 
+    fernet = None
+    data_to_decrypt = data
+
+    if isinstance(data, dict) and ENCRYPTION_METADATA_KEY in data:
+        metadata = data[ENCRYPTION_METADATA_KEY]
+        salt = base64.urlsafe_b64decode(metadata["salt"].encode("ascii"))
+        fernet = build_fernet(password, salt)
+        data_to_decrypt = {
+            key: value
+            for key, value in data.items()
+            if key != ENCRYPTION_METADATA_KEY
+        }
+
     return transform_export_values(
-        data,
-        lambda value: decrypt_value_if_needed(value, password)
+        data_to_decrypt,
+        lambda value: decrypt_value_if_needed(value, password, fernet)
     )
 
 
@@ -50,10 +78,7 @@ def transform_export_values(value, transform_scalar):
     return transform_scalar(value)
 
 
-def encrypt_value(value, password):
-    salt = os.urandom(SALT_BYTES)
-    fernet = build_fernet(password, salt)
-
+def encrypt_value(value, fernet):
     value_json = json.dumps(
         value,
         ensure_ascii=False
@@ -62,26 +87,35 @@ def encrypt_value(value, password):
     compressed_value = zlib.compress(value_json)
     encrypted_value = fernet.encrypt(compressed_value)
 
-    payload = {
-        "salt": base64.urlsafe_b64encode(salt).decode("ascii"),
-        "value": encrypted_value.decode("ascii")
-    }
-
-    payload_json = json.dumps(
-        payload,
-        separators=(",", ":")
-    ).encode("utf-8")
-
-    encoded_payload = base64.urlsafe_b64encode(payload_json).decode("ascii")
-
-    return f"{ENCRYPTED_VALUE_PREFIX}{encoded_payload}"
+    return f"{ENCRYPTED_VALUE_PREFIX_V2}{encrypted_value.decode('ascii')}"
 
 
-def decrypt_value_if_needed(value, password):
+def decrypt_value_if_needed(value, password, fernet=None):
     if not is_encrypted_value(value):
         return value
 
-    encoded_payload = value.removeprefix(ENCRYPTED_VALUE_PREFIX)
+    if value.startswith(ENCRYPTED_VALUE_PREFIX_V2):
+        if fernet is None:
+            raise ValueError(
+                "Could not decrypt export value. Check the export password."
+            )
+
+        encrypted_value = value.removeprefix(
+            ENCRYPTED_VALUE_PREFIX_V2
+        ).encode("ascii")
+
+        try:
+            compressed_value = fernet.decrypt(encrypted_value)
+            value_json = zlib.decompress(compressed_value)
+
+            return json.loads(value_json.decode("utf-8"))
+
+        except (ValueError, InvalidToken, zlib.error) as error:
+            raise ValueError(
+                "Could not decrypt export value. Check the export password."
+            ) from error
+
+    encoded_payload = value.removeprefix(ENCRYPTED_VALUE_PREFIX_V1)
 
     try:
         payload_json = base64.urlsafe_b64decode(
@@ -106,7 +140,10 @@ def decrypt_value_if_needed(value, password):
 def is_encrypted_value(value):
     return (
         isinstance(value, str)
-        and value.startswith(ENCRYPTED_VALUE_PREFIX)
+        and (
+            value.startswith(ENCRYPTED_VALUE_PREFIX_V1)
+            or value.startswith(ENCRYPTED_VALUE_PREFIX_V2)
+        )
     )
 
 

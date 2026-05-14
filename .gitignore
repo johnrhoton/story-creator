@@ -21,6 +21,7 @@ Thumbs.db
 
 # Database files
 *.db
+*.db-journal
 
 # Database backups
 *_backup_*.db
@@ -33,6 +34,7 @@ Thumbs.db
 
 *.sqlite
 *.sqlite3
+*.sqlite-journal
 backups/
 exports/
 __pycache__/

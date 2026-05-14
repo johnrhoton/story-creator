@@ -19,6 +19,8 @@ def render_bulk_actions(
     export_button_key,
     item_label
 ):
+    st.markdown("**Bulk actions**")
+
     options = {
         option_label(row): option_value(row)
         for row in rows
@@ -35,12 +37,15 @@ def render_bulk_actions(
         for label in selected_labels
     ]
 
-    if not selected_values:
-        return
+    selected_count = len(selected_values)
+    st.caption(f"{selected_count} {item_label}(s) selected.")
 
-    export_data = build_export_data(
-        build_export_payload(selected_values)
-    )
+    if selected_values:
+        export_data = build_export_data(
+            build_export_payload(selected_values)
+        )
+    else:
+        export_data = ""
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"{export_filename_prefix}_{timestamp}.json"
@@ -50,7 +55,8 @@ def render_bulk_actions(
     with col_delete:
         if st.button(
             delete_button_label,
-            key=delete_button_key
+            key=delete_button_key,
+            disabled=not selected_values
         ):
             deleted_count = delete_selected(selected_values)
             st.success(f"Deleted {deleted_count} {item_label}(s).")
@@ -62,7 +68,8 @@ def render_bulk_actions(
             data=export_data,
             file_name=file_name,
             mime="application/json",
-            key=export_button_key
+            key=export_button_key,
+            disabled=not selected_values
         )
 
 

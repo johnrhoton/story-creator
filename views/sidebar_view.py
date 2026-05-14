@@ -1,5 +1,10 @@
 import streamlit as st
 
+from database import (
+    enable_database_encryption,
+    get_database_encryption_status,
+    set_active_database_password,
+)
 from config import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from services.model_service import list_llm_models_by_provider
 
@@ -91,4 +96,53 @@ def render_llm_settings_sidebar():
 
         throttle_settings[throttle_key] = (
             st.session_state["llm_throttle_interval_seconds"]
+        )
+
+        st.divider()
+        st.header("Database Encryption")
+
+        database_password = st.text_input(
+            "Database password",
+            type="password",
+            key="database_encryption_password",
+            help=(
+                "Unlock encrypted fields for this session."
+            )
+        )
+
+        set_active_database_password(database_password)
+        encryption_status = get_database_encryption_status()
+
+        if encryption_status["enabled"]:
+            if encryption_status["unlocked"]:
+                st.success("Encrypted database fields are unlocked.")
+            else:
+                st.warning("Encrypted database fields are locked.")
+        else:
+            st.info("Database field encryption is not enabled.")
+
+        if st.button(
+            "Enable field encryption",
+            disabled=(
+                encryption_status["enabled"]
+                or not database_password
+            )
+        ):
+            try:
+                enable_database_encryption(database_password)
+                st.success("Database field encryption enabled.")
+                st.rerun()
+            except Exception as error:
+                st.error(f"Could not enable database encryption: {error}")
+
+        st.divider()
+        st.header("Import / Export")
+
+        st.text_input(
+            "Export password",
+            type="password",
+            key="import_export_password",
+            help=(
+                "Used for encrypted export files and encrypted imports."
+            )
         )

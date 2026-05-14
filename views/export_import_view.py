@@ -22,8 +22,6 @@ from ui_helpers import format_display_timestamp
 def render_export_import_tab():
     st.header("Export / Import Database")
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
     st.subheader("Export")
 
     export_format = st.radio(
@@ -32,26 +30,82 @@ def render_export_import_tab():
         horizontal=True
     )
 
-    if export_format == "YAML":
-        export_data = export_database_to_yaml()
-        export_filename = f"{EXPORT_FILENAME_PREFIX}_{timestamp}.yaml"
-        export_mime = "application/x-yaml"
-        preview_language = "yaml"
-    else:
-        export_data = export_database_to_json()
-        export_filename = f"{EXPORT_FILENAME_PREFIX}_{timestamp}.json"
-        export_mime = "application/json"
-        preview_language = "json"
-
-    st.download_button(
-        label=f"Download database as {export_format}",
-        data=export_data,
-        file_name=export_filename,
-        mime=export_mime
+    export_contents = st.radio(
+        "Export contents",
+        ["Plain text", "Encrypted values"],
+        horizontal=True
     )
 
-    with st.expander(f"Preview {export_format}"):
-        st.code(export_data, language=preview_language)
+    password = st.session_state.get("import_export_password", "")
+    encrypt_values = export_contents == "Encrypted values"
+    export_signature = {
+        "format": export_format,
+        "contents": export_contents,
+    }
+
+    if encrypt_values and not password:
+        st.warning(
+            "Enter an import/export password in the sidebar before "
+            "exporting encrypted values."
+        )
+    else:
+        if st.button("Prepare export file"):
+            try:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename_suffix = "_encrypted" if encrypt_values else ""
+
+                if export_format == "YAML":
+                    export_data = export_database_to_yaml(
+                        encrypt_values=encrypt_values,
+                        password=password
+                    )
+                    export_filename = (
+                        f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
+                        f"{filename_suffix}.yaml"
+                    )
+                    export_mime = "application/x-yaml"
+                    preview_language = "yaml"
+                else:
+                    export_data = export_database_to_json(
+                        encrypt_values=encrypt_values,
+                        password=password
+                    )
+                    export_filename = (
+                        f"{EXPORT_FILENAME_PREFIX}_{timestamp}"
+                        f"{filename_suffix}.json"
+                    )
+                    export_mime = "application/json"
+                    preview_language = "json"
+
+                st.session_state["prepared_export"] = {
+                    "data": export_data,
+                    "filename": export_filename,
+                    "mime": export_mime,
+                    "language": preview_language,
+                    "signature": export_signature,
+                }
+
+            except Exception as error:
+                st.error(f"Export failed: {error}")
+
+        prepared_export = st.session_state.get("prepared_export")
+
+        if (
+            prepared_export
+            and prepared_export.get("signature") == export_signature
+        ):
+            st.download_button(
+                label=f"Download database as {export_format}",
+                data=prepared_export["data"],
+                file_name=prepared_export["filename"],
+                mime=prepared_export["mime"]
+            )
+
+            with st.expander(f"Preview {export_format}"):
+                st.code(
+                    prepared_export["data"],
+                    language=prepared_export["language"]
+                )
 
     st.divider()
 
@@ -96,9 +150,15 @@ def render_export_import_tab():
                 uploaded_name = uploaded_file.name.lower()
 
                 if uploaded_name.endswith((".yaml", ".yml")):
-                    result = import_database_from_yaml(uploaded_file)
+                    result = import_database_from_yaml(
+                        uploaded_file,
+                        password=password
+                    )
                 else:
-                    result = import_database_from_json(uploaded_file)
+                    result = import_database_from_json(
+                        uploaded_file,
+                        password=password
+                    )
 
                 st.success("Import complete.")
                 st.json(result)

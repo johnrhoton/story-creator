@@ -1,6 +1,11 @@
 from datetime import datetime
 
 from database.connection import get_connection
+from database.db_encryption import (
+    decrypt_database_rows,
+    decrypt_database_tuple,
+    encrypt_database_field,
+)
 from database.metadata import mark_local_data_modified
 
 
@@ -26,9 +31,13 @@ def add_story_template(
     """, (
         datetime.now().isoformat(timespec="seconds"),
         template_name,
-        overview,
-        setting_background,
-        tone_style
+        encrypt_database_field("story_templates", "overview", overview),
+        encrypt_database_field(
+            "story_templates",
+            "setting_background",
+            setting_background
+        ),
+        encrypt_database_field("story_templates", "tone_style", tone_style)
     ))
 
     template_id = cursor.lastrowid
@@ -60,9 +69,13 @@ def update_story_template(
         WHERE id = ?
     """, (
         template_name,
-        overview,
-        setting_background,
-        tone_style,
+        encrypt_database_field("story_templates", "overview", overview),
+        encrypt_database_field(
+            "story_templates",
+            "setting_background",
+            setting_background
+        ),
+        encrypt_database_field("story_templates", "tone_style", tone_style),
         template_id
     ))
 
@@ -129,9 +142,13 @@ def clone_story_template(template_id):
     """, (
         datetime.now().isoformat(timespec="seconds"),
         new_name,
-        overview,
-        setting_background,
-        tone_style
+        encrypt_database_field("story_templates", "overview", overview),
+        encrypt_database_field(
+            "story_templates",
+            "setting_background",
+            setting_background
+        ),
+        encrypt_database_field("story_templates", "tone_style", tone_style)
     ))
 
     new_template_id = cursor.lastrowid
@@ -159,7 +176,11 @@ def clone_story_template(template_id):
         """, (
             new_template_id,
             chapter_number,
-            chapter_description
+            encrypt_database_field(
+                "story_template_chapters",
+                "chapter_description",
+                chapter_description
+            )
         ))
 
     mark_local_data_modified(cursor)
@@ -237,7 +258,12 @@ def get_story_templates():
         ORDER BY template_name
     """)
 
-    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "story_templates",
+        cursor.fetchall(),
+        columns
+    )
     conn.close()
 
     return rows
@@ -259,7 +285,12 @@ def get_story_template(template_id):
         WHERE id = ?
     """, (template_id,))
 
+    columns = [column[0] for column in cursor.description]
     row = cursor.fetchone()
+
+    if row:
+        row = decrypt_database_tuple("story_templates", row, columns)
+
     conn.close()
 
     return row
@@ -293,7 +324,11 @@ def get_story_templates_for_export(template_ids):
     template_columns = [column[0] for column in cursor.description]
     templates = [
         dict(zip(template_columns, row))
-        for row in cursor.fetchall()
+        for row in decrypt_database_rows(
+            "story_templates",
+            cursor.fetchall(),
+            template_columns
+        )
     ]
 
     cursor.execute(f"""
@@ -310,7 +345,11 @@ def get_story_templates_for_export(template_ids):
     chapter_columns = [column[0] for column in cursor.description]
     chapters = [
         dict(zip(chapter_columns, row))
-        for row in cursor.fetchall()
+        for row in decrypt_database_rows(
+            "story_template_chapters",
+            cursor.fetchall(),
+            chapter_columns
+        )
     ]
 
     conn.close()
@@ -340,7 +379,11 @@ def add_story_template_chapter(
     """, (
         template_id,
         chapter_number,
-        chapter_description
+        encrypt_database_field(
+            "story_template_chapters",
+            "chapter_description",
+            chapter_description
+        )
     ))
 
     chapter_id = cursor.lastrowid
@@ -369,7 +412,11 @@ def update_story_template_chapter(
         WHERE id = ?
     """, (
         chapter_number,
-        chapter_description,
+        encrypt_database_field(
+            "story_template_chapters",
+            "chapter_description",
+            chapter_description
+        ),
         chapter_id
     ))
 
@@ -411,7 +458,12 @@ def get_story_template_chapters(template_id):
         ORDER BY chapter_number
     """, (template_id,))
 
-    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "story_template_chapters",
+        cursor.fetchall(),
+        columns
+    )
     conn.close()
 
     return rows

@@ -326,6 +326,127 @@ profiles:
                 [("hero", "quick", "kind")]
             )
 
+    def test_encrypted_json_export_import_round_trip(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            save_character(
+                None,
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "kind",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+
+            encrypted_json = export_database_to_json(
+                encrypt_values=True,
+                password="password"
+            )
+
+            self.assertIn("characters", encrypted_json)
+            self.assertIn("encrypted:v2:", encrypted_json)
+            self.assertNotIn('"Alice"', encrypted_json)
+
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            result = import_database_from_json(
+                StringIO(encrypted_json),
+                password="password"
+            )
+
+            self.assertEqual(result["characters"], 1)
+
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT
+                    name,
+                    age,
+                    summary
+                FROM characters
+            """)
+            rows = cursor.fetchall()
+            conn.close()
+
+            self.assertEqual(
+                rows,
+                [("Alice", "18", "summary")]
+            )
+
+    def test_encrypted_yaml_export_import_round_trip(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            save_character(
+                None,
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "kind",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+
+            encrypted_yaml = export_database_to_yaml(
+                encrypt_values=True,
+                password="password"
+            )
+
+            self.assertIn("characters:", encrypted_yaml)
+            self.assertIn("encrypted:v2:", encrypted_yaml)
+            self.assertNotIn("Alice", encrypted_yaml)
+
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            result = import_database_from_yaml(
+                StringIO(encrypted_yaml),
+                password="password"
+            )
+
+            self.assertEqual(result["characters"], 1)
+
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT
+                    name,
+                    age,
+                    summary
+                FROM characters
+            """)
+            rows = cursor.fetchall()
+            conn.close()
+
+            self.assertEqual(
+                rows,
+                [("Alice", "18", "summary")]
+            )
+
+    def test_encrypted_export_requires_password(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            with self.assertRaisesRegex(ValueError, "password is required"):
+                export_database_to_json(
+                    encrypt_values=True,
+                    password=""
+                )
+
     def test_seeded_models_have_one_default_per_provider(self):
         with isolated_database_directory():
             seed_llm_models()

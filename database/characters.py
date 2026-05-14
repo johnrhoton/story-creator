@@ -1,6 +1,10 @@
 from datetime import datetime
 
 from database.connection import get_connection
+from database.db_encryption import (
+    decrypt_database_rows,
+    encrypt_database_field,
+)
 from database.metadata import mark_local_data_modified
 
 
@@ -41,12 +45,16 @@ def save_character(
         name,
         age,
         gender,
-        physical_traits,
-        personality_traits,
-        notes,
-        prompt,
-        response,
-        summary
+        encrypt_database_field("characters", "physical_traits", physical_traits),
+        encrypt_database_field(
+            "characters",
+            "personality_traits",
+            personality_traits
+        ),
+        encrypt_database_field("characters", "notes", notes),
+        encrypt_database_field("characters", "prompt", prompt),
+        encrypt_database_field("characters", "response", response),
+        encrypt_database_field("characters", "summary", summary)
     ))
 
     mark_local_data_modified(cursor)
@@ -88,11 +96,15 @@ def update_character(
         name,
         age,
         gender,
-        physical_traits,
-        personality_traits,
-        notes,
-        response,
-        summary,
+        encrypt_database_field("characters", "physical_traits", physical_traits),
+        encrypt_database_field(
+            "characters",
+            "personality_traits",
+            personality_traits
+        ),
+        encrypt_database_field("characters", "notes", notes),
+        encrypt_database_field("characters", "response", response),
+        encrypt_database_field("characters", "summary", summary),
         record_id
     ))
 
@@ -164,12 +176,16 @@ def clone_character(record_id):
         name,
         age,
         gender,
-        physical_traits,
-        personality_traits,
-        notes,
-        prompt,
-        response,
-        summary
+        encrypt_database_field("characters", "physical_traits", physical_traits),
+        encrypt_database_field(
+            "characters",
+            "personality_traits",
+            personality_traits
+        ),
+        encrypt_database_field("characters", "notes", notes),
+        encrypt_database_field("characters", "prompt", prompt),
+        encrypt_database_field("characters", "response", response),
+        encrypt_database_field("characters", "summary", summary)
     ))
 
     new_id = cursor.lastrowid
@@ -244,7 +260,12 @@ def get_characters():
         ORDER BY id DESC
     """)
 
-    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "characters",
+        cursor.fetchall(),
+        columns
+    )
     conn.close()
 
     return rows
@@ -281,7 +302,11 @@ def get_characters_for_export(record_ids):
     columns = [column[0] for column in cursor.description]
     rows = [
         dict(zip(columns, row))
-        for row in cursor.fetchall()
+        for row in decrypt_database_rows(
+            "characters",
+            cursor.fetchall(),
+            columns
+        )
     ]
 
     conn.close()
@@ -306,7 +331,12 @@ def get_characters_by_gender(gender):
         ORDER BY name
     """, (gender,))
 
-    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "characters",
+        cursor.fetchall(),
+        columns
+    )
     conn.close()
 
     return rows
@@ -332,9 +362,16 @@ def get_character_summaries_by_names(names):
         for name in names
     ))
 
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "characters",
+        cursor.fetchall(),
+        columns
+    )
+
     summaries = {
         row[0].strip().lower(): row[1] or ""
-        for row in cursor.fetchall()
+        for row in rows
         if row[0]
     }
 

@@ -17,6 +17,7 @@ from database.import_export import (
     import_database_from_dict,
     import_database_from_json,
     import_database_from_yaml,
+    prepare_export_data,
     serialize_export_to_json,
     serialize_export_to_yaml,
 )
@@ -96,4 +97,17 @@ from database.common_names import (
     character_name_exists,
     seed_common_names,
     suggest_character_name,
+)
+
+from database.db_encryption import (
+    decrypt_database_row,
+    decrypt_database_rows,
+    decrypt_database_tuple,
+    enable_database_encryption,
+    encrypt_database_field,
+    encrypt_database_row,
+    get_database_encryption_status,
+    is_database_encrypted_value,
+    is_database_encryption_enabled,
+    set_active_database_password,
 )

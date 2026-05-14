@@ -5,6 +5,14 @@ import yaml
 
 from config import GENDER_OPTIONS
 from database.connection import get_connection
+from database.db_encryption import (
+    decrypt_database_row,
+    encrypt_database_row,
+)
+from database.export_crypto import (
+    decrypt_export_values,
+    encrypt_export_values,
+)
 from database.metadata import mark_local_data_modified
 
 
@@ -67,15 +75,51 @@ def serialize_export_to_yaml(export_data):
     )
 
 
-def export_database_to_json():
+def prepare_export_data(encrypt_values=False, password=""):
+    export_data = export_database_to_dict()
+    export_data = decrypt_database_export_data(export_data)
+
+    if password:
+        export_data = decrypt_export_values(export_data, password)
+
+    if encrypt_values:
+        if not password:
+            raise ValueError(
+                "A password is required to export encrypted values."
+            )
+
+        export_data = encrypt_export_values(export_data, password)
+
+    return export_data
+
+
+def decrypt_database_export_data(export_data):
+    decrypted_data = dict(export_data)
+
+    for export_key, table_name in EXPORT_TABLES:
+        decrypted_data[export_key] = [
+            decrypt_database_row(table_name, row)
+            for row in export_data.get(export_key, [])
+        ]
+
+    return decrypted_data
+
+
+def export_database_to_json(encrypt_values=False, password=""):
     return serialize_export_to_json(
-        export_database_to_dict()
+        prepare_export_data(
+            encrypt_values=encrypt_values,
+            password=password
+        )
     )
 
 
-def export_database_to_yaml():
+def export_database_to_yaml(encrypt_values=False, password=""):
     return serialize_export_to_yaml(
-        export_database_to_dict()
+        prepare_export_data(
+            encrypt_values=encrypt_values,
+            password=password
+        )
     )
 
 
@@ -93,8 +137,15 @@ def fetch_table_rows(cursor, table_name):
     ]
 
 
-def import_database_from_json(uploaded_file, replace_existing=False):
+def import_database_from_json(
+    uploaded_file,
+    replace_existing=False,
+    password=""
+):
     data = deserialize_import_json(uploaded_file)
+
+    if password:
+        data = decrypt_export_values(data, password)
 
     return import_database_from_dict(
         data,
@@ -102,8 +153,15 @@ def import_database_from_json(uploaded_file, replace_existing=False):
     )
 
 
-def import_database_from_yaml(uploaded_file, replace_existing=False):
+def import_database_from_yaml(
+    uploaded_file,
+    replace_existing=False,
+    password=""
+):
     data = deserialize_import_yaml(uploaded_file)
+
+    if password:
+        data = decrypt_export_values(data, password)
 
     return import_database_from_dict(
         data,
@@ -205,6 +263,14 @@ def import_database_from_dict(data, replace_existing=False):
             "personality_traits",
             ""
         )
+        profile_row = encrypt_database_row(
+            "profiles",
+            {
+                "physical_traits": physical_traits,
+                "personality_traits": personality_traits,
+                "notes": profile.get("notes", ""),
+            }
+        )
 
         cursor.execute("""
             INSERT OR REPLACE INTO profiles
@@ -219,9 +285,9 @@ def import_database_from_dict(data, replace_existing=False):
         """, (
             profile_name,
             gender,
-            physical_traits,
-            personality_traits,
-            profile.get("notes", "")
+            profile_row["physical_traits"],
+            profile_row["personality_traits"],
+            profile_row["notes"]
         ))
 
         counts["profiles"] += 1
@@ -249,6 +315,17 @@ def import_database_from_dict(data, replace_existing=False):
         personality_traits = character.get(
             "personality_traits",
             ""
+        )
+        character_row = encrypt_database_row(
+            "characters",
+            {
+                "physical_traits": physical_traits,
+                "personality_traits": personality_traits,
+                "notes": character.get("notes", ""),
+                "prompt": character.get("prompt", ""),
+                "response": character.get("response", ""),
+                "summary": character.get("summary", ""),
+            }
         )
 
         cursor.execute("""
@@ -282,12 +359,12 @@ def import_database_from_dict(data, replace_existing=False):
             character.get("name", ""),
             character.get("age", ""),
             gender,
-            physical_traits,
-            personality_traits,
-            character.get("notes", ""),
-            character.get("prompt", ""),
-            character.get("response", ""),
-            character.get("summary", "")
+            character_row["physical_traits"],
+            character_row["personality_traits"],
+            character_row["notes"],
+            character_row["prompt"],
+            character_row["response"],
+            character_row["summary"]
         ))
 
         counts["characters"] += 1
@@ -301,6 +378,17 @@ def import_database_from_dict(data, replace_existing=False):
     for template in sections["story_templates"]:
         old_id = template.get("id")
         template_name = template.get("template_name", "")
+        template_row = encrypt_database_row(
+            "story_templates",
+            {
+                "overview": template.get("overview", ""),
+                "setting_background": template.get(
+                    "setting_background",
+                    ""
+                ),
+                "tone_style": template.get("tone_style", ""),
+            }
+        )
 
         delete_existing_template_by_name(cursor, template_name)
 
@@ -319,9 +407,9 @@ def import_database_from_dict(data, replace_existing=False):
             or datetime.now().isoformat(timespec="seconds"),
 
             template_name,
-            template.get("overview", ""),
-            template.get("setting_background", ""),
-            template.get("tone_style", "")
+            template_row["overview"],
+            template_row["setting_background"],
+            template_row["tone_style"]
         ))
 
         new_id = cursor.lastrowid
@@ -342,6 +430,15 @@ def import_database_from_dict(data, replace_existing=False):
             old_template_id,
             old_template_id
         )
+        chapter_row = encrypt_database_row(
+            "story_template_chapters",
+            {
+                "chapter_description": chapter.get(
+                    "chapter_description",
+                    ""
+                ),
+            }
+        )
 
         cursor.execute("""
             INSERT INTO story_template_chapters
@@ -354,7 +451,7 @@ def import_database_from_dict(data, replace_existing=False):
         """, (
             new_template_id,
             chapter.get("chapter_number", 1),
-            chapter.get("chapter_description", "")
+            chapter_row["chapter_description"]
         ))
 
         counts["story_template_chapters"] += 1
@@ -369,6 +466,16 @@ def import_database_from_dict(data, replace_existing=False):
         old_id = story.get("id")
         old_template_id = story.get("template_id")
         story_name = story.get("story_name", "")
+        story_row = encrypt_database_row(
+            "stories",
+            {
+                "overview": story.get("overview", ""),
+                "setting_background": story.get("setting_background", ""),
+                "tone_style": story.get("tone_style", ""),
+                "male_characters": story.get("male_characters", "[]"),
+                "female_characters": story.get("female_characters", "[]"),
+            }
+        )
 
         new_template_id = template_id_map.get(
             old_template_id,
@@ -396,11 +503,11 @@ def import_database_from_dict(data, replace_existing=False):
 
             story_name,
             new_template_id,
-            story.get("overview", ""),
-            story.get("setting_background", ""),
-            story.get("tone_style", ""),
-            story.get("male_characters", "[]"),
-            story.get("female_characters", "[]")
+            story_row["overview"],
+            story_row["setting_background"],
+            story_row["tone_style"],
+            story_row["male_characters"],
+            story_row["female_characters"]
         ))
 
         new_id = cursor.lastrowid
@@ -421,6 +528,17 @@ def import_database_from_dict(data, replace_existing=False):
             old_story_id,
             old_story_id
         )
+        chapter_row = encrypt_database_row(
+            "story_chapters",
+            {
+                "chapter_description": chapter.get(
+                    "chapter_description",
+                    ""
+                ),
+                "chapter_body": chapter.get("chapter_body", ""),
+                "chapter_summary": chapter.get("chapter_summary", ""),
+            }
+        )
 
         cursor.execute("""
             INSERT INTO story_chapters
@@ -435,9 +553,9 @@ def import_database_from_dict(data, replace_existing=False):
         """, (
             new_story_id,
             chapter.get("chapter_number", 1),
-            chapter.get("chapter_description", ""),
-            chapter.get("chapter_body", ""),
-            chapter.get("chapter_summary", "")
+            chapter_row["chapter_description"],
+            chapter_row["chapter_body"],
+            chapter_row["chapter_summary"]
         ))
 
         counts["story_chapters"] += 1
@@ -447,6 +565,14 @@ def import_database_from_dict(data, replace_existing=False):
     # -------------------------
 
     for llm_call in sections["llm_calls"]:
+        llm_call_row = encrypt_database_row(
+            "llm_calls",
+            {
+                "prompt": llm_call.get("prompt", ""),
+                "response": llm_call.get("response", ""),
+            }
+        )
+
         cursor.execute("""
             INSERT INTO llm_calls
             (
@@ -462,8 +588,8 @@ def import_database_from_dict(data, replace_existing=False):
             or datetime.now().isoformat(timespec="seconds"),
             llm_call.get("provider", ""),
             llm_call.get("model", ""),
-            llm_call.get("prompt", ""),
-            llm_call.get("response", "")
+            llm_call_row["prompt"],
+            llm_call_row["response"]
         ))
 
         counts["llm_calls"] += 1
@@ -473,6 +599,16 @@ def import_database_from_dict(data, replace_existing=False):
     # -------------------------
 
     for failed_call in sections["failed_llm_calls"]:
+        failed_call_row = encrypt_database_row(
+            "failed_llm_calls",
+            {
+                "prompt": failed_call.get("prompt", ""),
+                "response": failed_call.get("response", ""),
+                "error_message": failed_call.get("error_message", ""),
+                "error_details": failed_call.get("error_details", ""),
+            }
+        )
+
         cursor.execute("""
             INSERT INTO failed_llm_calls
             (
@@ -492,12 +628,12 @@ def import_database_from_dict(data, replace_existing=False):
             or datetime.now().isoformat(timespec="seconds"),
             failed_call.get("provider", ""),
             failed_call.get("model", ""),
-            failed_call.get("prompt", ""),
-            failed_call.get("response", ""),
+            failed_call_row["prompt"],
+            failed_call_row["response"],
             failed_call.get("error_type", ""),
             failed_call.get("error_codes", ""),
-            failed_call.get("error_message", ""),
-            failed_call.get("error_details", "")
+            failed_call_row["error_message"],
+            failed_call_row["error_details"]
         ))
 
         counts["failed_llm_calls"] += 1

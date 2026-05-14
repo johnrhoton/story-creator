@@ -3,6 +3,11 @@ import re
 from datetime import datetime
 
 from database.connection import get_connection
+from database.db_encryption import (
+    decrypt_database_rows,
+    decrypt_database_tuple,
+    encrypt_database_field,
+)
 from database.metadata import mark_local_data_modified
 
 
@@ -69,11 +74,23 @@ def add_story(
         datetime.now().isoformat(timespec="seconds"),
         story_name,
         template_id,
-        overview,
-        setting_background,
-        tone_style,
-        json.dumps(male_characters, ensure_ascii=False),
-        json.dumps(female_characters, ensure_ascii=False)
+        encrypt_database_field("stories", "overview", overview),
+        encrypt_database_field(
+            "stories",
+            "setting_background",
+            setting_background
+        ),
+        encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field(
+            "stories",
+            "male_characters",
+            json.dumps(male_characters, ensure_ascii=False)
+        ),
+        encrypt_database_field(
+            "stories",
+            "female_characters",
+            json.dumps(female_characters, ensure_ascii=False)
+        )
     ))
 
     story_id = cursor.lastrowid
@@ -110,11 +127,23 @@ def update_story(
         WHERE id = ?
     """, (
         story_name,
-        overview,
-        setting_background,
-        tone_style,
-        json.dumps(male_characters, ensure_ascii=False),
-        json.dumps(female_characters, ensure_ascii=False),
+        encrypt_database_field("stories", "overview", overview),
+        encrypt_database_field(
+            "stories",
+            "setting_background",
+            setting_background
+        ),
+        encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field(
+            "stories",
+            "male_characters",
+            json.dumps(male_characters, ensure_ascii=False)
+        ),
+        encrypt_database_field(
+            "stories",
+            "female_characters",
+            json.dumps(female_characters, ensure_ascii=False)
+        ),
         story_id
     ))
 
@@ -242,11 +271,19 @@ def clone_story(story_id):
         datetime.now().isoformat(timespec="seconds"),
         new_name,
         template_id,
-        overview,
-        setting_background,
-        tone_style,
-        male_characters,
-        female_characters
+        encrypt_database_field("stories", "overview", overview),
+        encrypt_database_field(
+            "stories",
+            "setting_background",
+            setting_background
+        ),
+        encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field("stories", "male_characters", male_characters),
+        encrypt_database_field(
+            "stories",
+            "female_characters",
+            female_characters
+        )
     ))
 
     new_story_id = cursor.lastrowid
@@ -285,9 +322,21 @@ def clone_story(story_id):
         """, (
             new_story_id,
             chapter_number,
-            chapter_description,
-            chapter_body,
-            chapter_summary
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_description",
+                chapter_description
+            ),
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_body",
+                chapter_body
+            ),
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_summary",
+                chapter_summary
+            )
         ))
 
     mark_local_data_modified(cursor)
@@ -317,7 +366,12 @@ def get_stories():
         ORDER BY story_name
     """)
 
-    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "stories",
+        cursor.fetchall(),
+        columns
+    )
 
     conn.close()
 
@@ -343,7 +397,11 @@ def get_story(story_id):
         WHERE id = ?
     """, (story_id,))
 
+    columns = [column[0] for column in cursor.description]
     row = cursor.fetchone()
+
+    if row:
+        row = decrypt_database_tuple("stories", row, columns)
 
     conn.close()
 
@@ -381,7 +439,11 @@ def get_stories_for_export(story_ids):
     story_columns = [column[0] for column in cursor.description]
     stories = [
         dict(zip(story_columns, row))
-        for row in cursor.fetchall()
+        for row in decrypt_database_rows(
+            "stories",
+            cursor.fetchall(),
+            story_columns
+        )
     ]
 
     cursor.execute(f"""
@@ -400,7 +462,11 @@ def get_stories_for_export(story_ids):
     chapter_columns = [column[0] for column in cursor.description]
     chapters = [
         dict(zip(chapter_columns, row))
-        for row in cursor.fetchall()
+        for row in decrypt_database_rows(
+            "story_chapters",
+            cursor.fetchall(),
+            chapter_columns
+        )
     ]
 
     conn.close()
@@ -429,11 +495,18 @@ def create_story_from_template(
         WHERE id = ?
     """, (template_id,))
 
+    template_columns = [column[0] for column in cursor.description]
     template_row = cursor.fetchone()
 
     if not template_row:
         conn.close()
         return None
+
+    template_row = decrypt_database_tuple(
+        "story_templates",
+        template_row,
+        template_columns
+    )
 
     (
         overview,
@@ -480,11 +553,23 @@ def create_story_from_template(
         datetime.now().isoformat(timespec="seconds"),
         story_name,
         template_id,
-        resolved_overview,
-        resolved_setting_background,
-        tone_style,
-        male_characters_json,
-        female_characters_json
+        encrypt_database_field("stories", "overview", resolved_overview),
+        encrypt_database_field(
+            "stories",
+            "setting_background",
+            resolved_setting_background
+        ),
+        encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field(
+            "stories",
+            "male_characters",
+            male_characters_json
+        ),
+        encrypt_database_field(
+            "stories",
+            "female_characters",
+            female_characters_json
+        )
     ))
 
     story_id = cursor.lastrowid
@@ -502,7 +587,11 @@ def create_story_from_template(
     """, (
         story_id,
         0,
-        "Establish the setting and introduce the characters.",
+        encrypt_database_field(
+            "story_chapters",
+            "chapter_description",
+            "Establish the setting and introduce the characters."
+        ),
         "",
         ""
     ))
@@ -516,7 +605,12 @@ def create_story_from_template(
         ORDER BY chapter_number
     """, (template_id,))
 
-    chapters = cursor.fetchall()
+    chapter_columns = [column[0] for column in cursor.description]
+    chapters = decrypt_database_rows(
+        "story_template_chapters",
+        cursor.fetchall(),
+        chapter_columns
+    )
 
     for (
         chapter_number,
@@ -542,7 +636,11 @@ def create_story_from_template(
         """, (
             story_id,
             chapter_number,
-            resolved_description,
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_description",
+                resolved_description
+            ),
             "",
             ""
         ))
@@ -578,9 +676,17 @@ def add_story_chapter(
     """, (
         story_id,
         chapter_number,
-        chapter_description,
-        chapter_body,
-        chapter_summary
+        encrypt_database_field(
+            "story_chapters",
+            "chapter_description",
+            chapter_description
+        ),
+        encrypt_database_field("story_chapters", "chapter_body", chapter_body),
+        encrypt_database_field(
+            "story_chapters",
+            "chapter_summary",
+            chapter_summary
+        )
     ))
 
     chapter_id = cursor.lastrowid
@@ -613,9 +719,17 @@ def update_story_chapter(
         WHERE id = ?
     """, (
         chapter_number,
-        chapter_description,
-        chapter_body,
-        chapter_summary,
+        encrypt_database_field(
+            "story_chapters",
+            "chapter_description",
+            chapter_description
+        ),
+        encrypt_database_field("story_chapters", "chapter_body", chapter_body),
+        encrypt_database_field(
+            "story_chapters",
+            "chapter_summary",
+            chapter_summary
+        ),
         chapter_id
     ))
 
@@ -659,7 +773,12 @@ def get_story_chapters(story_id):
         ORDER BY chapter_number
     """, (story_id,))
 
-    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "story_chapters",
+        cursor.fetchall(),
+        columns
+    )
 
     conn.close()
 

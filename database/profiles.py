@@ -1,4 +1,8 @@
 from database.connection import get_connection
+from database.db_encryption import (
+    decrypt_database_rows,
+    encrypt_database_field,
+)
 from database.metadata import mark_local_data_modified
 
 
@@ -25,9 +29,13 @@ def add_profile(
     """, (
         profile_name.lower(),
         gender,
-        physical_traits,
-        personality_traits,
-        notes
+        encrypt_database_field("profiles", "physical_traits", physical_traits),
+        encrypt_database_field(
+            "profiles",
+            "personality_traits",
+            personality_traits
+        ),
+        encrypt_database_field("profiles", "notes", notes)
     ))
 
     mark_local_data_modified(cursor)
@@ -56,9 +64,13 @@ def update_profile(
         WHERE profile_name = ?
     """, (
         gender,
-        physical_traits,
-        personality_traits,
-        notes,
+        encrypt_database_field("profiles", "physical_traits", physical_traits),
+        encrypt_database_field(
+            "profiles",
+            "personality_traits",
+            personality_traits
+        ),
+        encrypt_database_field("profiles", "notes", notes),
         profile_name.lower()
     ))
 
@@ -154,9 +166,13 @@ def clone_profile(profile_name):
     """, (
         new_name,
         gender,
-        physical_traits,
-        personality_traits,
-        notes
+        encrypt_database_field("profiles", "physical_traits", physical_traits),
+        encrypt_database_field(
+            "profiles",
+            "personality_traits",
+            personality_traits
+        ),
+        encrypt_database_field("profiles", "notes", notes)
     ))
 
     mark_local_data_modified(cursor)
@@ -228,7 +244,12 @@ def get_profiles():
         ORDER BY gender, profile_name
     """)
 
-    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    rows = decrypt_database_rows(
+        "profiles",
+        cursor.fetchall(),
+        columns
+    )
     conn.close()
 
     return rows
@@ -264,7 +285,11 @@ def get_profiles_for_export(profile_names):
     columns = [column[0] for column in cursor.description]
     rows = [
         dict(zip(columns, row))
-        for row in cursor.fetchall()
+        for row in decrypt_database_rows(
+            "profiles",
+            cursor.fetchall(),
+            columns
+        )
     ]
 
     conn.close()
