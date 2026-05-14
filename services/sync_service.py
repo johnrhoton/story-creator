@@ -16,10 +16,12 @@ from config import (
 )
 from database import (
     export_database_to_dict,
+    get_database_encryption_export_metadata,
     get_sync_metadata,
     import_database_from_json,
     set_sync_metadata,
 )
+from database.db_encryption import DATABASE_ENCRYPTION_EXPORT_KEY
 
 
 SYNC_DOCUMENT_ID = MONGODB_SYNC_DOCUMENT_ID
@@ -75,7 +77,14 @@ def get_mongo_collection():
 
 
 def get_local_export():
-    return export_database_to_dict()
+    export_data = export_database_to_dict()
+    encryption_metadata = get_database_encryption_export_metadata()
+
+    if encryption_metadata:
+        export_data = dict(export_data)
+        export_data[DATABASE_ENCRYPTION_EXPORT_KEY] = encryption_metadata
+
+    return export_data
 
 
 def get_content_hash(data):

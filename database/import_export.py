@@ -12,6 +12,7 @@ from database.db_encryption import (
     encrypt_database_row,
     get_database_encryption_export_metadata,
     initialize_database_encryption,
+    is_database_encrypted_value,
     is_database_encryption_enabled,
 )
 from database.export_crypto import (
@@ -272,7 +273,10 @@ def import_database_from_dict(
     for profile in sections["profiles"]:
         profile_name = (
             profile.get("profile_name") or ""
-        ).lower().strip()
+        )
+
+        if not is_database_encrypted_value(profile_name):
+            profile_name = profile_name.lower().strip()
 
         if not profile_name:
             continue
@@ -335,7 +339,7 @@ def import_database_from_dict(
 
         profile_name = character.get("profile_name")
 
-        if profile_name:
+        if profile_name and not is_database_encrypted_value(profile_name):
             profile_name = profile_name.lower()
 
         physical_traits = character.get(

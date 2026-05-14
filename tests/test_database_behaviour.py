@@ -8,7 +8,14 @@ from io import StringIO
 from pathlib import Path
 
 from config import DB_NAME
-from database.characters import save_character
+from database.characters import get_characters, save_character
+from database.db_encryption import (
+    DATABASE_ENCRYPTION_EXPORT_KEY,
+    DATABASE_ENCRYPTED_VALUE_PREFIX,
+    enable_database_encryption,
+    get_database_encryption_status,
+    set_active_database_password,
+)
 from database.import_export import (
     export_database_to_dict,
     export_database_to_json,
@@ -41,6 +48,7 @@ def isolated_database_directory():
         try:
             yield Path(temp_dir)
         finally:
+            set_active_database_password("")
             os.chdir(original_cwd)
 
 
@@ -635,6 +643,94 @@ profiles:
                 {"_id": sync_service.LEGACY_SYNC_DOCUMENT_ID}
             ]
         )
+
+    def test_sync_local_export_includes_database_encryption_metadata(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+            save_character(
+                "hero",
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "curious",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+            enable_database_encryption("password")
+
+            export_data = sync_service.get_local_export()
+
+            self.assertIn(DATABASE_ENCRYPTION_EXPORT_KEY, export_data)
+            self.assertIn(
+                "salt",
+                export_data[DATABASE_ENCRYPTION_EXPORT_KEY]
+            )
+            self.assertTrue(
+                export_data["characters"][0]["profile_name"].startswith(
+                    DATABASE_ENCRYPTED_VALUE_PREFIX
+                )
+            )
+
+    def test_sync_pull_applies_database_encryption_metadata(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+            save_character(
+                "hero",
+                "Alice",
+                "18",
+                "female",
+                "quick",
+                "curious",
+                "note",
+                "prompt",
+                "response",
+                "summary"
+            )
+            enable_database_encryption("password")
+            mongo_data = sync_service.get_local_export()
+            mongo_hash = sync_service.get_content_hash(mongo_data)
+
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            original_get_mongo_backup = sync_service.get_mongo_backup
+            sync_service.get_mongo_backup = lambda: {
+                "_id": sync_service.SYNC_DOCUMENT_ID,
+                "last_synced_at": "2026-05-14T12:00:00+00:00",
+                "data_modified_at": "2026-05-14T12:00:00+00:00",
+                "content_hash": mongo_hash,
+                "data": mongo_data
+            }
+
+            try:
+                sync_service.pull_mongo_to_local()
+            finally:
+                sync_service.get_mongo_backup = original_get_mongo_backup
+
+            self.assertEqual(
+                get_database_encryption_status(),
+                {
+                    "enabled": True,
+                    "unlocked": False,
+                }
+            )
+
+            set_active_database_password("password")
+
+            self.assertEqual(
+                get_characters()[0][3],
+                "Alice"
+            )
+            self.assertEqual(
+                get_characters()[0][6],
+                "quick"
+            )
 
 
 if __name__ == "__main__":
