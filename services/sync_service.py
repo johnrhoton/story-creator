@@ -15,7 +15,7 @@ from config import (
     MONGODB_SYNC_DOCUMENT_ID,
 )
 from database import (
-    export_database_to_json,
+    export_database_to_dict,
     get_sync_metadata,
     import_database_from_json,
     set_sync_metadata,
@@ -75,11 +75,7 @@ def get_mongo_collection():
 
 
 def get_local_export():
-    export_json = export_database_to_json()
-
-    data = json.loads(export_json)
-
-    return data
+    return export_database_to_dict()
 
 
 def get_content_hash(data):

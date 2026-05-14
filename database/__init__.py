@@ -11,8 +11,11 @@ from database.characters import (
 )
 
 from database.import_export import (
+    export_database_to_dict,
     export_database_to_json,
+    import_database_from_dict,
     import_database_from_json,
+    serialize_export_to_json,
 )
 
 from database.llm_calls import (

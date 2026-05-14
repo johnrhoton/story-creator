@@ -32,7 +32,7 @@ IMPORT_COUNT_KEYS = [
 ]
 
 
-def export_database_to_json():
+def export_database_to_dict():
     conn = get_connection()
     conn.row_factory = None
     cursor = conn.cursor()
@@ -46,10 +46,20 @@ def export_database_to_json():
 
     conn.close()
 
+    return export_data
+
+
+def serialize_export_to_json(export_data):
     return json.dumps(
         export_data,
         indent=2,
         ensure_ascii=False
+    )
+
+
+def export_database_to_json():
+    return serialize_export_to_json(
+        export_database_to_dict()
     )
 
 
@@ -68,7 +78,19 @@ def fetch_table_rows(cursor, table_name):
 
 
 def import_database_from_json(uploaded_file, replace_existing=False):
-    data = json.load(uploaded_file)
+    data = deserialize_import_json(uploaded_file)
+
+    return import_database_from_dict(
+        data,
+        replace_existing=replace_existing
+    )
+
+
+def deserialize_import_json(uploaded_file):
+    return json.load(uploaded_file)
+
+
+def import_database_from_dict(data, replace_existing=False):
     sections = get_import_sections(data)
 
     conn = get_connection()
