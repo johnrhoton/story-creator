@@ -19,6 +19,19 @@ EXPORT_TABLES = [
 ]
 
 
+IMPORT_COUNT_KEYS = [
+    "profiles",
+    "characters",
+    "story_templates",
+    "story_template_chapters",
+    "stories",
+    "story_chapters",
+    "llm_calls",
+    "failed_llm_calls",
+    "llm_models",
+]
+
+
 def export_database_to_json():
     conn = get_connection()
     conn.row_factory = None
@@ -56,48 +69,7 @@ def fetch_table_rows(cursor, table_name):
 
 def import_database_from_json(uploaded_file, replace_existing=False):
     data = json.load(uploaded_file)
-
-    characters = data.get(
-        "characters",
-        data.get("character_generations", [])
-    )
-
-    profiles = data.get("profiles", [])
-
-    story_templates = data.get(
-        "story_templates",
-        []
-    )
-
-    story_template_chapters = data.get(
-        "story_template_chapters",
-        []
-    )
-
-    stories = data.get(
-        "stories",
-        []
-    )
-
-    story_chapters = data.get(
-        "story_chapters",
-        []
-    )
-
-    llm_calls = data.get(
-        "llm_calls",
-        []
-    )
-
-    failed_llm_calls = data.get(
-        "failed_llm_calls",
-        []
-    )
-
-    llm_models = data.get(
-        "llm_models",
-        []
-    )
+    sections = get_import_sections(data)
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -105,21 +77,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
     if replace_existing:
         clear_exported_tables(cursor)
 
-    imported_profiles = 0
-    imported_characters = 0
-    imported_templates = 0
-    imported_template_chapters = 0
-    imported_stories = 0
-    imported_story_chapters = 0
-    imported_llm_calls = 0
-    imported_failed_llm_calls = 0
-    imported_llm_models = 0
+    counts = empty_import_counts()
 
     # -------------------------
     # LLM Models
     # -------------------------
 
-    for llm_model in llm_models:
+    for llm_model in sections["llm_models"]:
         provider = llm_model.get("provider", "")
         model = llm_model.get("model", "")
 
@@ -153,13 +117,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             is_default
         ))
 
-        imported_llm_models += 1
+        counts["llm_models"] += 1
 
     # -------------------------
     # Profiles
     # -------------------------
 
-    for profile in profiles:
+    for profile in sections["profiles"]:
         profile_name = (
             profile.get("profile_name") or ""
         ).lower().strip()
@@ -200,13 +164,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             profile.get("notes", "")
         ))
 
-        imported_profiles += 1
+        counts["profiles"] += 1
 
     # -------------------------
     # Characters
     # -------------------------
 
-    for character in characters:
+    for character in sections["characters"]:
         gender = character.get("gender") or "female"
 
         if gender not in GENDER_OPTIONS:
@@ -266,7 +230,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             character.get("summary", "")
         ))
 
-        imported_characters += 1
+        counts["characters"] += 1
 
     # -------------------------
     # Story Templates
@@ -274,7 +238,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
 
     template_id_map = {}
 
-    for template in story_templates:
+    for template in sections["story_templates"]:
         old_id = template.get("id")
         template_name = template.get("template_name", "")
 
@@ -305,13 +269,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         if old_id is not None:
             template_id_map[old_id] = new_id
 
-        imported_templates += 1
+        counts["story_templates"] += 1
 
     # -------------------------
     # Template Chapters
     # -------------------------
 
-    for chapter in story_template_chapters:
+    for chapter in sections["story_template_chapters"]:
         old_template_id = chapter.get("template_id")
 
         new_template_id = template_id_map.get(
@@ -333,7 +297,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             chapter.get("chapter_description", "")
         ))
 
-        imported_template_chapters += 1
+        counts["story_template_chapters"] += 1
 
     # -------------------------
     # Stories
@@ -341,7 +305,7 @@ def import_database_from_json(uploaded_file, replace_existing=False):
 
     story_id_map = {}
 
-    for story in stories:
+    for story in sections["stories"]:
         old_id = story.get("id")
         old_template_id = story.get("template_id")
         story_name = story.get("story_name", "")
@@ -384,13 +348,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
         if old_id is not None:
             story_id_map[old_id] = new_id
 
-        imported_stories += 1
+        counts["stories"] += 1
 
     # -------------------------
     # Story Chapters
     # -------------------------
 
-    for chapter in story_chapters:
+    for chapter in sections["story_chapters"]:
         old_story_id = chapter.get("story_id")
 
         new_story_id = story_id_map.get(
@@ -416,13 +380,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             chapter.get("chapter_summary", "")
         ))
 
-        imported_story_chapters += 1
+        counts["story_chapters"] += 1
 
     # -------------------------
     # LLM Calls
     # -------------------------
 
-    for llm_call in llm_calls:
+    for llm_call in sections["llm_calls"]:
         cursor.execute("""
             INSERT INTO llm_calls
             (
@@ -442,13 +406,13 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             llm_call.get("response", "")
         ))
 
-        imported_llm_calls += 1
+        counts["llm_calls"] += 1
 
     # -------------------------
     # Failed LLM Calls
     # -------------------------
 
-    for failed_call in failed_llm_calls:
+    for failed_call in sections["failed_llm_calls"]:
         cursor.execute("""
             INSERT INTO failed_llm_calls
             (
@@ -476,37 +440,43 @@ def import_database_from_json(uploaded_file, replace_existing=False):
             failed_call.get("error_details", "")
         ))
 
-        imported_failed_llm_calls += 1
+        counts["failed_llm_calls"] += 1
 
-    total_imported = (
-        imported_profiles
-        + imported_characters
-        + imported_templates
-        + imported_template_chapters
-        + imported_stories
-        + imported_story_chapters
-        + imported_llm_calls
-        + imported_failed_llm_calls
-        + imported_llm_models
-    )
-
-    if total_imported or replace_existing:
+    if total_import_count(counts) or replace_existing:
         mark_local_data_modified(cursor)
 
     conn.commit()
     conn.close()
 
+    return counts
+
+
+def get_import_sections(data):
     return {
-        "profiles": imported_profiles,
-        "characters": imported_characters,
-        "story_templates": imported_templates,
-        "story_template_chapters": imported_template_chapters,
-        "stories": imported_stories,
-        "story_chapters": imported_story_chapters,
-        "llm_calls": imported_llm_calls,
-        "failed_llm_calls": imported_failed_llm_calls,
-        "llm_models": imported_llm_models
+        "characters": data.get(
+            "characters",
+            data.get("character_generations", [])
+        ),
+        "profiles": data.get("profiles", []),
+        "story_templates": data.get("story_templates", []),
+        "story_template_chapters": data.get("story_template_chapters", []),
+        "stories": data.get("stories", []),
+        "story_chapters": data.get("story_chapters", []),
+        "llm_calls": data.get("llm_calls", []),
+        "failed_llm_calls": data.get("failed_llm_calls", []),
+        "llm_models": data.get("llm_models", []),
     }
+
+
+def empty_import_counts():
+    return {
+        key: 0
+        for key in IMPORT_COUNT_KEYS
+    }
+
+
+def total_import_count(counts):
+    return sum(counts.values())
 
 
 def clear_exported_tables(cursor):
