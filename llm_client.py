@@ -1,19 +1,15 @@
-import os
 import time
 
-import requests
 import streamlit as st
-from dotenv import load_dotenv
-from google import genai
 from google.genai import errors as genai_errors
-from groq import Groq
 
 from database import save_failed_llm_call, save_llm_call
+from llm_providers import SUPPORTED_PROVIDERS, generate_with_provider
 
 
 def generate_text(provider, model, prompt):
     try:
-        if provider not in ["Gemini", "Groq", "OpenRouter"]:
+        if provider not in SUPPORTED_PROVIDERS:
             st.error(f"Unsupported LLM provider: {provider}")
             log_failed_llm_call(
                 provider,
@@ -30,59 +26,14 @@ def generate_text(provider, model, prompt):
 
         throttle_llm_call(provider, model)
 
-        if provider == "Gemini":
-            response = generate_with_gemini(model, prompt)
-            if response is None:
-                log_failed_llm_call(
-                    provider,
-                    model,
-                    prompt,
-                    None,
-                    "NoResponse",
-                    "NO_RESPONSE",
-                    "Gemini did not return a response.",
-                    "Check the API key, model name, quota, or request format."
-                )
-                return None
+        response = generate_with_provider(provider, model, prompt)
 
-            log_llm_call(provider, model, prompt, response)
-            return response
+        if response is None:
+            log_no_response(provider, model, prompt)
+            return None
 
-        if provider == "Groq":
-            response = generate_with_groq(model, prompt)
-            if response is None:
-                log_failed_llm_call(
-                    provider,
-                    model,
-                    prompt,
-                    None,
-                    "NoResponse",
-                    "NO_RESPONSE",
-                    "Groq did not return a response.",
-                    "Check the API key, model name, quota, or request format."
-                )
-                return None
-
-            log_llm_call(provider, model, prompt, response)
-            return response
-
-        if provider == "OpenRouter":
-            response = generate_with_openrouter(model, prompt)
-            if response is None:
-                log_failed_llm_call(
-                    provider,
-                    model,
-                    prompt,
-                    None,
-                    "NoResponse",
-                    "NO_RESPONSE",
-                    "OpenRouter did not return a response.",
-                    "Check the API key, model name, quota, or request format."
-                )
-                return None
-
-            log_llm_call(provider, model, prompt, response)
-            return response
+        log_llm_call(provider, model, prompt, response)
+        return response
 
     except genai_errors.ServerError as error:
         error_text = str(error)
@@ -166,84 +117,6 @@ def remember_llm_call_start(provider, model):
     last_call_times[f"{provider}:{model}"] = time.monotonic()
 
 
-def generate_with_gemini(model, prompt):
-    load_dotenv()
-
-    api_key = os.getenv("GEMINI_API_KEY")
-
-    if not api_key:
-        st.error("GEMINI_API_KEY not found. Check your .env file.")
-        return None
-
-    client = genai.Client(api_key=api_key)
-
-    response = client.models.generate_content(
-        model=model,
-        contents=prompt
-    )
-
-    return response.text
-
-
-def generate_with_groq(model, prompt):
-    load_dotenv()
-
-    api_key = os.getenv("GROQ_API_KEY")
-
-    if not api_key:
-        st.error("GROQ_API_KEY not found. Check your .env file.")
-        return None
-
-    client = Groq(api_key=api_key)
-
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    )
-
-    return response.choices[0].message.content
-
-
-def generate_with_openrouter(model, prompt):
-    load_dotenv()
-
-    api_key = os.getenv("OPENROUTER_API_KEY")
-
-    if not api_key:
-        st.error("OPENROUTER_API_KEY not found. Check your .env file.")
-        return None
-
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "X-Title": "Story Builder"
-        },
-        json={
-            "model": model,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        },
-        timeout=60
-    )
-
-    response.raise_for_status()
-
-    data = response.json()
-
-    return data["choices"][0]["message"]["content"]
-
-
 def log_llm_call(provider, model, prompt, response):
     if response is None:
         return
@@ -253,6 +126,19 @@ def log_llm_call(provider, model, prompt, response):
         model,
         prompt,
         response
+    )
+
+
+def log_no_response(provider, model, prompt):
+    log_failed_llm_call(
+        provider,
+        model,
+        prompt,
+        None,
+        "NoResponse",
+        "NO_RESPONSE",
+        f"{provider} did not return a response.",
+        "Check the API key, model name, quota, or request format."
     )
 
 
