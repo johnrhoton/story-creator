@@ -50,7 +50,9 @@ def create_tables():
             template_name TEXT NOT NULL UNIQUE,
             overview TEXT,
             setting_background TEXT,
-            tone_style TEXT
+            tone_style TEXT,
+            male_character_roles TEXT,
+            female_character_roles TEXT
         )
     """)
 

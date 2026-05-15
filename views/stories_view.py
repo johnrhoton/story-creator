@@ -23,6 +23,7 @@ from services.story_service import (
     list_story_chapters,
     list_templates,
 )
+from services.template_service import parse_character_roles
 from views.bulk_actions import render_bulk_actions
 from ui_helpers import format_display_timestamp
 
@@ -34,6 +35,11 @@ def render_stories_tab():
 
     template_options = {
         template[2]: template[0]
+        for template in templates
+    }
+
+    template_rows_by_name = {
+        template[2]: template
         for template in templates
     }
 
@@ -73,17 +79,53 @@ def render_stories_tab():
             list(template_options.keys()) if template_options else []
         )
 
-        selected_male_characters = st.multiselect(
-            "Male characters",
-            male_character_options,
-            format_func=lambda name: male_character_labels.get(name, name)
+        selected_template = (
+            template_rows_by_name.get(selected_template_name)
+            if selected_template_name else None
         )
 
-        selected_female_characters = st.multiselect(
-            "Female characters",
-            female_character_options,
-            format_func=lambda name: female_character_labels.get(name, name)
-        )
+        male_roles = []
+        female_roles = []
+
+        if selected_template:
+            male_roles = parse_character_roles(selected_template[6])
+            female_roles = parse_character_roles(selected_template[7])
+
+        selected_male_characters = []
+        if male_roles:
+            st.markdown("**Male character slots**")
+            for idx, role in enumerate(male_roles, start=1):
+                selected_male_characters.append(
+                    st.selectbox(
+                        f"M{idx} — {role}",
+                        [""] + male_character_options,
+                        key=f"male_slot_{idx}"
+                    )
+                )
+        else:
+            selected_male_characters = st.multiselect(
+                "Male characters",
+                male_character_options,
+                format_func=lambda name: male_character_labels.get(name, name)
+            )
+
+        selected_female_characters = []
+        if female_roles:
+            st.markdown("**Female character slots**")
+            for idx, role in enumerate(female_roles, start=1):
+                selected_female_characters.append(
+                    st.selectbox(
+                        f"F{idx} — {role}",
+                        [""] + female_character_options,
+                        key=f"female_slot_{idx}"
+                    )
+                )
+        else:
+            selected_female_characters = st.multiselect(
+                "Female characters",
+                female_character_options,
+                format_func=lambda name: female_character_labels.get(name, name)
+            )
 
         create_story = st.form_submit_button(
             "Create story and generate chapters"
@@ -103,21 +145,43 @@ def render_stories_tab():
             )
         else:
             template_id = template_options[selected_template_name]
+            template = template_rows_by_name[selected_template_name]
+            male_roles = parse_character_roles(template[6])
+            female_roles = parse_character_roles(template[7])
+            missing_male = [
+                idx + 1 for idx, value in enumerate(selected_male_characters)
+                if male_roles and not value
+            ]
+            missing_female = [
+                idx + 1 for idx, value in enumerate(selected_female_characters)
+                if female_roles and not value
+            ]
 
-            try:
-                with st.spinner("Creating story and generating chapters..."):
-                    story_id = create_from_template(
-                        template_id,
-                        story_name,
-                        selected_male_characters,
-                        selected_female_characters
-                    )
+            if missing_male:
+                st.error(
+                    f"Please fill all male character slots: "
+                    f"{', '.join('M' + str(i) for i in missing_male)}."
+                )
+            elif missing_female:
+                st.error(
+                    f"Please fill all female character slots: "
+                    f"{', '.join('F' + str(i) for i in missing_female)}."
+                )
+            else:
+                try:
+                    with st.spinner("Creating story and generating chapters..."):
+                        story_id = create_from_template(
+                            template_id,
+                            story_name,
+                            selected_male_characters,
+                            selected_female_characters
+                        )
 
-                st.success(f"Story created with ID {story_id}.")
-                st.rerun()
+                    st.success(f"Story created with ID {story_id}.")
+                    st.rerun()
 
-            except Exception as error:
-                st.error(f"Story creation failed: {error}")
+                except Exception as error:
+                    st.error(f"Story creation failed: {error}")
 
     st.divider()
 

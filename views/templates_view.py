@@ -14,6 +14,8 @@ from services.template_service import (
     list_templates_for_export,
     list_template_chapters,
     list_templates,
+    format_character_roles,
+    parse_character_roles,
 )
 from views.bulk_actions import render_bulk_actions
 from ui_helpers import format_display_timestamp
@@ -39,6 +41,16 @@ def render_templates_tab():
 
         tone_style = st.text_input("Tone / Style")
 
+        male_character_roles = st.text_area(
+            "Male character roles (one per line, M1, M2, ...)",
+            height=120,
+        )
+
+        female_character_roles = st.text_area(
+            "Female character roles (one per line, F1, F2, ...)",
+            height=120,
+        )
+
         save_template = st.form_submit_button(
             "Create template"
         )
@@ -51,7 +63,17 @@ def render_templates_tab():
                 template_name.strip(),
                 overview,
                 setting_background,
-                tone_style
+                tone_style,
+                male_character_roles=[
+                    role.strip()
+                    for role in male_character_roles.splitlines()
+                    if role.strip()
+                ],
+                female_character_roles=[
+                    role.strip()
+                    for role in female_character_roles.splitlines()
+                    if role.strip()
+                ]
             )
 
             st.success(f"Template '{template_name}' created.")
@@ -115,13 +137,28 @@ def render_template_expander(template):
         template_name,
         overview,
         setting_background,
-        tone_style
+        tone_style,
+        male_character_roles,
+        female_character_roles
     ) = template
 
     with st.expander(template_name):
         st.write(
             f"**Created:** {format_display_timestamp(created_at)}"
         )
+
+        male_roles = parse_character_roles(template[6])
+        female_roles = parse_character_roles(template[7])
+
+        if male_roles:
+            st.markdown("**Male character slots:**")
+            for index, role in enumerate(male_roles, start=1):
+                st.write(f"M{index}: {role}")
+
+        if female_roles:
+            st.markdown("**Female character slots:**")
+            for index, role in enumerate(female_roles, start=1):
+                st.write(f"F{index}: {role}")
 
         with st.form(f"edit_template_{template_id}"):
             edited_template_name = st.text_input(
@@ -146,6 +183,22 @@ def render_template_expander(template):
                 value=tone_style or ""
             )
 
+            edited_male_character_roles = st.text_area(
+                "Male character roles (one per line, M1, M2, ...)",
+                value=format_character_roles(
+                    parse_character_roles(template[6])
+                ),
+                height=120,
+            )
+
+            edited_female_character_roles = st.text_area(
+                "Female character roles (one per line, F1, F2, ...)",
+                value=format_character_roles(
+                    parse_character_roles(template[7])
+                ),
+                height=120,
+            )
+
             save_changes = st.form_submit_button(
                 "Save template changes"
             )
@@ -156,7 +209,17 @@ def render_template_expander(template):
                 edited_template_name,
                 edited_overview,
                 edited_setting_background,
-                edited_tone_style
+                edited_tone_style,
+                male_character_roles=[
+                    role.strip()
+                    for role in edited_male_character_roles.splitlines()
+                    if role.strip()
+                ],
+                female_character_roles=[
+                    role.strip()
+                    for role in edited_female_character_roles.splitlines()
+                    if role.strip()
+                ]
             )
 
             st.success("Template updated.")

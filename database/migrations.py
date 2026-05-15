@@ -49,6 +49,10 @@ def run_migrations():
             "20260514101000_llm_model_defaults",
             migrate_20260514101000_llm_model_defaults
         ),
+        (
+            "20260515120000_template_character_roles",
+            migrate_20260515120000_template_character_roles
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -123,7 +127,7 @@ def get_columns(cursor, table_name):
 def add_column_if_missing(cursor, table_name, column_name, definition):
     columns = get_columns(cursor, table_name)
 
-    if column_name in columns:
+    if not columns or column_name in columns:
         return
 
     cursor.execute(f"""
@@ -459,6 +463,22 @@ def migrate_20260513112000_failed_llm_calls(cursor):
             error_details TEXT
         )
     """)
+
+
+def migrate_20260515120000_template_character_roles(cursor):
+    add_column_if_missing(
+        cursor,
+        "story_templates",
+        "male_character_roles",
+        "TEXT"
+    )
+
+    add_column_if_missing(
+        cursor,
+        "story_templates",
+        "female_character_roles",
+        "TEXT"
+    )
 
 
 # 2026-05-14 10:00

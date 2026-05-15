@@ -13,7 +13,9 @@ def add_story_template(
     template_name,
     overview,
     setting_background,
-    tone_style
+    tone_style,
+    male_character_roles=None,
+    female_character_roles=None,
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -25,9 +27,11 @@ def add_story_template(
             template_name,
             overview,
             setting_background,
-            tone_style
+            tone_style,
+            male_character_roles,
+            female_character_roles
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
         template_name,
@@ -37,7 +41,17 @@ def add_story_template(
             "setting_background",
             setting_background
         ),
-        encrypt_database_field("story_templates", "tone_style", tone_style)
+        encrypt_database_field("story_templates", "tone_style", tone_style),
+        encrypt_database_field(
+            "story_templates",
+            "male_character_roles",
+            male_character_roles
+        ),
+        encrypt_database_field(
+            "story_templates",
+            "female_character_roles",
+            female_character_roles
+        )
     ))
 
     template_id = cursor.lastrowid
@@ -54,7 +68,9 @@ def update_story_template(
     template_name,
     overview,
     setting_background,
-    tone_style
+    tone_style,
+    male_character_roles=None,
+    female_character_roles=None,
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -65,7 +81,9 @@ def update_story_template(
             template_name = ?,
             overview = ?,
             setting_background = ?,
-            tone_style = ?
+            tone_style = ?,
+            male_character_roles = ?,
+            female_character_roles = ?
         WHERE id = ?
     """, (
         template_name,
@@ -76,6 +94,16 @@ def update_story_template(
             setting_background
         ),
         encrypt_database_field("story_templates", "tone_style", tone_style),
+        encrypt_database_field(
+            "story_templates",
+            "male_character_roles",
+            male_character_roles
+        ),
+        encrypt_database_field(
+            "story_templates",
+            "female_character_roles",
+            female_character_roles
+        ),
         template_id
     ))
 
@@ -95,7 +123,9 @@ def clone_story_template(template_id):
             template_name,
             overview,
             setting_background,
-            tone_style
+            tone_style,
+            male_character_roles,
+            female_character_roles
         FROM story_templates
         WHERE id = ?
     """, (template_id,))
@@ -110,7 +140,9 @@ def clone_story_template(template_id):
         template_name,
         overview,
         setting_background,
-        tone_style
+        tone_style,
+        male_character_roles,
+        female_character_roles
     ) = row
 
     base_name = f"{template_name}_copy"
@@ -136,9 +168,11 @@ def clone_story_template(template_id):
             template_name,
             overview,
             setting_background,
-            tone_style
+            tone_style,
+            male_character_roles,
+            female_character_roles
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
         new_name,
@@ -148,7 +182,17 @@ def clone_story_template(template_id):
             "setting_background",
             setting_background
         ),
-        encrypt_database_field("story_templates", "tone_style", tone_style)
+        encrypt_database_field("story_templates", "tone_style", tone_style),
+        encrypt_database_field(
+            "story_templates",
+            "male_character_roles",
+            male_character_roles
+        ),
+        encrypt_database_field(
+            "story_templates",
+            "female_character_roles",
+            female_character_roles
+        )
     ))
 
     new_template_id = cursor.lastrowid
@@ -253,7 +297,9 @@ def get_story_templates():
             template_name,
             overview,
             setting_background,
-            tone_style
+            tone_style,
+            male_character_roles,
+            female_character_roles
         FROM story_templates
         ORDER BY template_name
     """)
@@ -280,7 +326,9 @@ def get_story_template(template_id):
             template_name,
             overview,
             setting_background,
-            tone_style
+            tone_style,
+            male_character_roles,
+            female_character_roles
         FROM story_templates
         WHERE id = ?
     """, (template_id,))
@@ -315,7 +363,9 @@ def get_story_templates_for_export(template_ids, decrypt_values=True):
             template_name,
             overview,
             setting_background,
-            tone_style
+            tone_style,
+            male_character_roles,
+            female_character_roles
         FROM story_templates
         WHERE id IN ({placeholders})
         ORDER BY template_name

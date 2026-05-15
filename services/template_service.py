@@ -1,3 +1,5 @@
+import json
+
 from database import (
     add_story_template,
     add_story_template_chapter,
@@ -11,6 +13,30 @@ from database import (
     update_story_template,
     update_story_template_chapter,
 )
+
+
+def parse_character_roles(roles_value):
+    if not roles_value:
+        return []
+
+    if isinstance(roles_value, list):
+        return [str(role) for role in roles_value if role is not None]
+
+    try:
+        parsed = json.loads(roles_value)
+        if isinstance(parsed, list):
+            return [str(role) for role in parsed if role is not None]
+    except Exception:
+        pass
+
+    return [line.strip() for line in str(roles_value).splitlines() if line.strip()]
+
+
+def format_character_roles(roles_list):
+    if not roles_list:
+        return ""
+
+    return "\n".join(str(role) for role in roles_list)
 
 
 def list_templates():
@@ -28,13 +54,19 @@ def create_template(
     template_name,
     overview,
     setting_background,
-    tone_style
+    tone_style,
+    male_character_roles=None,
+    female_character_roles=None,
 ):
     return add_story_template(
         template_name,
         overview,
         setting_background,
-        tone_style
+        tone_style,
+        male_character_roles=json.dumps(male_character_roles, ensure_ascii=False)
+        if male_character_roles is not None else None,
+        female_character_roles=json.dumps(female_character_roles, ensure_ascii=False)
+        if female_character_roles is not None else None,
     )
 
 
@@ -43,14 +75,20 @@ def edit_template(
     template_name,
     overview,
     setting_background,
-    tone_style
+    tone_style,
+    male_character_roles=None,
+    female_character_roles=None,
 ):
     update_story_template(
         template_id,
         template_name,
         overview,
         setting_background,
-        tone_style
+        tone_style,
+        male_character_roles=json.dumps(male_character_roles, ensure_ascii=False)
+        if male_character_roles is not None else None,
+        female_character_roles=json.dumps(female_character_roles, ensure_ascii=False)
+        if female_character_roles is not None else None,
     )
 
 
