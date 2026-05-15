@@ -16,7 +16,11 @@ from prompts import (
     build_story_chapter_zero_prompt,
 )
 from services.rag_indexing_service import index_chapter_summary
-from services.rag_service import format_rag_context, safe_search_memory
+from services.rag_service import (
+    format_rag_context,
+    safe_search_memory,
+    build_story_generation_memory,
+)
 
 
 def generate_story_chapters(story_id):
@@ -56,12 +60,18 @@ def generate_story_chapters(story_id):
         ) = chapter
 
         if chapter_number == 0:
-            rag_context = build_rag_context_for_chapter(
-                overview,
-                setting_background,
-                tone_style,
-                outline,
-                chapter_description
+            user_request = "\n".join([
+                f"Overview: {overview or ''}",
+                f"Setting/background: {setting_background or ''}",
+                f"Tone/style: {tone_style or ''}",
+                f"Outline: {outline or ''}",
+                f"User request: {chapter_description or ''}",
+            ])
+
+            rag_context = build_story_generation_memory(
+                story_id=story_id,
+                user_request=user_request,
+                n_results=6,
             )
             chapter_prompt = build_story_chapter_zero_prompt(
                 overview,
@@ -73,12 +83,18 @@ def generate_story_chapters(story_id):
                 rag_context
             )
         else:
-            rag_context = build_rag_context_for_chapter(
-                overview,
-                setting_background,
-                tone_style,
-                outline,
-                chapter_description
+            user_request = "\n".join([
+                f"Overview: {overview or ''}",
+                f"Setting/background: {setting_background or ''}",
+                f"Tone/style: {tone_style or ''}",
+                f"Outline: {outline or ''}",
+                f"User request: {chapter_description or ''}",
+            ])
+
+            rag_context = build_story_generation_memory(
+                story_id=story_id,
+                user_request=user_request,
+                n_results=6,
             )
             chapter_prompt = build_story_chapter_prompt(
                 overview,
@@ -171,12 +187,18 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id):
             male_characters,
             female_characters
         )
-        rag_context = build_rag_context_for_chapter(
-            overview,
-            setting_background,
-            tone_style,
-            outline,
-            chapter_description
+        user_request = "\n".join([
+            f"Overview: {overview or ''}",
+            f"Setting/background: {setting_background or ''}",
+            f"Tone/style: {tone_style or ''}",
+            f"Outline: {outline or ''}",
+            f"User request: {chapter_description or ''}",
+        ])
+
+        rag_context = build_story_generation_memory(
+            story_id=story_id,
+            user_request=user_request,
+            n_results=6,
         )
         chapter_prompt = build_story_chapter_zero_prompt(
             overview,
@@ -188,12 +210,18 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id):
             rag_context
         )
     else:
-        rag_context = build_rag_context_for_chapter(
-            overview,
-            setting_background,
-            tone_style,
-            outline,
-            chapter_description
+        user_request = "\n".join([
+            f"Overview: {overview or ''}",
+            f"Setting/background: {setting_background or ''}",
+            f"Tone/style: {tone_style or ''}",
+            f"Outline: {outline or ''}",
+            f"User request: {chapter_description or ''}",
+        ])
+
+        rag_context = build_story_generation_memory(
+            story_id=story_id,
+            user_request=user_request,
+            n_results=6,
         )
         chapter_prompt = build_story_chapter_prompt(
             overview,

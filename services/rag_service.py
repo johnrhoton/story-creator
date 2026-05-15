@@ -146,6 +146,86 @@ def format_rag_context(matches: list[dict]) -> str:
     return "\n\n".join(blocks)
 
 
+def build_story_generation_memory(
+    story_id: int | None,
+    user_request: str,
+    n_results: int = 6,
+) -> str:
+    """
+    Build a STORY MEMORY text block for chapter generation.
+
+    - Prefer records where metadata.story_id == story_id.
+    - Fill remaining slots with global-scope records (metadata.scope == 'global').
+    - Always filter out records that do not belong to the current story or global scope.
+    - Return formatted text suitable for prompt injection, or empty string.
+    """
+    if not user_request or not user_request.strip():
+        return ""
+
+    try:
+        matches: list[dict] = []
+
+        # First, try to retrieve records specific to the current story
+        if story_id:
+            story_matches = safe_search_memory(
+                user_request,
+                n_results=n_results,
+                where={"story_id": story_id},
+            )
+
+            # Only keep strictly matching story records or global ones
+            story_matches = [
+                m for m in (story_matches or [])
+                if (m.get("metadata", {}).get("story_id") == story_id)
+                or (m.get("metadata", {}).get("scope") == "global")
+            ]
+
+            matches.extend(story_matches)
+
+        # If we still need more results, fetch global-scoped memories
+        if len(matches) < n_results:
+            remaining = n_results - len(matches)
+            global_matches = safe_search_memory(
+                user_request,
+                n_results=remaining,
+                where={"scope": "global"},
+            )
+
+            # Ensure global matches have scope global
+            global_matches = [
+                m for m in (global_matches or [])
+                if m.get("metadata", {}).get("scope") == "global"
+            ]
+
+            # Append only non-duplicate matches
+            existing_texts = {m.get("text") for m in matches}
+            for m in global_matches:
+                if m.get("text") not in existing_texts:
+                    matches.append(m)
+
+        if not matches:
+            return ""
+
+        # Final safety filter: ensure no unrelated story memory is present
+        filtered = []
+        for m in matches:
+            md = m.get("metadata", {})
+            if story_id:
+                if md.get("story_id") == story_id or md.get("scope") == "global":
+                    filtered.append(m)
+            else:
+                # No story context: accept both global and any story-scoped memories
+                filtered.append(m)
+
+        if not filtered:
+            return ""
+
+        return format_rag_context(filtered)
+
+    except Exception:
+        return ""
+
+
 def clean_metadata(metadata: dict) -> dict:
     cleaned = {}
 

@@ -1,7 +1,7 @@
 import streamlit as st
 
 from services.rag_indexing_service import rebuild_rag_index_from_sqlite
-from services.rag_service import search_memory
+from services.rag_service import search_memory, build_story_generation_memory
 
 
 def render_rag_debug_panel():
@@ -11,6 +11,17 @@ def render_rag_debug_panel():
             key="rag_debug_query"
         )
 
+        story_id_input = st.text_input(
+            "Story ID (optional)",
+            key="rag_debug_story_id"
+        )
+
+        user_request = st.text_area(
+            "Generation request (preview)",
+            key="rag_debug_user_request",
+            height=120,
+        )
+
         col_search, col_rebuild = st.columns(2)
 
         with col_search:
@@ -18,6 +29,11 @@ def render_rag_debug_panel():
                 "Search memory",
                 key="rag_debug_search"
             )
+
+        show_memory = st.button(
+            "Show STORY MEMORY",
+            key="rag_debug_show_memory"
+        )
 
         with col_rebuild:
             rebuild = st.button(
@@ -52,3 +68,26 @@ def render_rag_debug_panel():
                 st.write(match.get("text", ""))
                 st.json(metadata)
                 st.write(f"Distance: {distance}")
+
+        if show_memory:
+            # Attempt to parse story_id as int, fall back to None
+            try:
+                story_id_val = int(story_id_input) if story_id_input and story_id_input.strip() else None
+            except Exception:
+                story_id_val = None
+
+            try:
+                rag_context = build_story_generation_memory(
+                    story_id=story_id_val,
+                    user_request=(user_request or query or ""),
+                    n_results=6,
+                )
+            except Exception as error:
+                st.error(f"Failed to build story memory: {error}")
+                rag_context = ""
+
+            if not rag_context:
+                st.info("No story memory would be injected.")
+            else:
+                st.markdown("**STORY MEMORY (injected):**")
+                st.code(rag_context)

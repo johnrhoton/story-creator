@@ -25,6 +25,10 @@ def index_character(character) -> None:
             "name": data.get("name") or "",
             "gender": data.get("gender") or "",
             "profile_name": data.get("profile_name") or "",
+            # If the character is attached to a specific story include story_id,
+            # otherwise mark it as global scope so it can be optionally reused.
+            "story_id": data.get("story_id") if data.get("story_id") else None,
+            "scope": "global" if not data.get("story_id") else "story",
         },
     )
 
