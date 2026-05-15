@@ -54,6 +54,15 @@ def upsert_memory(item_id: str, text: str, metadata: dict) -> None:
     )
 
 
+def safe_upsert_memory(item_id: str, text: str, metadata: dict) -> bool:
+    try:
+        upsert_memory(item_id, text, metadata)
+    except Exception:
+        return False
+
+    return True
+
+
 def search_memory(
     query: str,
     n_results: int = 5,
@@ -95,9 +104,29 @@ def search_memory(
     return matches
 
 
+def safe_search_memory(
+    query: str,
+    n_results: int = 5,
+    where: dict | None = None
+) -> list[dict]:
+    try:
+        return search_memory(query, n_results=n_results, where=where)
+    except Exception:
+        return []
+
+
 def delete_memory(item_id: str) -> None:
     collection = get_collection()
     collection.delete(ids=[item_id])
+
+
+def safe_delete_memory(item_id: str) -> bool:
+    try:
+        delete_memory(item_id)
+    except Exception:
+        return False
+
+    return True
 
 
 def format_rag_context(matches: list[dict]) -> str:

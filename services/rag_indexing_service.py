@@ -1,5 +1,9 @@
 from database import get_characters, get_profiles, get_stories, get_story_chapters
-from services.rag_service import delete_memory, reset_collection, upsert_memory
+from services.rag_service import (
+    reset_collection,
+    safe_delete_memory,
+    safe_upsert_memory,
+)
 
 
 def index_character(character) -> None:
@@ -12,7 +16,7 @@ def index_character(character) -> None:
     profile = get_profile_data(data.get("profile_name"))
     text = build_character_memory_text(data, profile)
 
-    upsert_memory(
+    safe_upsert_memory(
         f"character_{character_id}",
         text,
         {
@@ -45,7 +49,7 @@ def index_chapter_summary(
 
     text_parts.append(f"Summary: {summary}")
 
-    upsert_memory(
+    safe_upsert_memory(
         f"story_{story_id}_chapter_{chapter_number}",
         "\n".join(text_parts),
         {
@@ -58,11 +62,11 @@ def index_chapter_summary(
 
 
 def delete_character_memory(character_id) -> None:
-    delete_memory(f"character_{character_id}")
+    safe_delete_memory(f"character_{character_id}")
 
 
 def delete_chapter_summary_memory(story_id, chapter_number) -> None:
-    delete_memory(f"story_{story_id}_chapter_{chapter_number}")
+    safe_delete_memory(f"story_{story_id}_chapter_{chapter_number}")
 
 
 def rebuild_rag_index_from_sqlite() -> None:

@@ -16,7 +16,7 @@ from prompts import (
     build_story_chapter_zero_prompt,
 )
 from services.rag_indexing_service import index_chapter_summary
-from services.rag_service import format_rag_context, search_memory
+from services.rag_service import format_rag_context, safe_search_memory
 
 
 def generate_story_chapters(story_id):
@@ -257,7 +257,7 @@ def build_rag_context_for_chapter(
         f"User request: {chapter_description or ''}",
     ])
 
-    matches = search_memory(user_request, n_results=5)
+    matches = safe_search_memory(user_request, n_results=5)
 
     return format_rag_context(matches)
 
