@@ -750,6 +750,33 @@ def update_story_chapter(
     conn.close()
 
 
+def get_story_chapter(chapter_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            id,
+            story_id,
+            chapter_number,
+            chapter_description,
+            chapter_body,
+            chapter_summary
+        FROM story_chapters
+        WHERE id = ?
+    """, (chapter_id,))
+
+    columns = [column[0] for column in cursor.description]
+    row = cursor.fetchone()
+
+    if row:
+        row = decrypt_database_tuple("story_chapters", row, columns)
+
+    conn.close()
+
+    return row
+
+
 def delete_story_chapter(chapter_id):
     conn = get_connection()
     cursor = conn.cursor()

@@ -11,6 +11,7 @@ from views.export_import_view import render_export_import_tab
 from views.history_view import render_history_tab
 from views.models_view import render_models_tab
 from views.profiles_view import render_profiles_tab
+from views.rag_debug_view import render_rag_debug_panel
 from views.sidebar_view import render_llm_settings_sidebar
 from views.stories_view import render_stories_tab
 from views.templates_view import render_templates_tab
@@ -76,3 +77,5 @@ elif active_view == "History":
 
 elif active_view == "Export / Import":
     render_export_import_tab()
+
+render_rag_debug_panel()

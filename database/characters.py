@@ -63,8 +63,12 @@ def save_character(
 
     mark_local_data_modified(cursor)
 
+    character_id = cursor.lastrowid
+
     conn.commit()
     conn.close()
+
+    return character_id
 
 
 def update_character(

@@ -18,10 +18,12 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+*:Zone.Identifier
 
 # Database files
 *.db
 *.db-journal
+data/chroma_db/
 
 # Database backups
 *_backup_*.db

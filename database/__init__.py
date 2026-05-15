@@ -88,6 +88,7 @@ from database.stories import (
     get_stories,
     get_stories_for_export,
     get_story,
+    get_story_chapter,
     get_story_chapters,
     update_story,
     update_story_chapter,

@@ -14,6 +14,10 @@ from database import (
 )
 from llm_client import generate_text
 from prompts import build_character_summary_prompt, build_prompt
+from services.rag_indexing_service import (
+    delete_character_memory,
+    index_character,
+)
 
 
 def list_characters():
@@ -89,7 +93,7 @@ def create_character(
     response,
     summary
 ):
-    save_character(
+    character_id = save_character(
         profile_name,
         name,
         age,
@@ -101,6 +105,20 @@ def create_character(
         response,
         summary
     )
+    index_character({
+        "id": character_id,
+        "profile_name": profile_name,
+        "name": name,
+        "age": age,
+        "gender": gender,
+        "physical_traits": physical_traits,
+        "personality_traits": personality_traits,
+        "notes": notes,
+        "response": response,
+        "summary": summary,
+    })
+
+    return character_id
 
 
 def edit_character(
@@ -127,15 +145,44 @@ def edit_character(
         response,
         summary
     )
+    index_character({
+        "id": record_id,
+        "profile_name": profile_name,
+        "name": name,
+        "age": age,
+        "gender": gender,
+        "physical_traits": physical_traits,
+        "personality_traits": personality_traits,
+        "notes": notes,
+        "response": response,
+        "summary": summary,
+    })
 
 
 def clone_existing_character(record_id):
-    return clone_character(record_id)
+    new_id = clone_character(record_id)
+
+    if new_id:
+        matching_characters = [
+            character
+            for character in get_characters()
+            if character[0] == new_id
+        ]
+        if matching_characters:
+            index_character(matching_characters[0])
+
+    return new_id
 
 
 def delete_existing_character(record_id):
     delete_character(record_id)
+    delete_character_memory(record_id)
 
 
 def delete_existing_characters(record_ids):
-    return delete_characters(record_ids)
+    deleted_count = delete_characters(record_ids)
+
+    for record_id in record_ids:
+        delete_character_memory(record_id)
+
+    return deleted_count

@@ -9,9 +9,14 @@ from database import (
     get_stories,
     get_stories_for_export,
     get_story_chapters,
+    get_story_chapter,
     get_story_templates,
     update_story,
     update_story_chapter,
+)
+from services.rag_indexing_service import (
+    delete_chapter_summary_memory,
+    index_chapter_summary,
 )
 from services.story_generation_service import (
     generate_story_chapter_body_and_summary,
@@ -83,11 +88,25 @@ def clone_existing_story(story_id):
 
 
 def delete_existing_story(story_id):
+    chapters = get_story_chapters(story_id)
     delete_story(story_id)
+
+    for chapter in chapters:
+        delete_chapter_summary_memory(chapter[1], chapter[2])
 
 
 def delete_existing_stories(story_ids):
-    return delete_stories(story_ids)
+    chapters_by_story_id = {
+        story_id: get_story_chapters(story_id)
+        for story_id in story_ids
+    }
+    deleted_count = delete_stories(story_ids)
+
+    for chapters in chapters_by_story_id.values():
+        for chapter in chapters:
+            delete_chapter_summary_memory(chapter[1], chapter[2])
+
+    return deleted_count
 
 
 def list_story_chapters(story_id):
@@ -126,13 +145,22 @@ def create_story_chapter(
     chapter_body,
     chapter_summary
 ):
-    return add_story_chapter(
+    chapter_id = add_story_chapter(
         story_id,
         chapter_number,
         chapter_description,
         chapter_body,
         chapter_summary
     )
+    if chapter_summary:
+        index_chapter_summary(
+            story_id,
+            chapter_number,
+            chapter_summary,
+            title=chapter_description
+        )
+
+    return chapter_id
 
 
 def create_and_generate_story_chapter(
@@ -165,6 +193,8 @@ def edit_story_chapter(
     chapter_body,
     chapter_summary
 ):
+    old_chapter = get_story_chapter(chapter_id)
+
     update_story_chapter(
         chapter_id,
         chapter_number,
@@ -172,7 +202,23 @@ def edit_story_chapter(
         chapter_body,
         chapter_summary
     )
+    if old_chapter and old_chapter[2] != chapter_number:
+        delete_chapter_summary_memory(old_chapter[1], old_chapter[2])
+
+    updated_chapter = get_story_chapter(chapter_id)
+
+    if updated_chapter:
+        index_chapter_summary(
+            updated_chapter[1],
+            updated_chapter[2],
+            updated_chapter[5],
+            title=updated_chapter[3]
+        )
 
 
 def delete_existing_story_chapter(chapter_id):
+    chapter = get_story_chapter(chapter_id)
     delete_story_chapter(chapter_id)
+
+    if chapter:
+        delete_chapter_summary_memory(chapter[1], chapter[2])

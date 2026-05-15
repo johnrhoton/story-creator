@@ -15,6 +15,8 @@ from prompts import (
     build_story_chapter_summary_prompt,
     build_story_chapter_zero_prompt,
 )
+from services.rag_indexing_service import index_chapter_summary
+from services.rag_service import format_rag_context, search_memory
 
 
 def generate_story_chapters(story_id):
@@ -54,15 +56,30 @@ def generate_story_chapters(story_id):
         ) = chapter
 
         if chapter_number == 0:
+            rag_context = build_rag_context_for_chapter(
+                overview,
+                setting_background,
+                tone_style,
+                outline,
+                chapter_description
+            )
             chapter_prompt = build_story_chapter_zero_prompt(
                 overview,
                 setting_background,
                 tone_style,
                 outline,
                 characters,
-                chapter_description
+                chapter_description,
+                rag_context
             )
         else:
+            rag_context = build_rag_context_for_chapter(
+                overview,
+                setting_background,
+                tone_style,
+                outline,
+                chapter_description
+            )
             chapter_prompt = build_story_chapter_prompt(
                 overview,
                 setting_background,
@@ -70,7 +87,8 @@ def generate_story_chapters(story_id):
                 outline,
                 previous_summaries,
                 chapter_number,
-                chapter_description
+                chapter_description,
+                rag_context
             )
 
         chapter_body = call_selected_llm(chapter_prompt)
@@ -90,6 +108,12 @@ def generate_story_chapters(story_id):
             chapter_description,
             chapter_body,
             chapter_summary
+        )
+        index_chapter_summary(
+            _chapter_story_id,
+            chapter_number,
+            chapter_summary,
+            title=chapter_description
         )
 
         previous_summaries.append(
@@ -147,15 +171,30 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id):
             male_characters,
             female_characters
         )
+        rag_context = build_rag_context_for_chapter(
+            overview,
+            setting_background,
+            tone_style,
+            outline,
+            chapter_description
+        )
         chapter_prompt = build_story_chapter_zero_prompt(
             overview,
             setting_background,
             tone_style,
             outline,
             characters,
-            chapter_description
+            chapter_description,
+            rag_context
         )
     else:
+        rag_context = build_rag_context_for_chapter(
+            overview,
+            setting_background,
+            tone_style,
+            outline,
+            chapter_description
+        )
         chapter_prompt = build_story_chapter_prompt(
             overview,
             setting_background,
@@ -163,7 +202,8 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id):
             outline,
             build_previous_chapter_summaries(chapters, chapter_number),
             chapter_number,
-            chapter_description
+            chapter_description,
+            rag_context
         )
 
     chapter_body = call_selected_llm(chapter_prompt)
@@ -181,6 +221,12 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id):
         chapter_body,
         chapter_summary
     )
+    index_chapter_summary(
+        _chapter_story_id,
+        chapter_number,
+        chapter_summary,
+        title=chapter_description
+    )
 
     return {
         "chapter_body": chapter_body,
@@ -194,6 +240,26 @@ def call_selected_llm(prompt):
         st.session_state.get("llm_model", DEFAULT_LLM_MODEL),
         prompt
     )
+
+
+def build_rag_context_for_chapter(
+    overview,
+    setting_background,
+    tone_style,
+    outline,
+    chapter_description
+):
+    user_request = "\n".join([
+        f"Overview: {overview or ''}",
+        f"Setting/background: {setting_background or ''}",
+        f"Tone/style: {tone_style or ''}",
+        f"Outline: {outline or ''}",
+        f"User request: {chapter_description or ''}",
+    ])
+
+    matches = search_memory(user_request, n_results=5)
+
+    return format_rag_context(matches)
 
 
 def build_story_outline(chapters):
