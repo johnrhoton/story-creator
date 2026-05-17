@@ -34,6 +34,7 @@ from database.llm_models import (
 from database.migrations import run_migrations
 from database.profiles import add_profile, get_profiles
 from database.schema import create_tables
+from database.stories import add_story, get_stories
 from services import sync_service
 from services.sync_service import get_content_hash
 from scripts.seed_llm_models import seed_llm_models
@@ -67,6 +68,48 @@ def get_columns(table_name):
 
 
 class DatabaseBehaviourTests(unittest.TestCase):
+    def test_get_stories_orders_newest_first(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            older_id = add_story(
+                "Older",
+                None,
+                "overview",
+                "setting",
+                "tone",
+                [],
+                []
+            )
+            newer_id = add_story(
+                "Newer",
+                None,
+                "overview",
+                "setting",
+                "tone",
+                [],
+                []
+            )
+
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE stories SET created_at = ? WHERE id = ?",
+                ("2026-05-14T10:00:00", older_id)
+            )
+            cursor.execute(
+                "UPDATE stories SET created_at = ? WHERE id = ?",
+                ("2026-05-15T10:00:00", newer_id)
+            )
+            conn.commit()
+            conn.close()
+
+            self.assertEqual(
+                [story[2] for story in get_stories()],
+                ["Newer", "Older"]
+            )
+
     def test_migrations_rename_database_and_update_schema(self):
         with isolated_database_directory():
             old_db_path = Path("character_generations_v3.db")

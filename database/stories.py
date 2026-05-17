@@ -408,7 +408,7 @@ def get_stories():
             male_characters,
             female_characters
         FROM stories
-        ORDER BY story_name
+        ORDER BY datetime(created_at) DESC, id DESC
     """)
 
     columns = [column[0] for column in cursor.description]

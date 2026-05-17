@@ -84,7 +84,13 @@ def render_profiles_tab():
                 notes
             ) = profile
 
-            with st.expander(profile_name):
+            with st.expander(
+                build_profile_expander_label(
+                    profile_name,
+                    physical_traits,
+                    personality_traits
+                )
+            ):
                 with st.form(f"edit_profile_{profile_name}"):
 
                     edited_profile_name = st.text_input(
@@ -191,3 +197,51 @@ def build_selected_profiles_export_payload(selected_profiles):
     return {
         "profiles": profiles
     }
+
+
+def build_profile_expander_label(
+    profile_name,
+    physical_traits,
+    personality_traits
+):
+    traits = extract_first_profile_traits(
+        physical_traits,
+        personality_traits,
+        limit=5
+    )
+
+    if not traits:
+        return profile_name
+
+    return f"{profile_name} - {', '.join(traits)}"
+
+
+def extract_first_profile_traits(
+    physical_traits,
+    personality_traits,
+    limit=5
+):
+    traits = []
+
+    for value in [physical_traits, personality_traits]:
+        if not value:
+            continue
+
+        for trait in split_traits(value):
+            if trait and trait not in traits:
+                traits.append(trait)
+
+            if len(traits) >= limit:
+                return traits
+
+    return traits
+
+
+def split_traits(value):
+    normalized = value.replace("\n", ",").replace(";", ",")
+
+    return [
+        trait.strip()
+        for trait in normalized.split(",")
+        if trait.strip()
+    ]

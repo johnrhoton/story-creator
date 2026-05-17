@@ -230,7 +230,7 @@ def render_stories_tab():
     render_story_bulk_actions(stories)
 
     for story in stories:
-        render_story_expander(story)
+        render_story_expander(story, template_options)
 
 
 def render_story_bulk_actions(stories):
@@ -268,7 +268,7 @@ def build_story_option_label(story):
     return f"#{story_id} - {story_name}"
 
 
-def render_story_expander(story):
+def render_story_expander(story, template_options):
     (
         story_id,
         created_at,
@@ -286,8 +286,15 @@ def render_story_expander(story):
 
     male_character_values = safe_json_loads(male_characters)
     female_character_values = safe_json_loads(female_characters)
+    chapters = list_story_chapters(story_id)
+    story_title = build_story_expander_title(
+        story_name,
+        template_id,
+        template_options,
+        chapters
+    )
 
-    with st.expander(story_name):
+    with st.expander(story_title):
         st.write(
             f"**Created:** {format_display_timestamp(created_at)}"
         )
@@ -371,7 +378,7 @@ def render_story_expander(story):
 
         st.divider()
 
-        render_story_chapters_section(story_id)
+        render_story_chapters_section(story_id, chapters=chapters)
 
         st.divider()
 
@@ -396,10 +403,12 @@ def render_story_expander(story):
                 st.rerun()
 
 
-def render_story_chapters_section(story_id):
+def render_story_chapters_section(story_id, chapters=None):
     st.subheader("Chapters")
 
-    chapters = list_story_chapters(story_id)
+    if chapters is None:
+        chapters = list_story_chapters(story_id)
+
     story_markdown = build_full_story_markdown(chapters)
 
     if not chapters:
@@ -511,7 +520,8 @@ def render_story_chapter_expander(chapter):
 
     title = (
         f"Chapter {chapter_number} — "
-        f"{truncate_text(chapter_description, 60)}"
+        f"{truncate_text(chapter_description, 60)} "
+        f"({count_words(chapter_body)} words)"
     )
 
     with st.expander(title):
@@ -619,6 +629,33 @@ def build_character_option_labels(character_rows):
         labels[name] = f"{name} — {age} — {profile_name}"
 
     return labels
+
+
+def build_story_expander_title(
+    story_name,
+    template_id,
+    template_options,
+    chapters
+):
+    display_story_name = story_name or "Untitled story"
+    template_name = template_options.get(template_id, "No template")
+    word_count = count_story_words(chapters)
+
+    return f"{display_story_name} - {template_name} ({word_count} words)"
+
+
+def count_story_words(chapters):
+    return sum(
+        count_words(chapter[4])
+        for chapter in chapters
+    )
+
+
+def count_words(text):
+    if not text:
+        return 0
+
+    return len(text.split())
 
 
 def split_csv(value):

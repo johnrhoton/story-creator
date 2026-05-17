@@ -172,7 +172,7 @@ def render_index_section():
         st.info("No Chroma memory items found.")
         return
 
-    grouped_items = group_memory_items_by_type(items)
+    grouped_items = order_memory_groups(group_memory_items_by_type(items))
 
     st.caption(f"{len(items)} item(s) loaded from Chroma.")
 
@@ -229,3 +229,22 @@ def format_memory_type_label(item_type):
         return labels[item_type]
 
     return str(item_type).replace("_", " ").capitalize()
+
+
+def order_memory_groups(grouped_items):
+    preferred_order = [
+        "story",
+        "chapter_summary",
+        "character",
+    ]
+    ordered = {}
+
+    for item_type in preferred_order:
+        if item_type in grouped_items:
+            ordered[item_type] = grouped_items[item_type]
+
+    for item_type in sorted(grouped_items):
+        if item_type not in ordered:
+            ordered[item_type] = grouped_items[item_type]
+
+    return ordered

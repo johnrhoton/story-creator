@@ -6,6 +6,26 @@ from ui_helpers import format_display_timestamp
 
 
 def render_history_tab():
+    history_view = st.radio(
+        "History type",
+        [
+            "Character history",
+            "LLM Calls",
+            "Failed calls",
+        ],
+        horizontal=True,
+        key="history_view"
+    )
+
+    if history_view == "Character history":
+        render_character_history()
+    elif history_view == "LLM Calls":
+        render_llm_call_history()
+    elif history_view == "Failed calls":
+        render_failed_llm_call_history()
+
+
+def render_character_history():
     st.header("Character history")
 
     rows = list_characters()
@@ -48,14 +68,6 @@ def render_history_tab():
 
                 st.write("**Description:**")
                 st.write(response)
-
-    st.divider()
-
-    render_llm_call_history()
-
-    st.divider()
-
-    render_failed_llm_call_history()
 
 
 def render_llm_call_history():
