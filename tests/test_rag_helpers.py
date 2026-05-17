@@ -3,8 +3,10 @@ from unittest.mock import patch
 
 from prompts import build_story_chapter_prompt
 from services.rag_indexing_service import (
+    build_story_memory_text,
     build_character_memory_text,
     index_chapter_summary,
+    rebuild_rag_index_from_sqlite,
 )
 from services.rag_service import (
     clean_metadata,
@@ -73,6 +75,11 @@ class RagHelperTests(unittest.TestCase):
                 "metadata": {"type": "chapter_summary"},
             },
             {
+                "id": "story_1",
+                "text": "Story memory",
+                "metadata": {"type": "story"},
+            },
+            {
                 "id": "loose",
                 "text": "Loose memory",
                 "metadata": {},
@@ -81,11 +88,73 @@ class RagHelperTests(unittest.TestCase):
 
         self.assertEqual(
             sorted(grouped.keys()),
-            ["chapter_summary", "character", "unknown"]
+            ["chapter_summary", "character", "story", "unknown"]
         )
         self.assertEqual(grouped["character"][0]["id"], "character_1")
         self.assertEqual(grouped["chapter_summary"][0]["id"], "story_1_chapter_1")
+        self.assertEqual(grouped["story"][0]["id"], "story_1")
         self.assertEqual(grouped["unknown"][0]["id"], "loose")
+
+    @patch("services.rag_indexing_service.index_chapter_summary")
+    @patch("services.rag_indexing_service.index_story")
+    @patch("services.rag_indexing_service.index_character")
+    @patch("services.rag_indexing_service.get_story_chapters")
+    @patch("services.rag_indexing_service.get_stories")
+    @patch("services.rag_indexing_service.get_characters")
+    @patch("services.rag_indexing_service.reset_collection")
+    def test_rebuild_rag_index_returns_category_counts(
+        self,
+        mock_reset_collection,
+        mock_get_characters,
+        mock_get_stories,
+        mock_get_story_chapters,
+        mock_index_character,
+        mock_index_story,
+        mock_index_chapter_summary
+    ):
+        mock_get_characters.return_value = [
+            (1, None, None, "Alice", "18", "female", "", "", "", "", ""),
+            (2, None, None, "Ben", "19", "male", "", "", "", "", ""),
+        ]
+        mock_get_stories.return_value = [
+            (10, "created", "Story", None, "", "", "", "", "", "", "", ""),
+        ]
+        mock_get_story_chapters.return_value = [
+            (1, 10, 0, "Opening", "Body", "Summary"),
+            (2, 10, 1, "Next", "Body", ""),
+        ]
+
+        counts = rebuild_rag_index_from_sqlite()
+
+        self.assertEqual(
+            counts,
+            {
+                "stories": 1,
+                "characters": 2,
+                "chapter_summaries": 1,
+            }
+        )
+        mock_reset_collection.assert_called_once()
+        self.assertEqual(mock_index_character.call_count, 2)
+        mock_index_story.assert_called_once()
+        self.assertEqual(mock_index_chapter_summary.call_count, 2)
+
+    def test_build_story_memory_text_includes_story_fields(self):
+        text = build_story_memory_text({
+            "story_name": "Harbor Lights",
+            "overview": "A crew searches for a lost signal.",
+            "setting_background": "A foggy port.",
+            "tone_style": "Quiet mystery.",
+            "additional_instructions": "Keep scenes short.",
+            "language": "French",
+            "language_level": "B1",
+            "male_characters": '["Alden"]',
+            "female_characters": '["Mira"]',
+        })
+
+        self.assertIn("Story name: Harbor Lights", text)
+        self.assertIn("Overview: A crew searches", text)
+        self.assertIn("Language level: B1", text)
 
     def test_prompt_includes_story_memory_and_user_request(self):
         prompt = build_story_chapter_prompt(

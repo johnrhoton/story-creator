@@ -45,7 +45,7 @@ def generate_story_chapters(story_id, progress_callback=None):
     ) = story
 
     chapters = get_story_chapters(story_id)
-    total_chapters = len(chapters)
+    total_chapters = get_total_chapter_number(chapters)
     outline = build_story_outline(chapters)
     characters = build_character_list(
         male_characters,
@@ -53,7 +53,7 @@ def generate_story_chapters(story_id, progress_callback=None):
     )
     previous_summaries = []
 
-    for chapter_index, chapter in enumerate(chapters, start=1):
+    for chapter in chapters:
         (
             chapter_id,
             _chapter_story_id,
@@ -63,7 +63,7 @@ def generate_story_chapters(story_id, progress_callback=None):
             _chapter_summary
         ) = chapter
         if progress_callback:
-            progress_callback(chapter_index, total_chapters)
+            progress_callback(chapter_number, total_chapters)
 
         if chapter_number == 0:
             user_request = "\n".join([
@@ -180,7 +180,7 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
         get_story_chapters(story_id),
         key=lambda chapter: chapter[2]
     )
-    total_chapters = len(chapters)
+    total_chapters = get_total_chapter_number(chapters)
     target_chapter = next(
         (
             chapter
@@ -203,8 +203,7 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
     ) = target_chapter
 
     if progress_callback:
-        target_index = chapters.index(target_chapter) + 1
-        progress_callback(target_index, total_chapters)
+        progress_callback(chapter_number, total_chapters)
 
     outline = build_story_outline(chapters)
 
@@ -332,6 +331,17 @@ def build_story_outline(chapters):
     return "\n".join(
         f"Chapter {chapter[2]}: {chapter[3] or ''}"
         for chapter in chapters
+    )
+
+
+def get_total_chapter_number(chapters):
+    if not chapters:
+        return 0
+
+    return max(
+        chapter[2]
+        for chapter in chapters
+        if chapter[2] is not None
     )
 
 

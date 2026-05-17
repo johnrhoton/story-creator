@@ -16,6 +16,7 @@ from database import (
 )
 from services.rag_indexing_service import (
     delete_chapter_summary_memory,
+    delete_story_memory,
     index_chapter_summary,
 )
 from services.story_generation_service import (
@@ -103,6 +104,7 @@ def clone_existing_story(story_id):
 def delete_existing_story(story_id):
     chapters = get_story_chapters(story_id)
     delete_story(story_id)
+    delete_story_memory(story_id)
 
     for chapter in chapters:
         delete_chapter_summary_memory(chapter[1], chapter[2])
@@ -114,6 +116,9 @@ def delete_existing_stories(story_ids):
         for story_id in story_ids
     }
     deleted_count = delete_stories(story_ids)
+
+    for story_id in story_ids:
+        delete_story_memory(story_id)
 
     for chapters in chapters_by_story_id.values():
         for chapter in chapters:

@@ -33,6 +33,25 @@ def index_character(character) -> None:
     )
 
 
+def index_story(story) -> None:
+    data = normalize_story(story)
+    story_id = data.get("id")
+
+    if not story_id:
+        return
+
+    safe_upsert_memory(
+        f"story_{story_id}",
+        build_story_memory_text(data),
+        {
+            "type": "story",
+            "story_id": story_id,
+            "name": data.get("story_name") or "",
+            "scope": "story",
+        },
+    )
+
+
 def index_chapter_summary(
     story_id,
     chapter_number,
@@ -73,14 +92,27 @@ def delete_chapter_summary_memory(story_id, chapter_number) -> None:
     safe_delete_memory(f"story_{story_id}_chapter_{chapter_number}")
 
 
-def rebuild_rag_index_from_sqlite() -> None:
+def delete_story_memory(story_id) -> None:
+    safe_delete_memory(f"story_{story_id}")
+
+
+def rebuild_rag_index_from_sqlite() -> dict:
     reset_collection()
+
+    counts = {
+        "stories": 0,
+        "characters": 0,
+        "chapter_summaries": 0,
+    }
 
     for character in get_characters():
         index_character(character)
+        counts["characters"] += 1
 
     for story in get_stories():
         story_id = story[0]
+        index_story(story)
+        counts["stories"] += 1
 
         for chapter in get_story_chapters(story_id):
             (
@@ -98,6 +130,11 @@ def rebuild_rag_index_from_sqlite() -> None:
                 chapter_summary,
                 title=chapter_description,
             )
+
+            if chapter_summary and str(chapter_summary).strip():
+                counts["chapter_summaries"] += 1
+
+    return counts
 
 
 def normalize_character(character) -> dict:
@@ -129,6 +166,40 @@ def normalize_character(character) -> dict:
         "notes": notes,
         "response": response,
         "summary": summary,
+    }
+
+
+def normalize_story(story) -> dict:
+    if isinstance(story, dict):
+        return story
+
+    (
+        story_id,
+        _created_at,
+        story_name,
+        template_id,
+        overview,
+        setting_background,
+        tone_style,
+        additional_instructions,
+        language,
+        language_level,
+        male_characters,
+        female_characters,
+    ) = story
+
+    return {
+        "id": story_id,
+        "story_name": story_name,
+        "template_id": template_id,
+        "overview": overview,
+        "setting_background": setting_background,
+        "tone_style": tone_style,
+        "additional_instructions": additional_instructions,
+        "language": language,
+        "language_level": language_level,
+        "male_characters": male_characters,
+        "female_characters": female_characters,
     }
 
 
@@ -181,5 +252,25 @@ def build_character_memory_text(data, profile) -> str:
             ),
             f"Profile notes: {profile.get('notes') or ''}",
         ])
+
+    return "\n".join(parts)
+
+
+def build_story_memory_text(data) -> str:
+    parts = [
+        f"Story name: {data.get('story_name') or ''}",
+        f"Template ID: {data.get('template_id') or ''}",
+        f"Overview: {data.get('overview') or ''}",
+        f"Setting/background: {data.get('setting_background') or ''}",
+        f"Tone/style: {data.get('tone_style') or ''}",
+        (
+            "Additional instructions: "
+            f"{data.get('additional_instructions') or ''}"
+        ),
+        f"Language: {data.get('language') or ''}",
+        f"Language level: {data.get('language_level') or ''}",
+        f"Male characters: {data.get('male_characters') or ''}",
+        f"Female characters: {data.get('female_characters') or ''}",
+    ]
 
     return "\n".join(parts)

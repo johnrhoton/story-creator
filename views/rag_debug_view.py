@@ -32,8 +32,14 @@ def render_rebuild_section():
     ):
         try:
             with st.spinner("Rebuilding Chroma index from SQLite..."):
-                rebuild_rag_index_from_sqlite()
+                counts = rebuild_rag_index_from_sqlite()
             st.success("Chroma index rebuilt from SQLite.")
+            st.write(
+                "Indexed "
+                f"{counts.get('stories', 0)} stories, "
+                f"{counts.get('characters', 0)} characters, and "
+                f"{counts.get('chapter_summaries', 0)} chapter summaries."
+            )
         except Exception as error:
             st.error(f"RAG rebuild failed: {error}")
 
@@ -171,13 +177,13 @@ def render_index_section():
     st.caption(f"{len(items)} item(s) loaded from Chroma.")
 
     tabs = st.tabs([
-        f"{item_type} ({len(grouped)})"
+        f"{format_memory_type_label(item_type)} ({len(grouped)})"
         for item_type, grouped in grouped_items.items()
     ])
 
     for tab, (item_type, grouped) in zip(tabs, grouped_items.items()):
         with tab:
-            st.markdown(f"### {item_type}")
+            st.markdown(f"### {format_memory_type_label(item_type)}")
 
             for index, item in enumerate(grouped, start=1):
                 metadata = item.get("metadata", {})
@@ -199,7 +205,7 @@ def build_memory_item_label(index, metadata, distance=None):
         or ""
     )
 
-    label = f"{index}. {item_type}"
+    label = f"{index}. {format_memory_type_label(item_type)}"
 
     if name != "":
         label = f"{label}: {name}"
@@ -208,3 +214,18 @@ def build_memory_item_label(index, metadata, distance=None):
         label = f"{label} | distance {distance:.4f}"
 
     return label
+
+
+def format_memory_type_label(item_type):
+    labels = {
+        "story": "Stories",
+        "chapter_summary": "Chapter Summaries",
+        "character": "Characters",
+        "unknown": "Unknown",
+        "memory": "Memory",
+    }
+
+    if item_type in labels:
+        return labels[item_type]
+
+    return str(item_type).replace("_", " ").capitalize()

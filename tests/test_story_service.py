@@ -6,6 +6,7 @@ from services.story_service import (
     create_and_generate_story_chapter,
 )
 from services.story_generation_service import (
+    generate_story_chapters,
     generate_story_chapter_body_and_summary,
 )
 
@@ -151,6 +152,73 @@ class StoryServiceTests(unittest.TestCase):
             "Opening",
             "Generated opening",
             "Opening summary"
+        )
+
+    @patch("services.story_generation_service.index_chapter_summary")
+    @patch("services.story_generation_service.get_character_summaries_by_names")
+    @patch("services.story_generation_service.update_story_chapter")
+    @patch("services.story_generation_service.call_selected_llm")
+    @patch("services.story_generation_service.get_story_chapters")
+    @patch("services.story_generation_service.get_story")
+    def test_generate_story_chapters_progress_uses_chapter_number_over_last_chapter(
+        self,
+        mock_get_story,
+        mock_get_story_chapters,
+        mock_call_selected_llm,
+        mock_update_story_chapter,
+        mock_get_character_summaries,
+        mock_index_chapter_summary
+    ):
+        mock_get_story.return_value = (
+            1,
+            "2026-05-14T12:00:00",
+            "Story",
+            10,
+            "Overview",
+            "Setting",
+            "Tone",
+            "",
+            "",
+            "",
+            "[]",
+            "[]",
+        )
+        mock_get_story_chapters.return_value = [
+            (10, 1, 0, "Opening", "", ""),
+            (11, 1, 1, "Chapter one", "", ""),
+            (12, 1, 2, "Chapter two", "", ""),
+            (13, 1, 3, "Chapter three", "", ""),
+            (14, 1, 4, "Chapter four", "", ""),
+            (15, 1, 5, "Chapter five", "", ""),
+        ]
+        mock_get_character_summaries.return_value = {}
+        mock_call_selected_llm.side_effect = [
+            value
+            for chapter_number in range(6)
+            for value in [
+                f"Body {chapter_number}",
+                f"Summary {chapter_number}",
+            ]
+        ]
+        progress_calls = []
+
+        generate_story_chapters(
+            1,
+            progress_callback=lambda current, total: progress_calls.append(
+                (current, total)
+            )
+        )
+
+        self.assertEqual(
+            progress_calls,
+            [
+                (0, 5),
+                (1, 5),
+                (2, 5),
+                (3, 5),
+                (4, 5),
+                (5, 5),
+            ]
         )
 
     @patch("services.story_service.generate_story_chapter_body_and_summary")
