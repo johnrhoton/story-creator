@@ -67,6 +67,16 @@ ENCRYPTED_TABLE_FIELDS = {
         "chapter_body",
         "chapter_summary",
     },
+    "story_beats": {
+        "title",
+        "characters",
+        "location",
+        "time_span",
+        "summary",
+        "continuity_effect",
+        "unresolved_threads",
+        "search_keywords",
+    },
     "llm_calls": {
         "prompt",
         "response",

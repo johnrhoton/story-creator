@@ -61,11 +61,12 @@ class ViewLabelTests(unittest.TestCase):
             "unknown": ["unknown"],
             "story": ["story"],
             "chapter_summary": ["chapter"],
+            "story_beat": ["beat"],
         }
 
         self.assertEqual(
             list(order_memory_groups(grouped).keys()),
-            ["story", "chapter_summary", "character", "unknown"]
+            ["story", "chapter_summary", "story_beat", "character", "unknown"]
         )
 
     def test_object_history_label_includes_required_fields(self):

@@ -100,6 +100,28 @@ def create_tables():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS story_beats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            story_id INTEGER NOT NULL,
+            chapter_number INTEGER NOT NULL,
+            sequence_number INTEGER NOT NULL,
+            beat_type TEXT NOT NULL,
+            title TEXT,
+            characters TEXT,
+            location TEXT,
+            time_span TEXT,
+            summary TEXT,
+            continuity_effect TEXT,
+            unresolved_threads TEXT,
+            search_keywords TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (story_id)
+                REFERENCES stories (id)
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS llm_calls (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             created_at TEXT NOT NULL,

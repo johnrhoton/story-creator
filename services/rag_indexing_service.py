@@ -1,9 +1,16 @@
-from database import get_characters, get_profiles, get_stories, get_story_chapters
+from database import (
+    get_characters,
+    get_profiles,
+    get_stories,
+    get_story_beats,
+    get_story_chapters,
+)
 from services.rag_service import (
     reset_collection,
     safe_delete_memory,
     safe_upsert_memory,
 )
+from services.story_beat_service import index_story_beat
 
 
 def index_character(character) -> None:
@@ -103,6 +110,7 @@ def rebuild_rag_index_from_sqlite() -> dict:
         "stories": 0,
         "characters": 0,
         "chapter_summaries": 0,
+        "story_beats": 0,
     }
 
     for character in get_characters():
@@ -133,6 +141,14 @@ def rebuild_rag_index_from_sqlite() -> dict:
 
             if chapter_summary and str(chapter_summary).strip():
                 counts["chapter_summaries"] += 1
+
+        for beat in get_story_beats(story_id=story_id):
+            index_story_beat(
+                beat["story_id"],
+                beat["chapter_number"],
+                beat
+            )
+            counts["story_beats"] += 1
 
     return counts
 

@@ -25,6 +25,11 @@ from services.story_generation_service import (
     generate_story_chapter_body_and_summary,
     generate_story_chapters,
 )
+from services.story_beat_service import (
+    delete_story_beats_for_chapter,
+    delete_story_beats_for_story,
+    safe_extract_save_and_index_story_beats,
+)
 
 
 def list_templates():
@@ -119,6 +124,7 @@ def delete_existing_story(story_id):
     chapters = get_story_chapters(story_id)
     delete_story(story_id)
     delete_story_memory(story_id)
+    delete_story_beats_for_story(story_id)
 
     for chapter in chapters:
         delete_chapter_summary_memory(chapter[1], chapter[2])
@@ -140,6 +146,7 @@ def delete_existing_stories(story_ids):
 
     for story_id in story_ids:
         delete_story_memory(story_id)
+        delete_story_beats_for_story(story_id)
 
     for chapters in chapters_by_story_id.values():
         for chapter in chapters:
@@ -203,6 +210,13 @@ def create_story_chapter(
             title=chapter_description
         )
 
+    if chapter_body:
+        safe_extract_save_and_index_story_beats(
+            story_id,
+            chapter_number,
+            chapter_body
+        )
+
     return chapter_id
 
 
@@ -249,6 +263,7 @@ def edit_story_chapter(
     )
     if old_chapter and old_chapter[2] != chapter_number:
         delete_chapter_summary_memory(old_chapter[1], old_chapter[2])
+        delete_story_beats_for_chapter(old_chapter[1], old_chapter[2])
 
     updated_chapter = get_story_chapter(chapter_id)
 
@@ -259,6 +274,12 @@ def edit_story_chapter(
             updated_chapter[5],
             title=updated_chapter[3]
         )
+        if updated_chapter[4]:
+            safe_extract_save_and_index_story_beats(
+                updated_chapter[1],
+                updated_chapter[2],
+                updated_chapter[4]
+            )
 
 
 def delete_existing_story_chapter(chapter_id):
@@ -267,6 +288,7 @@ def delete_existing_story_chapter(chapter_id):
 
     if chapter:
         delete_chapter_summary_memory(chapter[1], chapter[2])
+        delete_story_beats_for_chapter(chapter[1], chapter[2])
 
 
 def log_story_history_from_row(story, operation):

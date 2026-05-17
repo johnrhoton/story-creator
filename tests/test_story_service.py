@@ -42,6 +42,7 @@ class StoryServiceTests(unittest.TestCase):
             "## Chapter 0\n\nKeep me"
         )
 
+    @patch("services.story_generation_service.safe_extract_save_and_index_story_beats")
     @patch("services.story_generation_service.update_story_chapter")
     @patch("services.story_generation_service.call_selected_llm")
     @patch("services.story_generation_service.get_story_chapters")
@@ -51,7 +52,8 @@ class StoryServiceTests(unittest.TestCase):
         mock_get_story,
         mock_get_story_chapters,
         mock_call_selected_llm,
-        mock_update_story_chapter
+        mock_update_story_chapter,
+        mock_safe_extract_beats
     ):
         mock_get_story.return_value = (
             1,
@@ -99,6 +101,7 @@ class StoryServiceTests(unittest.TestCase):
             }
         )
 
+    @patch("services.story_generation_service.safe_extract_save_and_index_story_beats")
     @patch("services.story_generation_service.get_character_summaries_by_names")
     @patch("services.story_generation_service.update_story_chapter")
     @patch("services.story_generation_service.call_selected_llm")
@@ -110,7 +113,8 @@ class StoryServiceTests(unittest.TestCase):
         mock_get_story_chapters,
         mock_call_selected_llm,
         mock_update_story_chapter,
-        mock_get_character_summaries
+        mock_get_character_summaries,
+        mock_safe_extract_beats
     ):
         mock_get_story.return_value = (
             1,
@@ -155,6 +159,7 @@ class StoryServiceTests(unittest.TestCase):
             "Opening summary"
         )
 
+    @patch("services.story_generation_service.safe_extract_save_and_index_story_beats")
     @patch("services.story_generation_service.index_chapter_summary")
     @patch("services.story_generation_service.get_character_summaries_by_names")
     @patch("services.story_generation_service.update_story_chapter")
@@ -168,7 +173,8 @@ class StoryServiceTests(unittest.TestCase):
         mock_call_selected_llm,
         mock_update_story_chapter,
         mock_get_character_summaries,
-        mock_index_chapter_summary
+        mock_index_chapter_summary,
+        mock_safe_extract_beats
     ):
         mock_get_story.return_value = (
             1,

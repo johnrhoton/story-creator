@@ -216,17 +216,17 @@ def build_story_generation_memory(
     Build a STORY MEMORY text block for chapter generation.
 
     - Prefer records where metadata.story_id == story_id.
-    - Fill remaining slots with global-scope records (metadata.scope == 'global').
+    - Fill remaining slots with global-scope character records.
     - Always filter out records that do not belong to the current story or global scope.
-    - Return formatted text suitable for prompt injection, or empty string.
+    - Group records so prompts can distinguish characters, continuity, beats, and
+      unresolved threads.
     """
     if not user_request or not user_request.strip():
         return ""
 
     try:
-        matches: list[dict] = []
+        story_matches: list[dict] = []
 
-        # First, try to retrieve records specific to the current story
         if story_id:
             story_matches = safe_search_memory(
                 user_request,
@@ -234,57 +234,140 @@ def build_story_generation_memory(
                 where={"story_id": story_id},
             )
 
-            # Only keep strictly matching story records or global ones
             story_matches = [
                 m for m in (story_matches or [])
-                if (m.get("metadata", {}).get("story_id") == story_id)
-                or (m.get("metadata", {}).get("scope") == "global")
+                if m.get("metadata", {}).get("story_id") == story_id
             ]
 
-            matches.extend(story_matches)
+        global_matches = safe_search_memory(
+            user_request,
+            n_results=n_results,
+            where={"scope": "global"},
+        )
+        global_matches = [
+            m for m in (global_matches or [])
+            if m.get("metadata", {}).get("scope") == "global"
+        ]
 
-        # If we still need more results, fetch global-scoped memories
-        if len(matches) < n_results:
-            remaining = n_results - len(matches)
-            global_matches = safe_search_memory(
+        matches = dedupe_memory_matches(story_matches + global_matches)
+
+        if not story_id:
+            extra_matches = safe_search_memory(
                 user_request,
-                n_results=remaining,
-                where={"scope": "global"},
+                n_results=n_results,
             )
-
-            # Ensure global matches have scope global
-            global_matches = [
-                m for m in (global_matches or [])
-                if m.get("metadata", {}).get("scope") == "global"
-            ]
-
-            # Append only non-duplicate matches
-            existing_texts = {m.get("text") for m in matches}
-            for m in global_matches:
-                if m.get("text") not in existing_texts:
-                    matches.append(m)
+            matches = dedupe_memory_matches(matches + (extra_matches or []))
 
         if not matches:
             return ""
 
-        # Final safety filter: ensure no unrelated story memory is present
-        filtered = []
-        for m in matches:
-            md = m.get("metadata", {})
-            if story_id:
-                if md.get("story_id") == story_id or md.get("scope") == "global":
-                    filtered.append(m)
-            else:
-                # No story context: accept both global and any story-scoped memories
-                filtered.append(m)
+        filtered = filter_story_memory_matches(matches, story_id)
 
         if not filtered:
             return ""
 
-        return format_rag_context(filtered)
+        return format_story_memory_context(filtered)
 
     except Exception:
         return ""
+
+
+def dedupe_memory_matches(matches: list[dict]) -> list[dict]:
+    deduped = []
+    seen = set()
+
+    for match in matches:
+        metadata = match.get("metadata", {})
+        key = (
+            metadata.get("type"),
+            metadata.get("story_id"),
+            metadata.get("chapter_number"),
+            metadata.get("sequence_number"),
+            metadata.get("character_id"),
+            metadata.get("name"),
+            match.get("text"),
+        )
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        deduped.append(match)
+
+    return deduped
+
+
+def filter_story_memory_matches(matches: list[dict], story_id) -> list[dict]:
+    filtered = []
+
+    for match in matches:
+        metadata = match.get("metadata", {})
+
+        if story_id:
+            if (
+                metadata.get("story_id") == story_id
+                or metadata.get("scope") == "global"
+            ):
+                filtered.append(match)
+        else:
+            filtered.append(match)
+
+    return filtered
+
+
+def format_story_memory_context(matches: list[dict]) -> str:
+    groups = {
+        "CHARACTERS": [],
+        "RECENT CONTINUITY": [],
+        "RELEVANT STORY BEATS": [],
+        "UNRESOLVED THREADS": [],
+    }
+
+    for match in matches:
+        metadata = match.get("metadata", {})
+        item_type = metadata.get("type")
+
+        if item_type == "character":
+            groups["CHARACTERS"].append(match)
+        elif item_type == "story_beat":
+            if metadata.get("beat_type") == "unresolved_thread":
+                groups["UNRESOLVED THREADS"].append(match)
+            else:
+                groups["RELEVANT STORY BEATS"].append(match)
+        elif item_type in {"chapter_summary", "story"}:
+            groups["RECENT CONTINUITY"].append(match)
+        else:
+            groups["RELEVANT STORY BEATS"].append(match)
+
+    sections = []
+
+    for heading, section_matches in groups.items():
+        if not section_matches:
+            continue
+
+        sections.append(
+            heading + ":\n" + format_story_memory_section(section_matches)
+        )
+
+    return "\n\n".join(sections)
+
+
+def format_story_memory_section(matches: list[dict]) -> str:
+    lines = []
+
+    for match in matches:
+        metadata = match.get("metadata", {})
+        label = (
+            metadata.get("name")
+            or metadata.get("title")
+            or metadata.get("chapter_number")
+            or metadata.get("character_id")
+            or metadata.get("type")
+            or "memory"
+        )
+        lines.append(f"- {label}: {match.get('text', '')}")
+
+    return "\n".join(lines)
 
 
 def clean_metadata(metadata: dict) -> dict:

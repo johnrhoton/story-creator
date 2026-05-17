@@ -21,6 +21,7 @@ from services.rag_service import (
     safe_search_memory,
     build_story_generation_memory,
 )
+from services.story_beat_service import safe_extract_save_and_index_story_beats
 
 
 class LLMGenerationError(RuntimeError):
@@ -155,6 +156,11 @@ def generate_story_chapters(story_id, progress_callback=None):
             chapter_number,
             chapter_summary,
             title=chapter_description
+        )
+        safe_extract_save_and_index_story_beats(
+            _chapter_story_id,
+            chapter_number,
+            chapter_body
         )
 
         previous_summaries.append(
@@ -301,6 +307,11 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
         chapter_number,
         chapter_summary,
         title=chapter_description
+    )
+    safe_extract_save_and_index_story_beats(
+        _chapter_story_id,
+        chapter_number,
+        chapter_body
     )
 
     return {

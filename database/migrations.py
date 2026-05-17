@@ -65,6 +65,10 @@ def run_migrations():
             "20260517104000_object_history",
             migrate_20260517104000_object_history
         ),
+        (
+            "20260517110000_story_beats",
+            migrate_20260517110000_story_beats
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -535,6 +539,32 @@ def migrate_20260517104000_object_history(cursor):
             object_name TEXT,
             operation TEXT NOT NULL,
             contents TEXT
+        )
+    """)
+
+
+# 2026-05-17 11:00
+# Store extracted chapter story-memory beats as rebuildable SQLite source data.
+def migrate_20260517110000_story_beats(cursor):
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS story_beats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            story_id INTEGER NOT NULL,
+            chapter_number INTEGER NOT NULL,
+            sequence_number INTEGER NOT NULL,
+            beat_type TEXT NOT NULL,
+            title TEXT,
+            characters TEXT,
+            location TEXT,
+            time_span TEXT,
+            summary TEXT,
+            continuity_effect TEXT,
+            unresolved_threads TEXT,
+            search_keywords TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (story_id)
+                REFERENCES stories (id)
         )
     """)
 

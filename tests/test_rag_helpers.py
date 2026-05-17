@@ -95,9 +95,11 @@ class RagHelperTests(unittest.TestCase):
         self.assertEqual(grouped["story"][0]["id"], "story_1")
         self.assertEqual(grouped["unknown"][0]["id"], "loose")
 
+    @patch("services.rag_indexing_service.index_story_beat")
     @patch("services.rag_indexing_service.index_chapter_summary")
     @patch("services.rag_indexing_service.index_story")
     @patch("services.rag_indexing_service.index_character")
+    @patch("services.rag_indexing_service.get_story_beats")
     @patch("services.rag_indexing_service.get_story_chapters")
     @patch("services.rag_indexing_service.get_stories")
     @patch("services.rag_indexing_service.get_characters")
@@ -108,9 +110,11 @@ class RagHelperTests(unittest.TestCase):
         mock_get_characters,
         mock_get_stories,
         mock_get_story_chapters,
+        mock_get_story_beats,
         mock_index_character,
         mock_index_story,
-        mock_index_chapter_summary
+        mock_index_chapter_summary,
+        mock_index_story_beat
     ):
         mock_get_characters.return_value = [
             (1, None, None, "Alice", "18", "female", "", "", "", "", ""),
@@ -123,6 +127,20 @@ class RagHelperTests(unittest.TestCase):
             (1, 10, 0, "Opening", "Body", "Summary"),
             (2, 10, 1, "Next", "Body", ""),
         ]
+        mock_get_story_beats.return_value = [
+            {
+                "story_id": 10,
+                "chapter_number": 1,
+                "sequence_number": 1,
+                "beat_type": "transition",
+                "title": "Travel",
+                "characters": [],
+                "summary": "They travel.",
+                "continuity_effect": "They are elsewhere.",
+                "unresolved_threads": [],
+                "search_keywords": ["travel"],
+            }
+        ]
 
         counts = rebuild_rag_index_from_sqlite()
 
@@ -132,12 +150,14 @@ class RagHelperTests(unittest.TestCase):
                 "stories": 1,
                 "characters": 2,
                 "chapter_summaries": 1,
+                "story_beats": 1,
             }
         )
         mock_reset_collection.assert_called_once()
         self.assertEqual(mock_index_character.call_count, 2)
         mock_index_story.assert_called_once()
         self.assertEqual(mock_index_chapter_summary.call_count, 2)
+        mock_index_story_beat.assert_called_once()
 
     def test_build_story_memory_text_includes_story_fields(self):
         text = build_story_memory_text({

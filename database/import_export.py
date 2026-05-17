@@ -29,6 +29,7 @@ EXPORT_TABLES = [
     ("story_template_chapters", "story_template_chapters"),
     ("stories", "stories"),
     ("story_chapters", "story_chapters"),
+    ("story_beats", "story_beats"),
     ("llm_calls", "llm_calls"),
     ("failed_llm_calls", "failed_llm_calls"),
     ("llm_models", "llm_models"),
@@ -43,6 +44,7 @@ IMPORT_COUNT_KEYS = [
     "story_template_chapters",
     "stories",
     "story_chapters",
+    "story_beats",
     "llm_calls",
     "failed_llm_calls",
     "llm_models",
@@ -633,6 +635,76 @@ def import_database_from_dict(
         counts["story_chapters"] += 1
 
     # -------------------------
+    # Story Beats
+    # -------------------------
+
+    for beat in sections["story_beats"]:
+        old_story_id = beat.get("story_id")
+        new_story_id = story_id_map.get(
+            old_story_id,
+            old_story_id
+        )
+        beat_row = encrypt_database_row(
+            "story_beats",
+            {
+                "title": beat.get("title", ""),
+                "characters": serialize_import_list(
+                    beat.get("characters", [])
+                ),
+                "location": beat.get("location", ""),
+                "time_span": beat.get("time_span", ""),
+                "summary": beat.get("summary", ""),
+                "continuity_effect": beat.get("continuity_effect", ""),
+                "unresolved_threads": serialize_import_list(
+                    beat.get("unresolved_threads", [])
+                ),
+                "search_keywords": serialize_import_list(
+                    beat.get("search_keywords", [])
+                ),
+            }
+        )
+
+        cursor.execute("""
+            INSERT INTO story_beats
+            (
+                story_id,
+                chapter_number,
+                sequence_number,
+                beat_type,
+                title,
+                characters,
+                location,
+                time_span,
+                summary,
+                continuity_effect,
+                unresolved_threads,
+                search_keywords,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            new_story_id,
+            beat.get("chapter_number", 1),
+            beat.get("sequence_number", 1),
+            beat.get("beat_type", "scene"),
+            beat_row["title"],
+            beat_row["characters"],
+            beat_row["location"],
+            beat_row["time_span"],
+            beat_row["summary"],
+            beat_row["continuity_effect"],
+            beat_row["unresolved_threads"],
+            beat_row["search_keywords"],
+            beat.get("created_at")
+            or datetime.now().isoformat(timespec="seconds"),
+            beat.get("updated_at")
+            or datetime.now().isoformat(timespec="seconds"),
+        ))
+
+        counts["story_beats"] += 1
+
+    # -------------------------
     # LLM Calls
     # -------------------------
 
@@ -765,11 +837,22 @@ def get_import_sections(data):
         "story_template_chapters": data.get("story_template_chapters", []),
         "stories": data.get("stories", []),
         "story_chapters": data.get("story_chapters", []),
+        "story_beats": data.get("story_beats", []),
         "llm_calls": data.get("llm_calls", []),
         "failed_llm_calls": data.get("failed_llm_calls", []),
         "llm_models": data.get("llm_models", []),
         "object_history": data.get("object_history", []),
     }
+
+
+def serialize_import_list(value):
+    if isinstance(value, str):
+        return value
+
+    if isinstance(value, list):
+        return json.dumps(value, ensure_ascii=False)
+
+    return "[]"
 
 
 def empty_import_counts():
@@ -788,6 +871,7 @@ def clear_exported_tables(cursor):
     cursor.execute("DELETE FROM llm_models")
     cursor.execute("DELETE FROM failed_llm_calls")
     cursor.execute("DELETE FROM llm_calls")
+    cursor.execute("DELETE FROM story_beats")
     cursor.execute("DELETE FROM story_chapters")
     cursor.execute("DELETE FROM stories")
     cursor.execute("DELETE FROM story_template_chapters")
@@ -885,6 +969,13 @@ def delete_existing_story_by_name(cursor, story_name):
         return
 
     story_id = row[0]
+
+    cursor.execute("""
+        DELETE FROM story_beats
+        WHERE story_id = ?
+    """, (
+        story_id,
+    ))
 
     cursor.execute("""
         DELETE FROM story_chapters

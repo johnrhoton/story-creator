@@ -99,6 +99,12 @@ from database.stories import (
     update_story_chapter,
 )
 
+from database.story_beats import (
+    delete_story_beats,
+    get_story_beats,
+    replace_story_beats,
+)
+
 from database.common_names import (
     character_name_exists,
     seed_common_names,

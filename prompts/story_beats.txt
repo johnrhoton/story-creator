@@ -1,0 +1,62 @@
+Analyse the chapter below and extract useful story-memory beats for future continuity.
+
+Do not force everything into scenes. Classify each meaningful segment as one of:
+
+- scene
+- transition
+- relationship_progression
+- emotional_shift
+- revelation
+- unresolved_thread
+- time_jump
+- world_or_setting_detail
+- character_state_change
+
+For each beat, return structured JSON only.
+
+Each beat should include:
+- beat_type
+- title
+- chapter_number
+- sequence_number
+- characters
+- location, if relevant
+- time_span, if relevant
+- summary
+- continuity_effect
+- unresolved_threads
+- search_keywords
+
+Rules:
+- Prefer 3-8 useful beats per chapter.
+- Do not summarise every paragraph.
+- Capture changes that matter later.
+- Include transitions and montages when they change relationships, habits, knowledge, or plot state.
+- Keep summaries concise but specific.
+- Do not invent information not present in the chapter.
+
+CHAPTER NUMBER:
+{chapter_number}
+
+CHAPTER TEXT:
+{chapter_text}
+
+Return JSON in this format:
+
+{{
+  "beats": [
+    {{
+      "beat_type": "relationship_progression",
+      "title": "Mark and Susan grow closer through running",
+      "chapter_number": 4,
+      "sequence_number": 1,
+      "characters": ["Mark", "Susan"],
+      "location": null,
+      "time_span": "several weeks",
+      "summary": "Mark gradually increases his running distance, and Susan joins him more often. Their shared runs expand into meals, cinema visits, and eventually travel together.",
+      "continuity_effect": "Mark and Susan now have an established shared routine and a closer emotional bond.",
+      "unresolved_threads": [],
+      "search_keywords": ["running", "shared routine", "relationship development", "cinema", "travel"]
+    }}
+  ]
+}}

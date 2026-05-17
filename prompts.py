@@ -112,6 +112,14 @@ def build_story_chapter_summary_prompt(chapter_body):
     )
 
 
+def build_story_beats_prompt(chapter_number, chapter_text):
+    return render_prompt_template(
+        "story_beats.txt",
+        chapter_number=chapter_number,
+        chapter_text=chapter_text or "",
+    )
+
+
 def build_story_memory_section(story_memory_context):
     if not story_memory_context:
         return ""
