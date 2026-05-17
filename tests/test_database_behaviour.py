@@ -35,6 +35,7 @@ from database.migrations import run_migrations
 from database.profiles import add_profile, get_profiles
 from database.schema import create_tables
 from database.stories import add_story, get_stories
+from database.object_history import get_object_history, log_object_history
 from services import sync_service
 from services.sync_service import get_content_hash
 from scripts.seed_llm_models import seed_llm_models
@@ -68,6 +69,30 @@ def get_columns(table_name):
 
 
 class DatabaseBehaviourTests(unittest.TestCase):
+    def test_object_history_round_trips_contents(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            log_object_history(
+                "Stories",
+                7,
+                "Harbor",
+                "Update",
+                {
+                    "story_name": "Harbor",
+                    "overview": "Fog and bells",
+                }
+            )
+
+            rows = get_object_history()
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0][2], "Stories")
+            self.assertEqual(rows[0][3], "7")
+            self.assertEqual(rows[0][4], "Harbor")
+            self.assertEqual(rows[0][5], "Update")
+            self.assertIn('"story_name": "Harbor"', rows[0][6])
+
     def test_get_stories_orders_newest_first(self):
         with isolated_database_directory():
             run_migrations()

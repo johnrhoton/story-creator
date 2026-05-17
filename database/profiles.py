@@ -44,9 +44,12 @@ def add_profile(
     ))
 
     mark_local_data_modified(cursor)
+    profile_id = cursor.lastrowid
 
     conn.commit()
     conn.close()
+
+    return profile_id
 
 
 def update_profile(

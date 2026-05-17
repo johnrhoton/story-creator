@@ -77,6 +77,9 @@ ENCRYPTED_TABLE_FIELDS = {
         "error_message",
         "error_details",
     },
+    "object_history": {
+        "contents",
+    },
 }
 
 DECRYPT_TABLE_FIELDS = {

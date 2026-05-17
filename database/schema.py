@@ -137,6 +137,18 @@ def create_tables():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS object_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
+            object_type TEXT NOT NULL,
+            object_id TEXT,
+            object_name TEXT,
+            operation TEXT NOT NULL,
+            contents TEXT
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS sync_metadata (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL

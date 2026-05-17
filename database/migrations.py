@@ -61,6 +61,10 @@ def run_migrations():
             "20260517102000_story_language_level",
             migrate_20260517102000_story_language_level
         ),
+        (
+            "20260517104000_object_history",
+            migrate_20260517104000_object_history
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -517,6 +521,22 @@ def migrate_20260517102000_story_language_level(cursor):
         "language_level",
         "TEXT"
     )
+
+
+# 2026-05-17 10:40
+# Add an object audit log for user-visible CRUD history.
+def migrate_20260517104000_object_history(cursor):
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS object_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
+            object_type TEXT NOT NULL,
+            object_id TEXT,
+            object_name TEXT,
+            operation TEXT NOT NULL,
+            contents TEXT
+        )
+    """)
 
 
 # 2026-05-14 10:00

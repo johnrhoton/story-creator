@@ -8,9 +8,11 @@ from database import (
     get_characters_by_gender,
     get_stories,
     get_stories_for_export,
+    get_story,
     get_story_chapters,
     get_story_chapter,
     get_story_templates,
+    log_object_history,
     update_story,
     update_story_chapter,
 )
@@ -67,6 +69,9 @@ def create_from_template(
 
     if story_id:
         generate_story_chapters(story_id, progress_callback=progress_callback)
+        story = get_story(story_id)
+        if story:
+            log_story_history_from_row(story, "Create")
 
     return story_id
 
@@ -95,13 +100,22 @@ def edit_story(
         language=language,
         language_level=language_level
     )
+    story = get_story(story_id)
+    if story:
+        log_story_history_from_row(story, "Update")
 
 
 def clone_existing_story(story_id):
-    return clone_story(story_id)
+    new_story_id = clone_story(story_id)
+    story = get_story(new_story_id) if new_story_id else None
+    if story:
+        log_story_history_from_row(story, "Clone")
+
+    return new_story_id
 
 
 def delete_existing_story(story_id):
+    story = get_story(story_id)
     chapters = get_story_chapters(story_id)
     delete_story(story_id)
     delete_story_memory(story_id)
@@ -109,8 +123,15 @@ def delete_existing_story(story_id):
     for chapter in chapters:
         delete_chapter_summary_memory(chapter[1], chapter[2])
 
+    if story:
+        log_story_history_from_row(story, "Delete")
+
 
 def delete_existing_stories(story_ids):
+    stories_by_id = {
+        story_id: get_story(story_id)
+        for story_id in story_ids
+    }
     chapters_by_story_id = {
         story_id: get_story_chapters(story_id)
         for story_id in story_ids
@@ -123,6 +144,10 @@ def delete_existing_stories(story_ids):
     for chapters in chapters_by_story_id.values():
         for chapter in chapters:
             delete_chapter_summary_memory(chapter[1], chapter[2])
+
+    for story in stories_by_id.values():
+        if story:
+            log_story_history_from_row(story, "Delete")
 
     return deleted_count
 
@@ -242,3 +267,39 @@ def delete_existing_story_chapter(chapter_id):
 
     if chapter:
         delete_chapter_summary_memory(chapter[1], chapter[2])
+
+
+def log_story_history_from_row(story, operation):
+    (
+        story_id,
+        _created_at,
+        story_name,
+        template_id,
+        overview,
+        setting_background,
+        tone_style,
+        additional_instructions,
+        language,
+        language_level,
+        male_characters,
+        female_characters
+    ) = story
+
+    log_object_history(
+        "Stories",
+        story_id,
+        story_name or "Untitled story",
+        operation,
+        {
+            "story_name": story_name,
+            "template_id": template_id,
+            "overview": overview,
+            "setting_background": setting_background,
+            "tone_style": tone_style,
+            "additional_instructions": additional_instructions,
+            "language": language,
+            "language_level": language_level,
+            "male_characters": male_characters,
+            "female_characters": female_characters,
+        }
+    )

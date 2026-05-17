@@ -47,6 +47,11 @@ from database.metadata import (
     set_sync_metadata,
 )
 
+from database.object_history import (
+    get_object_history,
+    log_object_history,
+)
+
 from database.migrations import run_migrations
 
 from database.profiles import (

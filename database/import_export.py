@@ -32,6 +32,7 @@ EXPORT_TABLES = [
     ("llm_calls", "llm_calls"),
     ("failed_llm_calls", "failed_llm_calls"),
     ("llm_models", "llm_models"),
+    ("object_history", "object_history"),
 ]
 
 
@@ -45,6 +46,7 @@ IMPORT_COUNT_KEYS = [
     "llm_calls",
     "failed_llm_calls",
     "llm_models",
+    "object_history",
 ]
 
 
@@ -708,6 +710,41 @@ def import_database_from_dict(
 
         counts["failed_llm_calls"] += 1
 
+    # -------------------------
+    # Object History
+    # -------------------------
+
+    for history_entry in sections["object_history"]:
+        history_row = encrypt_database_row(
+            "object_history",
+            {
+                "contents": history_entry.get("contents", ""),
+            }
+        )
+
+        cursor.execute("""
+            INSERT INTO object_history
+            (
+                created_at,
+                object_type,
+                object_id,
+                object_name,
+                operation,
+                contents
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            history_entry.get("created_at")
+            or datetime.now().isoformat(timespec="seconds"),
+            history_entry.get("object_type", ""),
+            history_entry.get("object_id", ""),
+            history_entry.get("object_name", ""),
+            history_entry.get("operation", ""),
+            history_row["contents"]
+        ))
+
+        counts["object_history"] += 1
+
     if total_import_count(counts) or replace_existing:
         mark_local_data_modified(cursor)
 
@@ -731,6 +768,7 @@ def get_import_sections(data):
         "llm_calls": data.get("llm_calls", []),
         "failed_llm_calls": data.get("failed_llm_calls", []),
         "llm_models": data.get("llm_models", []),
+        "object_history": data.get("object_history", []),
     }
 
 
@@ -746,6 +784,7 @@ def total_import_count(counts):
 
 
 def clear_exported_tables(cursor):
+    cursor.execute("DELETE FROM object_history")
     cursor.execute("DELETE FROM llm_models")
     cursor.execute("DELETE FROM failed_llm_calls")
     cursor.execute("DELETE FROM llm_calls")
