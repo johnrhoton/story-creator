@@ -23,7 +23,7 @@ from services.rag_service import (
 )
 
 
-def generate_story_chapters(story_id):
+def generate_story_chapters(story_id, progress_callback=None):
     story = get_story(story_id)
 
     if not story:
@@ -58,6 +58,8 @@ def generate_story_chapters(story_id):
             _chapter_body,
             _chapter_summary
         ) = chapter
+        if progress_callback:
+            progress_callback(chapter_number)
 
         if chapter_number == 0:
             user_request = "\n".join([
@@ -137,7 +139,7 @@ def generate_story_chapters(story_id):
         )
 
 
-def generate_story_chapter_body_and_summary(story_id, chapter_id):
+def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callback=None):
     story = get_story(story_id)
 
     if not story:
@@ -179,6 +181,9 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id):
         _chapter_body,
         _chapter_summary
     ) = target_chapter
+
+    if progress_callback:
+        progress_callback(chapter_number)
 
     outline = build_story_outline(chapters)
 

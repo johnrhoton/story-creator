@@ -34,12 +34,12 @@ def render_stories_tab():
     templates = list_templates()
 
     template_options = {
-        template[2]: template[0]
+        template[0]: template[2]
         for template in templates
     }
 
-    template_rows_by_name = {
-        template[2]: template
+    template_rows_by_id = {
+        template[0]: template
         for template in templates
     }
 
@@ -60,6 +60,10 @@ def render_stories_tab():
     male_character_labels = build_character_option_labels(
         male_character_rows
     )
+    male_character_by_name = {
+        row[1]: row
+        for row in male_character_rows
+    }
 
     female_character_options = [
         row[1]
@@ -71,25 +75,27 @@ def render_stories_tab():
 
     st.subheader("Create story from template")
 
+    selected_template_id = st.selectbox(
+        "Template",
+        list(template_options.keys()) if template_options else [],
+        format_func=lambda template_id: template_options.get(template_id, ""),
+        key="selected_template_id"
+    )
+
+    selected_template = (
+        template_rows_by_id.get(selected_template_id)
+        if selected_template_id else None
+    )
+
+    male_roles = []
+    female_roles = []
+
+    if selected_template:
+        male_roles = parse_character_roles(selected_template[6])
+        female_roles = parse_character_roles(selected_template[7])
+
     with st.form("create_story_form"):
         story_name = st.text_input("Story name")
-
-        selected_template_name = st.selectbox(
-            "Template",
-            list(template_options.keys()) if template_options else []
-        )
-
-        selected_template = (
-            template_rows_by_name.get(selected_template_name)
-            if selected_template_name else None
-        )
-
-        male_roles = []
-        female_roles = []
-
-        if selected_template:
-            male_roles = parse_character_roles(selected_template[6])
-            female_roles = parse_character_roles(selected_template[7])
 
         selected_male_characters = []
         if male_roles:
@@ -99,6 +105,7 @@ def render_stories_tab():
                     st.selectbox(
                         f"M{idx} — {role}",
                         [""] + male_character_options,
+                        format_func=lambda name: male_character_labels.get(name, name),
                         key=f"male_slot_{idx}"
                     )
                 )
@@ -117,6 +124,7 @@ def render_stories_tab():
                     st.selectbox(
                         f"F{idx} — {role}",
                         [""] + female_character_options,
+                        format_func=lambda name: female_character_labels.get(name, name),
                         key=f"female_slot_{idx}"
                     )
                 )
@@ -136,7 +144,7 @@ def render_stories_tab():
 
         if not story_name:
             st.error("Story name is required.")
-        elif not selected_template_name:
+        elif not selected_template_id:
             st.error("A template is required.")
         elif story_name.lower() in existing_story_names:
             st.error(
@@ -144,8 +152,8 @@ def render_stories_tab():
                 "Choose another name."
             )
         else:
-            template_id = template_options[selected_template_name]
-            template = template_rows_by_name[selected_template_name]
+            template_id = selected_template_id
+            template = template_rows_by_id[selected_template_id]
             male_roles = parse_character_roles(template[6])
             female_roles = parse_character_roles(template[7])
             missing_male = [
@@ -169,12 +177,20 @@ def render_stories_tab():
                 )
             else:
                 try:
+                    status_placeholder = st.empty()
+
+                    def progress_callback(chapter_number):
+                        status_placeholder.info(
+                            f"Generating Chapter {chapter_number}..."
+                        )
+
                     with st.spinner("Creating story and generating chapters..."):
                         story_id = create_from_template(
                             template_id,
                             story_name,
                             selected_male_characters,
-                            selected_female_characters
+                            selected_female_characters,
+                            progress_callback=progress_callback
                         )
 
                     st.success(f"Story created with ID {story_id}.")
@@ -408,13 +424,21 @@ def render_story_chapters_section(story_id):
 
     if add_and_generate_chapter:
         try:
+            status_placeholder = st.empty()
+
+            def progress_callback(chapter_number):
+                status_placeholder.info(
+                    f"Generating Chapter {chapter_number}..."
+                )
+
             with st.spinner("Adding and generating chapter..."):
                 _chapter_id, result = create_and_generate_story_chapter(
                     story_id,
                     int(new_chapter_number),
                     new_chapter_description,
                     new_chapter_body,
-                    new_chapter_summary
+                    new_chapter_summary,
+                    progress_callback=progress_callback
                 )
 
             if result:
@@ -492,12 +516,20 @@ def render_story_chapter_expander(chapter):
             key=f"generate_story_chapter_{chapter_id}"
         ):
             try:
+                status_placeholder = st.empty()
+
+                def progress_callback(chapter_number):
+                    status_placeholder.info(
+                        f"Generating Chapter {chapter_number}..."
+                    )
+
                 with st.spinner(
                     "Generating chapter body and summary..."
                 ):
                     result = generate_story_chapter_body_and_summary(
                         story_id,
-                        chapter_id
+                        chapter_id,
+                        progress_callback=progress_callback
                     )
 
                 if result:

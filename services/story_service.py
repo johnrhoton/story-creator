@@ -48,7 +48,8 @@ def create_from_template(
     template_id,
     story_name,
     male_characters,
-    female_characters
+    female_characters,
+    progress_callback=None
 ):
     story_id = create_story_from_template(
         template_id,
@@ -58,7 +59,7 @@ def create_from_template(
     )
 
     if story_id:
-        generate_story_chapters(story_id)
+        generate_story_chapters(story_id, progress_callback=progress_callback)
 
     return story_id
 
@@ -168,7 +169,8 @@ def create_and_generate_story_chapter(
     chapter_number,
     chapter_description,
     chapter_body,
-    chapter_summary
+    chapter_summary,
+    progress_callback=None
 ):
     chapter_id = create_story_chapter(
         story_id,
@@ -180,7 +182,8 @@ def create_and_generate_story_chapter(
 
     result = generate_story_chapter_body_and_summary(
         story_id,
-        chapter_id
+        chapter_id,
+        progress_callback=progress_callback
     )
 
     return chapter_id, result

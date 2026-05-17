@@ -431,6 +431,14 @@ def import_database_from_dict(
                     ""
                 ),
                 "tone_style": template.get("tone_style", ""),
+                "male_character_roles": template.get(
+                    "male_character_roles",
+                    "[]"
+                ),
+                "female_character_roles": template.get(
+                    "female_character_roles",
+                    "[]"
+                ),
             }
         )
 
@@ -444,9 +452,11 @@ def import_database_from_dict(
                 template_name,
                 overview,
                 setting_background,
-                tone_style
+                tone_style,
+                male_character_roles,
+                female_character_roles
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
             template.get("created_at")
             or datetime.now().isoformat(timespec="seconds"),
@@ -454,7 +464,9 @@ def import_database_from_dict(
             template_name,
             template_row["overview"],
             template_row["setting_background"],
-            template_row["tone_style"]
+            template_row["tone_style"],
+            template_row["male_character_roles"],
+            template_row["female_character_roles"]
         ))
 
         new_id = cursor.lastrowid

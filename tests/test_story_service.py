@@ -171,7 +171,11 @@ class StoryServiceTests(unittest.TestCase):
             "",
             ""
         )
-        mock_generate_story_chapter.assert_called_once_with(1, 42)
+        mock_generate_story_chapter.assert_called_once_with(
+            1,
+            42,
+            progress_callback=None
+        )
         self.assertEqual(
             result,
             (
