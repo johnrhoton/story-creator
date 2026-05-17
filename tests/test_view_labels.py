@@ -6,6 +6,7 @@ from views.history_view import (
 )
 from views.profiles_view import build_profile_expander_label
 from views.rag_debug_view import order_memory_groups
+from views.rag_debug_view import build_memory_item_label
 from views.stories_view import (
     build_story_expander_title,
     count_story_words,
@@ -67,6 +68,55 @@ class ViewLabelTests(unittest.TestCase):
         self.assertEqual(
             list(order_memory_groups(grouped).keys()),
             ["story", "chapter_summary", "story_beat", "character", "unknown"]
+        )
+
+    def test_rag_inspect_labels_use_ids_without_type_prefix(self):
+        self.assertEqual(
+            build_memory_item_label(
+                1,
+                {
+                    "type": "story",
+                    "story_id": 1,
+                    "name": "Blinded by the light",
+                },
+            ),
+            "1: Blinded by the light"
+        )
+        self.assertEqual(
+            build_memory_item_label(
+                2,
+                {
+                    "type": "chapter_summary",
+                    "story_id": 1,
+                    "chapter_number": 3,
+                    "title": "First blinding",
+                },
+            ),
+            "1 / 3: First blinding"
+        )
+        self.assertEqual(
+            build_memory_item_label(
+                3,
+                {
+                    "type": "story_beat",
+                    "story_id": 1,
+                    "chapter_number": 3,
+                    "sequence_number": 2,
+                    "title": "A bright light appears",
+                },
+            ),
+            "1 / 3 / 2: A bright light appears"
+        )
+        self.assertEqual(
+            build_memory_item_label(
+                4,
+                {
+                    "type": "character",
+                    "character_id": 22,
+                    "name": "Iris",
+                },
+            ),
+            "22: Iris"
         )
 
     def test_object_history_label_includes_required_fields(self):

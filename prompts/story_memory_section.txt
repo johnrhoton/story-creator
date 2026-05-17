@@ -1,0 +1,3 @@
+STORY MEMORY:
+{story_memory_context}
+

@@ -414,23 +414,67 @@ def parse_optional_int(value):
 
 def build_memory_item_label(index, metadata, distance=None):
     item_type = metadata.get("type") or "memory"
-    name = (
-        metadata.get("name")
-        or metadata.get("title")
-        or metadata.get("chapter_number")
-        or metadata.get("character_id")
-        or ""
-    )
+    label = build_memory_item_identity_label(item_type, metadata)
 
-    label = f"{index}. {format_memory_type_label(item_type)}"
-
-    if name != "":
-        label = f"{label}: {name}"
+    if not label:
+        label = f"{index}: {format_memory_type_label(item_type)}"
 
     if distance is not None:
         label = f"{label} | distance {distance:.4f}"
 
     return label
+
+
+def build_memory_item_identity_label(item_type, metadata):
+    if item_type == "story":
+        return build_colon_label(
+            metadata.get("story_id"),
+            metadata.get("name") or metadata.get("title")
+        )
+
+    if item_type == "chapter_summary":
+        prefix = join_present_values([
+            metadata.get("story_id"),
+            metadata.get("chapter_number"),
+        ])
+        return build_colon_label(prefix, metadata.get("title"))
+
+    if item_type == "story_beat":
+        prefix = join_present_values([
+            metadata.get("story_id"),
+            metadata.get("chapter_number"),
+            metadata.get("sequence_number"),
+        ])
+        return build_colon_label(prefix, metadata.get("title"))
+
+    if item_type == "character":
+        return build_colon_label(
+            metadata.get("character_id"),
+            metadata.get("name")
+        )
+
+    return ""
+
+
+def build_colon_label(prefix, name):
+    if prefix in (None, "") and not name:
+        return ""
+
+    if prefix in (None, ""):
+        return str(name)
+
+    if not name:
+        return str(prefix)
+
+    return f"{prefix}: {name}"
+
+
+def join_present_values(values):
+    return " / ".join(
+        str(value)
+        for value in values
+        if value not in (None, "")
+    )
 
 
 def format_memory_type_label(item_type):

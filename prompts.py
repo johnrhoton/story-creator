@@ -124,9 +124,9 @@ def build_story_memory_section(story_memory_context):
     if not story_memory_context:
         return ""
 
-    return (
-        "STORY MEMORY:\n"
-        f"{story_memory_context}\n\n"
+    return render_prompt_template(
+        "story_memory_section.txt",
+        story_memory_context=story_memory_context,
     )
 
 

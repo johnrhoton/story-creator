@@ -108,7 +108,7 @@ def list_memory_items(
     limit: int | None = None,
     where: dict | None = None
 ) -> list[dict]:
-    collection = get_collection()
+    collection = get_read_collection()
     kwargs = {
         "include": ["documents", "metadatas"],
     }
@@ -142,6 +142,13 @@ def list_memory_items(
         })
 
     return items
+
+
+def get_read_collection():
+    import chromadb
+
+    client = chromadb.PersistentClient(path=CHROMA_PATH)
+    return client.get_or_create_collection(name=COLLECTION_NAME)
 
 
 def safe_list_memory_items(
