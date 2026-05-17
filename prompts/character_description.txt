@@ -1,0 +1,10 @@
+Write a vivid approximately {length}-word character introduction suitable for fiction.
+
+{name_instruction}
+Age: {age}
+Gender: {gender}
+Physical traits: {physical_traits}
+Personality traits: {personality_traits}
+Additional notes: {notes}
+
+Use the physical traits to shape the character's visible appearance, presence, body language, and atmosphere. Use the personality traits to shape temperament, habits, emotional tone, and inner tendencies. Use the notes to incorporate additional context, actions, history, motivations, or other relevant details naturally into the introduction. Do not merely list the information. Turn it into a natural literary character introduction. Avoid directly referencing any specific named persons other than the character themselves. Other people, if mentioned, should only be referred to anonymously or generically.

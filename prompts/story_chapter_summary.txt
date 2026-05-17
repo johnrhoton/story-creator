@@ -1,0 +1,6 @@
+Summarise the following chapter body as concise continuity notes for future chapter generation.
+
+Include key events, character decisions, emotional changes, revealed information, unresolved tension, and the final state at the end of the chapter. Avoid polished prose.
+
+Chapter body:
+{chapter_body}

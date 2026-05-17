@@ -6,6 +6,7 @@ from services.story_service import (
     create_and_generate_story_chapter,
 )
 from services.story_generation_service import (
+    LLMGenerationError,
     generate_story_chapters,
     generate_story_chapter_body_and_summary,
 )
@@ -220,6 +221,49 @@ class StoryServiceTests(unittest.TestCase):
                 (5, 5),
             ]
         )
+
+    @patch("services.story_generation_service.index_chapter_summary")
+    @patch("services.story_generation_service.get_character_summaries_by_names")
+    @patch("services.story_generation_service.update_story_chapter")
+    @patch("services.story_generation_service.call_selected_llm")
+    @patch("services.story_generation_service.get_story_chapters")
+    @patch("services.story_generation_service.get_story")
+    def test_generate_story_chapters_aborts_after_failed_llm_call(
+        self,
+        mock_get_story,
+        mock_get_story_chapters,
+        mock_call_selected_llm,
+        mock_update_story_chapter,
+        mock_get_character_summaries,
+        mock_index_chapter_summary
+    ):
+        mock_get_story.return_value = (
+            1,
+            "2026-05-14T12:00:00",
+            "Story",
+            10,
+            "Overview",
+            "Setting",
+            "Tone",
+            "",
+            "",
+            "",
+            "[]",
+            "[]",
+        )
+        mock_get_story_chapters.return_value = [
+            (10, 1, 0, "Opening", "", ""),
+            (11, 1, 1, "Chapter one", "", ""),
+        ]
+        mock_get_character_summaries.return_value = {}
+        mock_call_selected_llm.return_value = None
+
+        with self.assertRaises(LLMGenerationError):
+            generate_story_chapters(1)
+
+        mock_call_selected_llm.assert_called_once()
+        mock_update_story_chapter.assert_not_called()
+        mock_index_chapter_summary.assert_not_called()
 
     @patch("services.story_service.generate_story_chapter_body_and_summary")
     @patch("services.story_service.create_story_chapter")

@@ -23,6 +23,10 @@ from services.rag_service import (
 )
 
 
+class LLMGenerationError(RuntimeError):
+    pass
+
+
 def generate_story_chapters(story_id, progress_callback=None):
     story = get_story(story_id)
 
@@ -125,16 +129,19 @@ def generate_story_chapters(story_id, progress_callback=None):
                 rag_context
             )
 
-        chapter_body = call_selected_llm(chapter_prompt)
-
-        if not chapter_body:
-            continue
+        chapter_body = require_llm_response(
+            chapter_prompt,
+            f"chapter {chapter_number} body"
+        )
 
         summary_prompt = build_story_chapter_summary_prompt(
             chapter_body
         )
 
-        chapter_summary = call_selected_llm(summary_prompt) or ""
+        chapter_summary = require_llm_response(
+            summary_prompt,
+            f"chapter {chapter_number} summary"
+        )
 
         update_story_chapter(
             chapter_id,
@@ -271,13 +278,16 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
             rag_context
         )
 
-    chapter_body = call_selected_llm(chapter_prompt)
-
-    if not chapter_body:
-        return None
+    chapter_body = require_llm_response(
+        chapter_prompt,
+        f"chapter {chapter_number} body"
+    )
 
     summary_prompt = build_story_chapter_summary_prompt(chapter_body)
-    chapter_summary = call_selected_llm(summary_prompt) or ""
+    chapter_summary = require_llm_response(
+        summary_prompt,
+        f"chapter {chapter_number} summary"
+    )
 
     update_story_chapter(
         chapter_id,
@@ -305,6 +315,17 @@ def call_selected_llm(prompt):
         st.session_state.get("llm_model", DEFAULT_LLM_MODEL),
         prompt
     )
+
+
+def require_llm_response(prompt, purpose):
+    response = call_selected_llm(prompt)
+
+    if not response:
+        raise LLMGenerationError(
+            f"LLM generation failed while generating {purpose}."
+        )
+
+    return response
 
 
 def build_rag_context_for_chapter(

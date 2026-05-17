@@ -54,6 +54,7 @@ active_view = st.radio(
         "Export / Import"
     ],
     horizontal=True,
+    index=3,
     label_visibility="collapsed",
     key="active_view"
 )

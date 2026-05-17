@@ -1,0 +1,6 @@
+Summarise the following character description in approximately {length} words.
+
+Use succinct factual notes, not polished prose. Include only key facts useful as context for future LLM prompts: identity, age, gender, appearance, personality, motivations, behaviour, background, and notable details. Avoid decorative language.
+
+Character description:
+{description}

@@ -1,0 +1,25 @@
+Write the full body for the current story chapter.
+
+{story_instruction_section}Template overview:
+{overview}
+
+Template setting/background:
+{setting_background}
+
+Template tone/style:
+{tone_style}
+
+Outline:
+{outline}
+
+Previous chapter summaries:
+{previous_summary_text}
+
+{story_memory_section}USER REQUEST:
+{chapter_description}
+
+Current chapter: Chapter {chapter_number}
+Current chapter description:
+{chapter_description}
+
+Write only the chapter body. Follow the outline, maintain continuity with previous summaries, and match the requested tone/style. Use the story memory for continuity. Do not contradict it unless the user explicitly asks for a change.

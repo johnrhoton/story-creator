@@ -68,10 +68,10 @@ def create_from_template(
     )
 
     if story_id:
-        generate_story_chapters(story_id, progress_callback=progress_callback)
         story = get_story(story_id)
         if story:
             log_story_history_from_row(story, "Create")
+        generate_story_chapters(story_id, progress_callback=progress_callback)
 
     return story_id
 

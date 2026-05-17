@@ -1,0 +1,24 @@
+Write Chapter 0 for this story.
+
+{story_instruction_section}Template overview:
+{overview}
+
+Template setting/background:
+{setting_background}
+
+Template tone/style:
+{tone_style}
+
+Outline:
+{outline}
+
+Characters:
+{characters}
+
+{story_memory_section}USER REQUEST:
+{chapter_description}
+
+Chapter 0 purpose:
+{chapter_description}
+
+Write only the chapter body. Establish the setting, introduce the main characters naturally, and prepare the reader for the story outlined above. Do not advance too far into the Chapter 1 events. Use the story memory for continuity. Do not contradict it unless the user explicitly asks for a change.
