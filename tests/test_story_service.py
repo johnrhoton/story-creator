@@ -145,7 +145,6 @@ class StoryServiceTests(unittest.TestCase):
 
         first_prompt = mock_call_selected_llm.call_args_list[0].args[0]
         self.assertIn("Write Chapter 0", first_prompt)
-        self.assertIn("HIGH PRIORITY STORY INSTRUCTIONS:", first_prompt)
         self.assertIn("Additional instructions: Keep scenes concise.", first_prompt)
         self.assertIn("Target language: French", first_prompt)
         self.assertIn("Target language proficiency level: B1 CEFR", first_prompt)

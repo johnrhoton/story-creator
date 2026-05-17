@@ -1,3 +1,22 @@
+[section]
 STORY MEMORY:
-{story_memory_context}
+{memory_sections}
 
+[characters]
+CHARACTERS:
+{items}
+
+[recent_continuity]
+RECENT CONTINUITY:
+{items}
+
+[relevant_story_beats]
+RELEVANT STORY BEATS:
+{items}
+
+[unresolved_threads]
+UNRESOLVED THREADS:
+{items}
+
+[item]
+- {label}: {text}

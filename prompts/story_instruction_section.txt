@@ -1,0 +1,12 @@
+[section]
+High-level Story Insructions:
+{instruction_lines}
+
+[additional_instructions]
+Additional instructions: {additional_instructions}
+
+[language]
+Target language: {language}
+
+[language_level]
+Target language proficiency level: {language_level} CEFR. Write the story at this proficiency level.

@@ -124,9 +124,13 @@ def build_story_memory_section(story_memory_context):
     if not story_memory_context:
         return ""
 
-    return render_prompt_template(
-        "story_memory_section.txt",
-        story_memory_context=story_memory_context,
+    return (
+        render_prompt_template_section(
+            "story_memory_section.txt",
+            "section",
+            memory_sections=story_memory_context,
+        )
+        + "\n\n"
     )
 
 
@@ -139,34 +143,55 @@ def build_story_instruction_section(
 
     if additional_instructions and additional_instructions.strip():
         instruction_lines.append(
-            "Additional instructions: "
-            f"{additional_instructions.strip()}"
+            render_prompt_template_section(
+                "story_instruction_section.txt",
+                "additional_instructions",
+                additional_instructions=additional_instructions.strip(),
+            ).strip()
         )
 
     if language and language.strip():
         instruction_lines.append(
-            f"Target language: {language.strip()}"
+            render_prompt_template_section(
+                "story_instruction_section.txt",
+                "language",
+                language=language.strip(),
+            ).strip()
         )
 
     if language_level and language_level.strip():
         instruction_lines.append(
-            "Target language proficiency level: "
-            f"{language_level.strip()} CEFR. Write the story at this "
-            "proficiency level."
+            render_prompt_template_section(
+                "story_instruction_section.txt",
+                "language_level",
+                language_level=language_level.strip(),
+            ).strip()
         )
 
     if not instruction_lines:
         return ""
 
     return (
-        "HIGH PRIORITY STORY INSTRUCTIONS:\n"
-        + "\n".join(instruction_lines)
+        render_prompt_template_section(
+            "story_instruction_section.txt",
+            "section",
+            instruction_lines="\n".join(instruction_lines),
+        )
         + "\n\n"
     )
 
 
 def render_prompt_template(template_name, **values):
     template = load_prompt_template(template_name)
+    return render_template_text(template, **values)
+
+
+def render_prompt_template_section(template_name, section_name, **values):
+    template = load_prompt_template_section(template_name, section_name)
+    return render_template_text(template, **values)
+
+
+def render_template_text(template, **values):
     safe_values = {
         key: "" if value is None else value
         for key, value in values.items()
@@ -179,3 +204,36 @@ def load_prompt_template(template_name):
     return (PROMPT_TEMPLATE_DIR / template_name).read_text(
         encoding="utf-8"
     )
+
+
+def load_prompt_template_section(template_name, section_name):
+    sections = parse_prompt_template_sections(
+        load_prompt_template(template_name)
+    )
+
+    return sections[section_name]
+
+
+def parse_prompt_template_sections(template):
+    sections = {}
+    current_section = None
+    current_lines = []
+
+    for line in template.splitlines():
+        stripped = line.strip()
+
+        if stripped.startswith("[") and stripped.endswith("]"):
+            if current_section:
+                sections[current_section] = "\n".join(current_lines).strip()
+
+            current_section = stripped[1:-1]
+            current_lines = []
+            continue
+
+        if current_section:
+            current_lines.append(line)
+
+    if current_section:
+        sections[current_section] = "\n".join(current_lines).strip()
+
+    return sections

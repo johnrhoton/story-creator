@@ -5,6 +5,8 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 _client = None
 _embedding_fn = None
 
+from prompts import render_prompt_template_section
+
 
 def get_collection():
     global _client, _embedding_fn
@@ -324,10 +326,10 @@ def filter_story_memory_matches(matches: list[dict], story_id) -> list[dict]:
 
 def format_story_memory_context(matches: list[dict]) -> str:
     groups = {
-        "CHARACTERS": [],
-        "RECENT CONTINUITY": [],
-        "RELEVANT STORY BEATS": [],
-        "UNRESOLVED THREADS": [],
+        "characters": [],
+        "recent_continuity": [],
+        "relevant_story_beats": [],
+        "unresolved_threads": [],
     }
 
     for match in matches:
@@ -335,25 +337,29 @@ def format_story_memory_context(matches: list[dict]) -> str:
         item_type = metadata.get("type")
 
         if item_type == "character":
-            groups["CHARACTERS"].append(match)
+            groups["characters"].append(match)
         elif item_type == "story_beat":
             if metadata.get("beat_type") == "unresolved_thread":
-                groups["UNRESOLVED THREADS"].append(match)
+                groups["unresolved_threads"].append(match)
             else:
-                groups["RELEVANT STORY BEATS"].append(match)
+                groups["relevant_story_beats"].append(match)
         elif item_type in {"chapter_summary", "story"}:
-            groups["RECENT CONTINUITY"].append(match)
+            groups["recent_continuity"].append(match)
         else:
-            groups["RELEVANT STORY BEATS"].append(match)
+            groups["relevant_story_beats"].append(match)
 
     sections = []
 
-    for heading, section_matches in groups.items():
+    for section_name, section_matches in groups.items():
         if not section_matches:
             continue
 
         sections.append(
-            heading + ":\n" + format_story_memory_section(section_matches)
+            render_prompt_template_section(
+                "story_memory_section.txt",
+                section_name,
+                items=format_story_memory_section(section_matches),
+            )
         )
 
     return "\n\n".join(sections)
@@ -372,7 +378,14 @@ def format_story_memory_section(matches: list[dict]) -> str:
             or metadata.get("type")
             or "memory"
         )
-        lines.append(f"- {label}: {match.get('text', '')}")
+        lines.append(
+            render_prompt_template_section(
+                "story_memory_section.txt",
+                "item",
+                label=label,
+                text=match.get("text", ""),
+            )
+        )
 
     return "\n".join(lines)
 
