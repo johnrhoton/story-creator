@@ -4,6 +4,12 @@ import json
 
 import streamlit as st
 
+from services.glossary_service import (
+    build_glossary_table,
+    generate_glossary,
+    glossary_entries_to_csv,
+    normalize_dictionary_languages,
+)
 from services.story_service import (
     build_full_story_markdown,
     clone_existing_story,
@@ -25,6 +31,7 @@ from services.story_service import (
 )
 from services.template_service import parse_character_roles
 from views.bulk_actions import render_bulk_actions
+from views.glossary_view import build_glossary_url
 from ui_helpers import format_display_timestamp
 
 
@@ -378,7 +385,11 @@ def render_story_expander(story, template_options):
 
         st.divider()
 
-        render_story_chapters_section(story_id, chapters=chapters)
+        render_story_chapters_section(
+            story_id,
+            chapters=chapters,
+            source_language=language
+        )
 
         st.divider()
 
@@ -403,7 +414,11 @@ def render_story_expander(story, template_options):
                 st.rerun()
 
 
-def render_story_chapters_section(story_id, chapters=None):
+def render_story_chapters_section(
+    story_id,
+    chapters=None,
+    source_language=""
+):
     st.subheader("Chapters")
 
     if chapters is None:
@@ -424,11 +439,22 @@ def render_story_chapters_section(story_id, chapters=None):
                     mime="text/markdown",
                     key=f"download_story_markdown_{story_id}"
                 )
+                render_glossary_controls(
+                    source_text=story_markdown,
+                    text_type="full story",
+                    key_prefix=f"story_{story_id}",
+                    file_name=f"story_{story_id}_glossary.csv",
+                    story_id=story_id,
+                    source_language=source_language
+                )
             else:
                 st.info("No chapter body text yet.")
 
         for chapter in chapters:
-            render_story_chapter_expander(chapter)
+            render_story_chapter_expander(
+                chapter,
+                source_language=source_language
+            )
 
     st.markdown("### Add next chapter")
 
@@ -508,7 +534,7 @@ def render_story_chapters_section(story_id, chapters=None):
             st.error(f"Chapter generation failed: {error}")
 
 
-def render_story_chapter_expander(chapter):
+def render_story_chapter_expander(chapter, source_language=""):
     (
         chapter_id,
         story_id,
@@ -599,6 +625,18 @@ def render_story_chapter_expander(chapter):
             except Exception as error:
                 st.error(f"Chapter generation failed: {error}")
 
+        render_glossary_controls(
+            source_text=chapter_body,
+            text_type=f"chapter {chapter_number}",
+            key_prefix=f"chapter_{chapter_id}",
+            file_name=(
+                f"story_{story_id}_chapter_{chapter_number}_glossary.csv"
+            ),
+            story_id=story_id,
+            chapter_number=chapter_number,
+            source_language=source_language
+        )
+
         if st.button(
             "Delete chapter",
             key=f"delete_story_chapter_{chapter_id}"
@@ -606,6 +644,81 @@ def render_story_chapter_expander(chapter):
             delete_existing_story_chapter(chapter_id)
             st.success("Chapter deleted.")
             st.rerun()
+
+
+def render_glossary_controls(
+    source_text,
+    text_type,
+    key_prefix,
+    file_name,
+    story_id,
+    chapter_number=None,
+    source_language=""
+):
+    st.markdown("### Glossary")
+    st.link_button(
+        "Open glossary page",
+        build_glossary_url(story_id, chapter_number)
+    )
+
+    col_count, col_languages = st.columns([1, 3])
+
+    with col_count:
+        entry_count = st.number_input(
+            "Entries",
+            min_value=1,
+            max_value=100,
+            value=15,
+            step=1,
+            key=f"{key_prefix}_glossary_entry_count"
+        )
+
+    with col_languages:
+        dictionary_languages = st.text_input(
+            "Dictionary languages",
+            placeholder="German, Spanish",
+            key=f"{key_prefix}_glossary_languages"
+        )
+
+    if st.button(
+        "Create glossary",
+        key=f"{key_prefix}_create_glossary"
+    ):
+        languages = normalize_dictionary_languages(dictionary_languages)
+
+        if not source_text or not str(source_text).strip():
+            st.info("No text available for glossary generation.")
+            return
+
+        if not languages:
+            st.error("Enter at least one dictionary language.")
+            return
+
+        with st.spinner("Creating glossary..."):
+            entries = generate_glossary(
+                source_text,
+                languages,
+                entry_count=int(entry_count),
+                text_type=text_type,
+                source_language=source_language,
+            )
+
+        if not entries:
+            st.warning("Glossary generation did not return entries.")
+            return
+
+        csv_data = glossary_entries_to_csv(entries, languages)
+        st.dataframe(
+            build_glossary_table(entries, languages),
+            use_container_width=True
+        )
+        st.download_button(
+            "Download glossary CSV",
+            data=csv_data,
+            file_name=file_name,
+            mime="text/csv",
+            key=f"{key_prefix}_download_glossary"
+        )
 
 
 def safe_json_loads(value):

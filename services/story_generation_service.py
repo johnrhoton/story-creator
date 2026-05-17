@@ -136,7 +136,9 @@ def generate_story_chapters(story_id, progress_callback=None):
         )
 
         summary_prompt = build_story_chapter_summary_prompt(
-            chapter_body
+            chapter_body,
+            language=language,
+            language_level=language_level
         )
 
         chapter_summary = require_llm_response(
@@ -289,7 +291,11 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
         f"chapter {chapter_number} body"
     )
 
-    summary_prompt = build_story_chapter_summary_prompt(chapter_body)
+    summary_prompt = build_story_chapter_summary_prompt(
+        chapter_body,
+        language=language,
+        language_level=language_level
+    )
     chapter_summary = require_llm_response(
         summary_prompt,
         f"chapter {chapter_number} summary"

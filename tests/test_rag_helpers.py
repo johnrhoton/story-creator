@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from prompts import build_story_chapter_prompt
+from prompts import build_story_chapter_prompt, build_story_chapter_summary_prompt
 from services.rag_indexing_service import (
     build_story_memory_text,
     build_character_memory_text,
@@ -195,6 +195,17 @@ class RagHelperTests(unittest.TestCase):
         self.assertIn("Mira remembers every coastline.", prompt)
         self.assertIn("USER REQUEST:\nFind the old harbor.", prompt)
         self.assertIn("Use the story memory for continuity.", prompt)
+
+    def test_summary_prompt_includes_optional_language_guidance(self):
+        prompt = build_story_chapter_summary_prompt(
+            "Chapter body",
+            language="French",
+            language_level="B1"
+        )
+
+        self.assertIn("Target language: French", prompt)
+        self.assertIn("Target language proficiency level: B1 CEFR", prompt)
+        self.assertIn("Chapter body", prompt)
 
     def test_safe_rag_operations_do_not_raise_when_backend_fails(self):
         with patch(

@@ -1,5 +1,7 @@
 Summarise the following chapter body as concise continuity notes for future chapter generation.
 
+{story_instruction_section}Write the chapter summary in the requested target language and CEFR level when those instructions are present.
+
 Include key events, character decisions, emotional changes, revealed information, unresolved tension, and the final state at the end of the chapter. Avoid polished prose.
 
 Chapter body:

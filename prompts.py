@@ -105,9 +105,18 @@ def build_story_chapter_zero_prompt(
     )
 
 
-def build_story_chapter_summary_prompt(chapter_body):
+def build_story_chapter_summary_prompt(
+    chapter_body,
+    language="",
+    language_level=""
+):
     return render_prompt_template(
         "story_chapter_summary.txt",
+        story_instruction_section=build_story_instruction_section(
+            "",
+            language,
+            language_level
+        ),
         chapter_body=chapter_body,
     )
 
@@ -117,6 +126,23 @@ def build_story_beats_prompt(chapter_number, chapter_text):
         "story_beats.txt",
         chapter_number=chapter_number,
         chapter_text=chapter_text or "",
+    )
+
+
+def build_glossary_prompt(
+    source_text,
+    dictionary_languages,
+    entry_count=15,
+    text_type="story section",
+    source_language=""
+):
+    return render_prompt_template(
+        "glossary.txt",
+        entry_count=entry_count,
+        source_language=source_language or "Use the language of the source text.",
+        dictionary_languages=", ".join(dictionary_languages or []),
+        text_type=text_type,
+        source_text=source_text or "",
     )
 
 

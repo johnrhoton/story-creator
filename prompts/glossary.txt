@@ -1,0 +1,45 @@
+Create a glossary for the text below.
+
+Select {entry_count} of the most difficult or least common words in the text.
+
+Rules:
+- List entries in order of first appearance in the text.
+- The headword must be in the same language as the source text, not translated into English.
+- Use source-language lemma/headword forms, not inflected forms.
+- Do not include proper names unless they are vocabulary items.
+- Prefer words that help a language learner understand the passage.
+- For each headword, provide the most common translation or translations in each dictionary language.
+- Return structured JSON only.
+
+Source/story language:
+{source_language}
+
+Dictionary languages:
+{dictionary_languages}
+
+Text type:
+{text_type}
+
+Text:
+{source_text}
+
+Return JSON in this format:
+
+{{
+  "entries": [
+    {{
+      "headword": "mirror",
+      "translations": {{
+        "German": "der Spiegel",
+        "Spanish": "el espejo"
+      }}
+    }},
+    {{
+      "headword": "break",
+      "translations": {{
+        "German": "brechen/zerbrechen",
+        "Spanish": "romper"
+      }}
+    }}
+  ]
+}}

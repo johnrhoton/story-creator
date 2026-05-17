@@ -13,6 +13,7 @@ from database import (
 )
 from views.characters_view import render_characters_tab
 from views.export_import_view import render_export_import_tab
+from views.glossary_view import render_glossary_tab
 from views.history_view import render_history_tab
 from views.models_view import render_models_tab
 from views.profiles_view import render_profiles_tab
@@ -20,6 +21,18 @@ from views.rag_debug_view import render_rag_tab
 from views.sidebar_view import render_llm_settings_sidebar
 from views.stories_view import render_stories_tab
 from views.templates_view import render_templates_tab
+
+
+def get_view_index_from_query_params(view_options):
+    view = st.query_params.get("view")
+
+    if isinstance(view, list):
+        view = view[0] if view else None
+
+    if view in view_options:
+        return view_options.index(view)
+
+    return view_options.index("Stories")
 
 
 run_migrations()
@@ -46,20 +59,23 @@ if (
     st.info("Enter the database password in the sidebar to continue.")
     st.stop()
 
+VIEW_OPTIONS = [
+    "Characters",
+    "Profiles",
+    "Templates",
+    "Stories",
+    "RAG",
+    "Glossary",
+    "Models",
+    "History",
+    "Export / Import"
+]
+
 active_view = st.radio(
     "View",
-    [
-        "Characters",
-        "Profiles",
-        "Templates",
-        "Stories",
-        "RAG",
-        "Models",
-        "History",
-        "Export / Import"
-    ],
+    VIEW_OPTIONS,
     horizontal=True,
-    index=3,
+    index=get_view_index_from_query_params(VIEW_OPTIONS),
     label_visibility="collapsed",
     key="active_view"
 )
@@ -78,6 +94,9 @@ elif active_view == "Stories":
 
 elif active_view == "RAG":
     render_rag_tab()
+
+elif active_view == "Glossary":
+    render_glossary_tab()
 
 elif active_view == "Models":
     render_models_tab()
