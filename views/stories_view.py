@@ -28,6 +28,9 @@ from views.bulk_actions import render_bulk_actions
 from ui_helpers import format_display_timestamp
 
 
+CEFR_LEVEL_OPTIONS = ["", "A1", "A2", "B1", "B2", "C1", "C2"]
+
+
 def render_stories_tab():
     st.header("Stories")
 
@@ -96,6 +99,19 @@ def render_stories_tab():
 
     with st.form("create_story_form"):
         story_name = st.text_input("Story name")
+
+        additional_instructions = st.text_area(
+            "Additional instructions",
+            height=120
+        )
+
+        language = st.text_input("Language")
+
+        language_level = st.selectbox(
+            "CEFR language proficiency level",
+            CEFR_LEVEL_OPTIONS,
+            format_func=lambda value: value or ""
+        )
 
         selected_male_characters = []
         if male_roles:
@@ -179,9 +195,10 @@ def render_stories_tab():
                 try:
                     status_placeholder = st.empty()
 
-                    def progress_callback(chapter_number):
+                    def progress_callback(current_chapter, total_chapters):
                         status_placeholder.info(
-                            f"Generating Chapter {chapter_number}..."
+                            "Generating Chapter "
+                            f"{current_chapter} / {total_chapters}"
                         )
 
                     with st.spinner("Creating story and generating chapters..."):
@@ -190,6 +207,9 @@ def render_stories_tab():
                             story_name,
                             selected_male_characters,
                             selected_female_characters,
+                            additional_instructions=additional_instructions,
+                            language=language,
+                            language_level=language_level,
                             progress_callback=progress_callback
                         )
 
@@ -257,6 +277,9 @@ def render_story_expander(story):
         overview,
         setting_background,
         tone_style,
+        additional_instructions,
+        language,
+        language_level,
         male_characters,
         female_characters
     ) = story
@@ -293,6 +316,26 @@ def render_story_expander(story):
                 value=tone_style or ""
             )
 
+            edited_additional_instructions = st.text_area(
+                "Additional instructions",
+                value=additional_instructions or "",
+                height=120
+            )
+
+            edited_language = st.text_input(
+                "Language",
+                value=language or ""
+            )
+
+            edited_language_level = st.selectbox(
+                "CEFR language proficiency level",
+                CEFR_LEVEL_OPTIONS,
+                index=CEFR_LEVEL_OPTIONS.index(language_level)
+                if language_level in CEFR_LEVEL_OPTIONS
+                else 0,
+                format_func=lambda value: value or ""
+            )
+
             edited_male_characters_text = st.text_area(
                 "Male characters",
                 value=", ".join(male_character_values),
@@ -317,7 +360,10 @@ def render_story_expander(story):
                 edited_setting_background,
                 edited_tone_style,
                 split_csv(edited_male_characters_text),
-                split_csv(edited_female_characters_text)
+                split_csv(edited_female_characters_text),
+                additional_instructions=edited_additional_instructions,
+                language=edited_language,
+                language_level=edited_language_level
             )
 
             st.success("Story updated.")
@@ -426,9 +472,9 @@ def render_story_chapters_section(story_id):
         try:
             status_placeholder = st.empty()
 
-            def progress_callback(chapter_number):
+            def progress_callback(current_chapter, total_chapters):
                 status_placeholder.info(
-                    f"Generating Chapter {chapter_number}..."
+                    f"Generating Chapter {current_chapter} / {total_chapters}"
                 )
 
             with st.spinner("Adding and generating chapter..."):
@@ -518,9 +564,10 @@ def render_story_chapter_expander(chapter):
             try:
                 status_placeholder = st.empty()
 
-                def progress_callback(chapter_number):
+                def progress_callback(current_chapter, total_chapters):
                     status_placeholder.info(
-                        f"Generating Chapter {chapter_number}..."
+                        "Generating Chapter "
+                        f"{current_chapter} / {total_chapters}"
                     )
 
                 with st.spinner(

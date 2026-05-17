@@ -53,6 +53,14 @@ def run_migrations():
             "20260515120000_template_character_roles",
             migrate_20260515120000_template_character_roles
         ),
+        (
+            "20260517100000_story_generation_instructions",
+            migrate_20260517100000_story_generation_instructions
+        ),
+        (
+            "20260517102000_story_language_level",
+            migrate_20260517102000_story_language_level
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -477,6 +485,36 @@ def migrate_20260515120000_template_character_roles(cursor):
         cursor,
         "story_templates",
         "female_character_roles",
+        "TEXT"
+    )
+
+
+# 2026-05-17 10:00
+# Add optional per-story generation guidance that is sent to the LLM only when
+# populated.
+def migrate_20260517100000_story_generation_instructions(cursor):
+    add_column_if_missing(
+        cursor,
+        "stories",
+        "additional_instructions",
+        "TEXT"
+    )
+
+    add_column_if_missing(
+        cursor,
+        "stories",
+        "language",
+        "TEXT"
+    )
+
+
+# 2026-05-17 10:20
+# Add optional CEFR language proficiency guidance for generated stories.
+def migrate_20260517102000_story_language_level(cursor):
+    add_column_if_missing(
+        cursor,
+        "stories",
+        "language_level",
         "TEXT"
     )
 

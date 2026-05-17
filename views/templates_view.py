@@ -147,19 +147,6 @@ def render_template_expander(template):
             f"**Created:** {format_display_timestamp(created_at)}"
         )
 
-        male_roles = parse_character_roles(template[6])
-        female_roles = parse_character_roles(template[7])
-
-        if male_roles:
-            st.markdown("**Male character slots:**")
-            for index, role in enumerate(male_roles, start=1):
-                st.write(f"M{index}: {role}")
-
-        if female_roles:
-            st.markdown("**Female character slots:**")
-            for index, role in enumerate(female_roles, start=1):
-                st.write(f"F{index}: {role}")
-
         with st.form(f"edit_template_{template_id}"):
             edited_template_name = st.text_input(
                 "Template name",

@@ -9,6 +9,7 @@ from services.rag_indexing_service import (
 from services.rag_service import (
     clean_metadata,
     format_rag_context,
+    group_memory_items_by_type,
     safe_delete_memory,
     safe_search_memory,
     safe_upsert_memory,
@@ -59,11 +60,41 @@ class RagHelperTests(unittest.TestCase):
         self.assertIn("Mira remembers every coastline.", context)
         self.assertIn("[chapter_summary: 3]", context)
 
+    def test_group_memory_items_by_type_segments_index_items(self):
+        grouped = group_memory_items_by_type([
+            {
+                "id": "character_1",
+                "text": "Character memory",
+                "metadata": {"type": "character"},
+            },
+            {
+                "id": "story_1_chapter_1",
+                "text": "Chapter memory",
+                "metadata": {"type": "chapter_summary"},
+            },
+            {
+                "id": "loose",
+                "text": "Loose memory",
+                "metadata": {},
+            },
+        ])
+
+        self.assertEqual(
+            sorted(grouped.keys()),
+            ["chapter_summary", "character", "unknown"]
+        )
+        self.assertEqual(grouped["character"][0]["id"], "character_1")
+        self.assertEqual(grouped["chapter_summary"][0]["id"], "story_1_chapter_1")
+        self.assertEqual(grouped["unknown"][0]["id"], "loose")
+
     def test_prompt_includes_story_memory_and_user_request(self):
         prompt = build_story_chapter_prompt(
             "Overview",
             "Setting",
             "Tone",
+            "",
+            "",
+            "",
             "Chapter 1: Depart",
             [],
             1,

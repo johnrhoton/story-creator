@@ -52,7 +52,10 @@ def add_story(
     setting_background,
     tone_style,
     male_characters,
-    female_characters
+    female_characters,
+    additional_instructions="",
+    language="",
+    language_level=""
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -66,10 +69,13 @@ def add_story(
             overview,
             setting_background,
             tone_style,
+            additional_instructions,
+            language,
+            language_level,
             male_characters,
             female_characters
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
         story_name,
@@ -81,6 +87,13 @@ def add_story(
             setting_background
         ),
         encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field(
+            "stories",
+            "additional_instructions",
+            additional_instructions
+        ),
+        encrypt_database_field("stories", "language", language),
+        encrypt_database_field("stories", "language_level", language_level),
         encrypt_database_field(
             "stories",
             "male_characters",
@@ -110,7 +123,10 @@ def update_story(
     setting_background,
     tone_style,
     male_characters,
-    female_characters
+    female_characters,
+    additional_instructions="",
+    language="",
+    language_level=""
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -122,6 +138,9 @@ def update_story(
             overview = ?,
             setting_background = ?,
             tone_style = ?,
+            additional_instructions = ?,
+            language = ?,
+            language_level = ?,
             male_characters = ?,
             female_characters = ?
         WHERE id = ?
@@ -134,6 +153,13 @@ def update_story(
             setting_background
         ),
         encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field(
+            "stories",
+            "additional_instructions",
+            additional_instructions
+        ),
+        encrypt_database_field("stories", "language", language),
+        encrypt_database_field("stories", "language_level", language_level),
         encrypt_database_field(
             "stories",
             "male_characters",
@@ -216,6 +242,9 @@ def clone_story(story_id):
             overview,
             setting_background,
             tone_style,
+            additional_instructions,
+            language,
+            language_level,
             male_characters,
             female_characters
         FROM stories
@@ -234,6 +263,9 @@ def clone_story(story_id):
         overview,
         setting_background,
         tone_style,
+        additional_instructions,
+        language,
+        language_level,
         male_characters,
         female_characters
     ) = row
@@ -263,10 +295,13 @@ def clone_story(story_id):
             overview,
             setting_background,
             tone_style,
+            additional_instructions,
+            language,
+            language_level,
             male_characters,
             female_characters
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
         new_name,
@@ -278,6 +313,13 @@ def clone_story(story_id):
             setting_background
         ),
         encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field(
+            "stories",
+            "additional_instructions",
+            additional_instructions
+        ),
+        encrypt_database_field("stories", "language", language),
+        encrypt_database_field("stories", "language_level", language_level),
         encrypt_database_field("stories", "male_characters", male_characters),
         encrypt_database_field(
             "stories",
@@ -360,6 +402,9 @@ def get_stories():
             overview,
             setting_background,
             tone_style,
+            additional_instructions,
+            language,
+            language_level,
             male_characters,
             female_characters
         FROM stories
@@ -391,6 +436,9 @@ def get_story(story_id):
             overview,
             setting_background,
             tone_style,
+            additional_instructions,
+            language,
+            language_level,
             male_characters,
             female_characters
         FROM stories
@@ -429,6 +477,9 @@ def get_stories_for_export(story_ids, decrypt_values=True):
             overview,
             setting_background,
             tone_style,
+            additional_instructions,
+            language,
+            language_level,
             male_characters,
             female_characters
         FROM stories
@@ -491,7 +542,10 @@ def create_story_from_template(
     template_id,
     story_name,
     male_characters,
-    female_characters
+    female_characters,
+    additional_instructions="",
+    language="",
+    language_level=""
 ):
     conn = get_connection()
     cursor = conn.cursor()
@@ -555,10 +609,13 @@ def create_story_from_template(
             overview,
             setting_background,
             tone_style,
+            additional_instructions,
+            language,
+            language_level,
             male_characters,
             female_characters
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         datetime.now().isoformat(timespec="seconds"),
         story_name,
@@ -570,6 +627,13 @@ def create_story_from_template(
             resolved_setting_background
         ),
         encrypt_database_field("stories", "tone_style", tone_style),
+        encrypt_database_field(
+            "stories",
+            "additional_instructions",
+            additional_instructions
+        ),
+        encrypt_database_field("stories", "language", language),
+        encrypt_database_field("stories", "language_level", language_level),
         encrypt_database_field(
             "stories",
             "male_characters",

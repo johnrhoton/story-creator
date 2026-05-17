@@ -529,6 +529,12 @@ def import_database_from_dict(
                 "overview": story.get("overview", ""),
                 "setting_background": story.get("setting_background", ""),
                 "tone_style": story.get("tone_style", ""),
+                "additional_instructions": story.get(
+                    "additional_instructions",
+                    ""
+                ),
+                "language": story.get("language", ""),
+                "language_level": story.get("language_level", ""),
                 "male_characters": story.get("male_characters", "[]"),
                 "female_characters": story.get("female_characters", "[]"),
             }
@@ -551,10 +557,13 @@ def import_database_from_dict(
                 overview,
                 setting_background,
                 tone_style,
+                additional_instructions,
+                language,
+                language_level,
                 male_characters,
                 female_characters
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             story.get("created_at")
             or datetime.now().isoformat(timespec="seconds"),
@@ -564,6 +573,9 @@ def import_database_from_dict(
             story_row["overview"],
             story_row["setting_background"],
             story_row["tone_style"],
+            story_row["additional_instructions"],
+            story_row["language"],
+            story_row["language_level"],
             story_row["male_characters"],
             story_row["female_characters"]
         ))

@@ -29,6 +29,7 @@ def render_characters_tab():
 
     profiles = list_profiles_for_character_creation()
     all_profile_options = [profile[0] for profile in profiles]
+    profile_option_labels = build_profile_option_labels(profiles)
 
     st.subheader("Create character")
 
@@ -98,6 +99,10 @@ def render_characters_tab():
     selected_profiles = st.multiselect(
         "Profiles",
         profile_options,
+        format_func=lambda profile_name: profile_option_labels.get(
+            profile_name,
+            profile_name
+        ),
         key="creation_selected_profiles"
     )
 
@@ -230,7 +235,8 @@ def render_characters_tab():
             render_character_expander(
                 row,
                 profiles,
-                all_profile_options
+                all_profile_options,
+                profile_option_labels
             )
 
 
@@ -261,6 +267,36 @@ def build_character_option_label(row):
     return f"#{record_id} - {name} - {age} - {gender}"
 
 
+def build_profile_option_labels(profiles):
+    labels = {}
+
+    for profile in profiles:
+        (
+            profile_name,
+            _gender,
+            physical_traits,
+            personality_traits,
+            _notes
+        ) = profile
+
+        details = " | ".join(
+            value.strip()
+            for value in [
+                physical_traits or "",
+                personality_traits or ""
+            ]
+            if value and value.strip()
+        )
+
+        labels[profile_name] = (
+            f"{profile_name} - {details}"
+            if details
+            else profile_name
+        )
+
+    return labels
+
+
 def build_selected_characters_export_payload(selected_ids):
     characters = list_characters_for_export(
         selected_ids,
@@ -278,7 +314,8 @@ def build_selected_characters_export_payload(selected_ids):
 def render_character_expander(
     row,
     profiles,
-    profile_options
+    profile_options,
+    profile_option_labels
 ):
     (
         record_id,
@@ -357,6 +394,10 @@ def render_character_expander(
         st.multiselect(
             "Profile(s) assigned to this character",
             profile_options,
+            format_func=lambda profile_name: profile_option_labels.get(
+                profile_name,
+                profile_name
+            ),
             key=selected_profiles_key
         )
 

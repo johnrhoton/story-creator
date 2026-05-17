@@ -104,6 +104,67 @@ def search_memory(
     return matches
 
 
+def list_memory_items(
+    limit: int | None = None,
+    where: dict | None = None
+) -> list[dict]:
+    collection = get_collection()
+    kwargs = {
+        "include": ["documents", "metadatas"],
+    }
+
+    if limit:
+        kwargs["limit"] = limit
+
+    if where:
+        kwargs["where"] = where
+
+    results = collection.get(**kwargs)
+    ids = results.get("ids", [])
+    documents = results.get("documents", [])
+    metadatas = results.get("metadatas", [])
+
+    items = []
+
+    for index, item_id in enumerate(ids):
+        items.append({
+            "id": item_id,
+            "text": (
+                documents[index]
+                if index < len(documents)
+                else ""
+            ),
+            "metadata": (
+                metadatas[index]
+                if index < len(metadatas) and metadatas[index]
+                else {}
+            ),
+        })
+
+    return items
+
+
+def safe_list_memory_items(
+    limit: int | None = None,
+    where: dict | None = None
+) -> list[dict]:
+    try:
+        return list_memory_items(limit=limit, where=where)
+    except Exception:
+        return []
+
+
+def group_memory_items_by_type(items: list[dict]) -> dict[str, list[dict]]:
+    grouped = {}
+
+    for item in items:
+        metadata = item.get("metadata", {})
+        item_type = metadata.get("type") or "unknown"
+        grouped.setdefault(item_type, []).append(item)
+
+    return dict(sorted(grouped.items()))
+
+
 def safe_search_memory(
     query: str,
     n_results: int = 5,

@@ -50,6 +50,9 @@ def build_story_chapter_prompt(
     overview,
     setting_background,
     tone_style,
+    additional_instructions,
+    language,
+    language_level,
     outline,
     previous_summaries,
     chapter_number,
@@ -64,6 +67,7 @@ def build_story_chapter_prompt(
 
     return (
         "Write the full body for the current story chapter.\n\n"
+        f"{build_story_instruction_section(additional_instructions, language, language_level)}"
         f"Template overview:\n{overview or ''}\n\n"
         f"Template setting/background:\n{setting_background or ''}\n\n"
         f"Template tone/style:\n{tone_style or ''}\n\n"
@@ -84,6 +88,9 @@ def build_story_chapter_zero_prompt(
     overview,
     setting_background,
     tone_style,
+    additional_instructions,
+    language,
+    language_level,
     outline,
     characters,
     chapter_description,
@@ -91,6 +98,7 @@ def build_story_chapter_zero_prompt(
 ):
     return (
         "Write Chapter 0 for this story.\n\n"
+        f"{build_story_instruction_section(additional_instructions, language, language_level)}"
         f"Template overview:\n{overview or ''}\n\n"
         f"Template setting/background:\n{setting_background or ''}\n\n"
         f"Template tone/style:\n{tone_style or ''}\n\n"
@@ -125,4 +133,39 @@ def build_story_memory_section(story_memory_context):
     return (
         "STORY MEMORY:\n"
         f"{story_memory_context}\n\n"
+    )
+
+
+def build_story_instruction_section(
+    additional_instructions,
+    language,
+    language_level
+):
+    instruction_lines = []
+
+    if additional_instructions and additional_instructions.strip():
+        instruction_lines.append(
+            "Additional instructions: "
+            f"{additional_instructions.strip()}"
+        )
+
+    if language and language.strip():
+        instruction_lines.append(
+            f"Target language: {language.strip()}"
+        )
+
+    if language_level and language_level.strip():
+        instruction_lines.append(
+            "Target language proficiency level: "
+            f"{language_level.strip()} CEFR. Write the story at this "
+            "proficiency level."
+        )
+
+    if not instruction_lines:
+        return ""
+
+    return (
+        "HIGH PRIORITY STORY INSTRUCTIONS:\n"
+        + "\n".join(instruction_lines)
+        + "\n\n"
     )

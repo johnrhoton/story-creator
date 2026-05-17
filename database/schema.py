@@ -76,6 +76,9 @@ def create_tables():
             overview TEXT,
             setting_background TEXT,
             tone_style TEXT,
+            additional_instructions TEXT,
+            language TEXT,
+            language_level TEXT,
             male_characters TEXT,
             female_characters TEXT,
             FOREIGN KEY (template_id)

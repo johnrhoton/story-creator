@@ -49,13 +49,19 @@ def create_from_template(
     story_name,
     male_characters,
     female_characters,
+    additional_instructions="",
+    language="",
+    language_level="",
     progress_callback=None
 ):
     story_id = create_story_from_template(
         template_id,
         story_name,
         male_characters,
-        female_characters
+        female_characters,
+        additional_instructions=additional_instructions,
+        language=language,
+        language_level=language_level
     )
 
     if story_id:
@@ -71,7 +77,10 @@ def edit_story(
     setting_background,
     tone_style,
     male_characters,
-    female_characters
+    female_characters,
+    additional_instructions="",
+    language="",
+    language_level=""
 ):
     update_story(
         story_id,
@@ -80,7 +89,10 @@ def edit_story(
         setting_background,
         tone_style,
         male_characters,
-        female_characters
+        female_characters,
+        additional_instructions=additional_instructions,
+        language=language,
+        language_level=language_level
     )
 
 

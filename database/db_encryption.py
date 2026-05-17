@@ -58,6 +58,9 @@ ENCRYPTED_TABLE_FIELDS = {
         "overview",
         "setting_background",
         "tone_style",
+        "additional_instructions",
+        "language",
+        "language_level",
     },
     "story_chapters": {
         "chapter_description",
@@ -92,6 +95,9 @@ DECRYPT_TABLE_FIELDS["profiles"].update({
 DECRYPT_TABLE_FIELDS["story_templates"].add("tone_style")
 DECRYPT_TABLE_FIELDS["stories"].update({
     "tone_style",
+    "additional_instructions",
+    "language",
+    "language_level",
     "male_characters",
     "female_characters",
 })
