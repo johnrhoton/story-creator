@@ -58,9 +58,9 @@ The app uses a tab-based interface with the following sections:
   - Headwords are kept in the story language and translations are added per dictionary language
 - **Reading Comprehension**: Generate CSV comprehension questions for a full story or chapter
   - Choose number of questions (default 15)
-  - Optional interrogative language adds a translated-question column
+  - Optional question language adds a translated-question column
 
-### RAG Tab
+### Story Memory Tab
 - **Rebuild Chroma Index**: Rebuild story memory from SQLite source data
 - **Search Memory**: Search Chroma memory records
 - **Preview STORY MEMORY**: See the exact memory block that would be injected into a chapter prompt
@@ -68,8 +68,9 @@ The app uses a tab-based interface with the following sections:
 - **Story Beats**: View, extract, or search structured story-memory beats
 - For an end-to-end explanation, see `docs/story_memory.md`.
 
-### Glossary Tab
-- Open a standalone glossary generator for a selected story or chapter
+### Language Aids Tab
+- Open a standalone language-aids generator for a selected story or chapter
+- Choose between Glossary and Reading comprehension
 - Can be opened via URL/query parameters from story/chapter controls
 - Useful as a browser-tab "pop-out" while keeping the story open elsewhere
 - For glossary and reading comprehension details, see `docs/language_aids.md`.
@@ -97,10 +98,9 @@ The app uses a tab-based interface with the following sections:
 
 ### Sidebar Settings
 - **Provider Selection**: Choose between Gemini, Groq, OpenRouter
-- **API Key**: Enter your API key for the selected provider
 - **Model Selection**: Pick from available models
-- **Temperature**: Control creativity (0.0-1.0)
-- **Max Tokens**: Limit response length
+- **Saved Defaults**: The last selected provider/model is saved to `.env` as `DEFAULT_LLM_PROVIDER` and `DEFAULT_LLM_MODEL`
+- **Throttle Interval**: Optional delay between calls for the selected provider/model
 
 ### Database Encryption
 - **Enable Encryption**: Protect sensitive data with password
@@ -114,7 +114,7 @@ The app uses a tab-based interface with the following sections:
 3. **Monitor Usage**: Check the History tab for API usage and costs
 4. **Regular Backups**: Use Export/Import for data safety
 5. **Experiment**: Try different models and settings for varied results
-6. **Rebuild RAG After Imports**: Rebuild the Chroma index after importing data or when memory looks stale
+6. **Rebuild Story Memory After Imports**: Rebuild the Chroma index after importing data or when memory looks stale
 
 ## Troubleshooting
 
@@ -122,4 +122,4 @@ The app uses a tab-based interface with the following sections:
 - **Database Issues**: Run migrations manually: `python scripts/migrate.py`
 - **Import Problems**: Ensure file format matches export format
 - **Performance**: Monitor LLM call history for rate limiting
-- **RAG Looks Empty**: Rebuild Chroma from the RAG tab; persisted source data remains in SQLite
+- **Story Memory Looks Empty**: Rebuild Chroma from the Story Memory tab; persisted source data remains in SQLite

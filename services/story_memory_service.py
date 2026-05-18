@@ -199,7 +199,7 @@ def safe_delete_memory(item_id: str) -> bool:
     return True
 
 
-def format_rag_context(matches: list[dict]) -> str:
+def format_memory_context(matches: list[dict]) -> str:
     blocks = []
 
     for match in matches:

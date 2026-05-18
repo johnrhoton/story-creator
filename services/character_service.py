@@ -15,7 +15,7 @@ from database import (
 )
 from llm_client import generate_text
 from prompts import build_character_summary_prompt, build_prompt
-from services.rag_indexing_service import (
+from services.story_memory_indexing_service import (
     delete_character_memory,
     index_character,
 )

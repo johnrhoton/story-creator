@@ -2,7 +2,7 @@ import json
 import unittest
 from unittest.mock import patch
 
-from services.rag_service import build_story_generation_memory
+from services.story_memory_service import build_story_generation_memory
 from services.story_beat_service import (
     build_story_beat_index_text,
     index_story_beat,
@@ -202,7 +202,7 @@ class StoryBeatTests(unittest.TestCase):
                 ]
             return []
 
-        with patch("services.rag_service.safe_search_memory", side_effect=fake_search):
+        with patch("services.story_memory_service.safe_search_memory", side_effect=fake_search):
             memory = build_story_generation_memory(
                 1,
                 "Mira and Alden return to the harbor.",

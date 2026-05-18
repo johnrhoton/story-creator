@@ -6,7 +6,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from services.rag_service import search_memory, upsert_memory
+from services.story_memory_service import search_memory, upsert_memory
 
 
 def main():
@@ -35,12 +35,12 @@ def main():
 
     matches = search_memory("Who remembers every coastline?", n_results=3)
 
-    print("RAG smoke test matches:")
+    print("Story Memory smoke test matches:")
     for match in matches:
         print(match)
 
     if not matches:
-        raise SystemExit("Expected at least one RAG match.")
+        raise SystemExit("Expected at least one Story Memory match.")
 
 
 if __name__ == "__main__":

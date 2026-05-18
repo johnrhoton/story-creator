@@ -6,6 +6,7 @@ from database import (
     set_active_database_password,
 )
 from config import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
+from services.llm_defaults_service import save_llm_defaults
 from services.model_service import list_llm_models_by_provider
 
 
@@ -21,6 +22,9 @@ DEFAULT_MODELS = {
 def render_llm_settings_sidebar():
     with st.sidebar:
         st.header("LLM Settings")
+
+        previous_provider = st.session_state.get("llm_provider")
+        previous_model = st.session_state.get("llm_model")
 
         current_provider = st.session_state.get(
             "llm_provider",
@@ -74,6 +78,19 @@ def render_llm_settings_sidebar():
             st.session_state["llm_model"] = st.text_input(
                 "Model",
                 value=current_model
+            )
+
+        if (
+            previous_provider is not None
+            and previous_model is not None
+            and (
+                st.session_state["llm_provider"] != previous_provider
+                or st.session_state["llm_model"] != previous_model
+            )
+        ):
+            save_llm_defaults(
+                st.session_state["llm_provider"],
+                st.session_state["llm_model"]
             )
 
         throttle_settings = st.session_state.setdefault(

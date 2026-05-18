@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch
 
-from services.rag_service import build_story_generation_memory
+from services.story_memory_service import build_story_generation_memory
 
 
-class RagGenerationMemoryTests(unittest.TestCase):
+class StoryMemoryGenerationTests(unittest.TestCase):
     def test_build_story_generation_memory_prefers_story_id_and_includes_global(self):
         def fake_search(query, n_results=5, where=None):
             if where and where.get("story_id") == 1:
@@ -23,14 +23,14 @@ class RagGenerationMemoryTests(unittest.TestCase):
                 ]
             return []
 
-        with patch("services.rag_service.safe_search_memory", side_effect=fake_search):
+        with patch("services.story_memory_service.safe_search_memory", side_effect=fake_search):
             context = build_story_generation_memory(1, "Find the old harbor.", n_results=6)
 
         self.assertIn("Chapter 1 summary for story 1.", context)
         self.assertIn("Mira is a careful navigator.", context)
 
     def test_missing_chroma_does_not_break_generation(self):
-        with patch("services.rag_service.safe_search_memory", side_effect=Exception("backend down")):
+        with patch("services.story_memory_service.safe_search_memory", side_effect=Exception("backend down")):
             context = build_story_generation_memory(1, "Any request", n_results=6)
 
         self.assertEqual(context, "")
@@ -48,7 +48,7 @@ class RagGenerationMemoryTests(unittest.TestCase):
             # No global matches
             return []
 
-        with patch("services.rag_service.safe_search_memory", side_effect=fake_search_unrelated):
+        with patch("services.story_memory_service.safe_search_memory", side_effect=fake_search_unrelated):
             context = build_story_generation_memory(1, "Request", n_results=6)
 
         # Unrelated story memory should be filtered out

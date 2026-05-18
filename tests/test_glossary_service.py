@@ -8,7 +8,12 @@ from services.glossary_service import (
     normalize_dictionary_languages,
     parse_glossary_response,
 )
-from views.glossary_view import build_glossary_url, resolve_glossary_source
+from views.language_aids_view import (
+    build_glossary_url,
+    build_language_aids_url,
+    resolve_glossary_source,
+    resolve_language_aid_source,
+)
 
 
 class GlossaryServiceTests(unittest.TestCase):
@@ -102,11 +107,18 @@ class GlossaryServiceTests(unittest.TestCase):
     def test_build_glossary_url_supports_story_and_chapter(self):
         self.assertEqual(
             build_glossary_url(7),
-            "?view=Glossary&story_id=7"
+            "?view=Language%20Aids&story_id=7&aid=Glossary"
         )
         self.assertEqual(
             build_glossary_url(7, 3),
-            "?view=Glossary&story_id=7&chapter_number=3"
+            "?view=Language%20Aids&story_id=7&aid=Glossary&chapter_number=3"
+        )
+        self.assertEqual(
+            build_language_aids_url(7, 3, aid="Reading comprehension"),
+            (
+                "?view=Language%20Aids&story_id=7"
+                "&aid=Reading%20comprehension&chapter_number=3"
+            )
         )
 
     def test_resolve_glossary_source_supports_full_story_and_chapter(self):
@@ -132,6 +144,13 @@ class GlossaryServiceTests(unittest.TestCase):
         self.assertEqual(chapter_text, "Three four")
         self.assertEqual(chapter_type, "chapter 2")
         self.assertEqual(chapter_file, "story_7_chapter_2_glossary.csv")
+
+        _text, _text_type, file_prefix = resolve_language_aid_source(
+            7,
+            2,
+            chapters
+        )
+        self.assertEqual(file_prefix, "story_7_chapter_2")
 
 
 if __name__ == "__main__":

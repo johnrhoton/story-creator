@@ -15,9 +15,9 @@ from prompts import (
     build_story_chapter_summary_prompt,
     build_story_chapter_zero_prompt,
 )
-from services.rag_indexing_service import index_chapter_summary
-from services.rag_service import (
-    format_rag_context,
+from services.story_memory_indexing_service import index_chapter_summary
+from services.story_memory_service import (
+    format_memory_context,
     safe_search_memory,
     build_story_generation_memory,
 )
@@ -82,7 +82,7 @@ def generate_story_chapters(story_id, progress_callback=None):
                 f"User request: {chapter_description or ''}",
             ])
 
-            rag_context = build_story_generation_memory(
+            story_memory_context = build_story_generation_memory(
                 story_id=story_id,
                 user_request=user_request,
                 n_results=6,
@@ -97,7 +97,7 @@ def generate_story_chapters(story_id, progress_callback=None):
                 outline,
                 characters,
                 chapter_description,
-                rag_context
+                story_memory_context
             )
         else:
             user_request = "\n".join([
@@ -111,7 +111,7 @@ def generate_story_chapters(story_id, progress_callback=None):
                 f"User request: {chapter_description or ''}",
             ])
 
-            rag_context = build_story_generation_memory(
+            story_memory_context = build_story_generation_memory(
                 story_id=story_id,
                 user_request=user_request,
                 n_results=6,
@@ -127,7 +127,7 @@ def generate_story_chapters(story_id, progress_callback=None):
                 previous_summaries,
                 chapter_number,
                 chapter_description,
-                rag_context
+                story_memory_context
             )
 
         chapter_body = require_llm_response(
@@ -238,7 +238,7 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
             f"User request: {chapter_description or ''}",
         ])
 
-        rag_context = build_story_generation_memory(
+        story_memory_context = build_story_generation_memory(
             story_id=story_id,
             user_request=user_request,
             n_results=6,
@@ -253,7 +253,7 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
             outline,
             characters,
             chapter_description,
-            rag_context
+            story_memory_context
         )
     else:
         user_request = "\n".join([
@@ -267,7 +267,7 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
             f"User request: {chapter_description or ''}",
         ])
 
-        rag_context = build_story_generation_memory(
+        story_memory_context = build_story_generation_memory(
             story_id=story_id,
             user_request=user_request,
             n_results=6,
@@ -283,7 +283,7 @@ def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callb
             build_previous_chapter_summaries(chapters, chapter_number),
             chapter_number,
             chapter_description,
-            rag_context
+            story_memory_context
         )
 
     chapter_body = require_llm_response(
@@ -345,7 +345,7 @@ def require_llm_response(prompt, purpose):
     return response
 
 
-def build_rag_context_for_chapter(
+def build_story_memory_context_for_chapter(
     overview,
     setting_background,
     tone_style,
@@ -362,7 +362,7 @@ def build_rag_context_for_chapter(
 
     matches = safe_search_memory(user_request, n_results=5)
 
-    return format_rag_context(matches)
+    return format_memory_context(matches)
 
 
 def build_story_outline(chapters):

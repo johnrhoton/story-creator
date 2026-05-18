@@ -14,7 +14,7 @@ def generate_reading_comprehension_questions(
     source_text,
     question_count=15,
     source_language="",
-    interrogative_language="",
+    question_language="",
     text_type="story section"
 ):
     if not source_text or not str(source_text).strip():
@@ -24,7 +24,7 @@ def generate_reading_comprehension_questions(
         source_text=source_text,
         question_count=question_count,
         source_language=source_language,
-        interrogative_language=interrogative_language,
+        question_language=question_language,
         text_type=text_type,
     )
     response_text = generate_text(

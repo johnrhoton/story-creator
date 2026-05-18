@@ -10,18 +10,18 @@ from services.reading_comprehension_service import (
 
 
 class ReadingComprehensionServiceTests(unittest.TestCase):
-    def test_build_prompt_includes_optional_interrogative_language(self):
+    def test_build_prompt_includes_optional_question_language(self):
         prompt = build_reading_comprehension_prompt(
             "Iris sees the light.",
             question_count=15,
             source_language="English",
-            interrogative_language="German",
+            question_language="German",
             text_type="chapter 1"
         )
 
         self.assertIn("Create 15 questions", prompt)
         self.assertIn("Original textual language:\nEnglish", prompt)
-        self.assertIn("Interrogative language:\nGerman", prompt)
+        self.assertIn("Question language:\nGerman", prompt)
         self.assertIn("Iris sees the light.", prompt)
 
     def test_build_prompt_omits_translation_when_language_absent(self):
@@ -29,7 +29,7 @@ class ReadingComprehensionServiceTests(unittest.TestCase):
             "Iris sees the light.",
             question_count=3,
             source_language="English",
-            interrogative_language="",
+            question_language="",
         )
 
         self.assertIn("Do not include translated_question values", prompt)

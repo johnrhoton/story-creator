@@ -85,7 +85,7 @@ Each record includes:
 
 The project also uses text-based prompt templates rather than model classes for
 generation behavior. Prompt templates live in `prompts/` and are loaded by
-`prompts.py`. RAG memory records are represented as Chroma documents plus
+`prompts.py`. story memory records are represented as Chroma documents plus
 metadata dictionaries. SQLite remains the source of truth for rebuildable memory
 such as story beats.
 

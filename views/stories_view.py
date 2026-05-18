@@ -36,7 +36,7 @@ from services.story_service import (
 )
 from services.template_service import parse_character_roles
 from views.bulk_actions import render_bulk_actions
-from views.glossary_view import build_glossary_url
+from views.language_aids_view import build_language_aids_url
 from ui_helpers import format_display_timestamp
 
 
@@ -678,8 +678,8 @@ def render_glossary_controls(
 ):
     st.markdown("### Glossary")
     st.link_button(
-        "Open glossary page",
-        build_glossary_url(story_id, chapter_number)
+        "Open language aids page",
+        build_language_aids_url(story_id, chapter_number, aid="Glossary")
     )
 
     col_count, col_languages = st.columns([1, 3])
@@ -764,10 +764,10 @@ def render_reading_comprehension_controls(
         )
 
     with col_language:
-        interrogative_language = st.text_input(
-            "Interrogative language",
+        question_language = st.text_input(
+            "Question language",
             placeholder="Optional, e.g. German",
-            key=f"{key_prefix}_interrogative_language"
+            key=f"{key_prefix}_question_language"
         )
 
     if st.button(
@@ -783,7 +783,7 @@ def render_reading_comprehension_controls(
                 source_text,
                 question_count=int(question_count),
                 source_language=source_language,
-                interrogative_language=interrogative_language.strip(),
+                question_language=question_language.strip(),
                 text_type=text_type,
             )
 
@@ -791,7 +791,7 @@ def render_reading_comprehension_controls(
             st.warning("Question generation did not return entries.")
             return
 
-        include_translation = bool(interrogative_language.strip())
+        include_translation = bool(question_language.strip())
         csv_data = reading_comprehension_to_csv(
             questions,
             include_translation=include_translation

@@ -13,8 +13,8 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `profiles_view.py`: Profile creation and editing
   - `templates_view.py`: Story template management
   - `stories_view.py`: Story generation and viewing
-  - `rag_debug_view.py`: Chroma/RAG rebuild, search, index inspection, story-memory preview, and story-beat tools
-  - `glossary_view.py`: Standalone glossary generation page for full stories or chapters
+  - `story_memory_view.py`: Chroma Story Memory rebuild, search, index inspection, story-memory preview, and story-beat tools
+  - `language_aids_view.py`: Standalone Language Aids page for glossary and comprehension question generation
   - `models_view.py`: LLM model configuration
   - `history_view.py`: Object history and LLM call history
   - `export_import_view.py`: Data import/export functionality
@@ -30,8 +30,8 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `story_service.py`: Story creation and chapter management
   - `story_generation_service.py`: LLM-powered story generation
   - `story_beat_service.py`: Story-memory beat extraction, validation, SQLite persistence, and Chroma indexing
-  - `rag_service.py`: Chroma access, search, and injected STORY MEMORY formatting
-  - `rag_indexing_service.py`: Rebuildable Chroma indexing from SQLite
+  - `story_memory_service.py`: Chroma access, search, and injected STORY MEMORY formatting
+  - `story_memory_indexing_service.py`: Rebuildable Chroma indexing from SQLite
   - `glossary_service.py`: Glossary generation, JSON parsing, table formatting, and CSV export
   - `reading_comprehension_service.py`: Reading comprehension question generation, JSON parsing, and CSV export
   - `template_service.py`: Template management
@@ -88,11 +88,11 @@ comprehension question generation. Some prompt files contain named sections such
 as `[section]`, `[characters]`, or `[item]`; Python selects the relevant section
 and supplies dynamic values.
 
-## RAG and Story Memory
+## Story Memory
 
-The RAG system uses Chroma with a persistent local path, `data/chroma_db`. SQLite
+Story Memory uses Chroma with a persistent local path, `data/chroma_db`. SQLite
 remains the source of truth for stories, chapters, characters, and story beats.
-Chroma can be rebuilt from SQLite from the RAG tab. During chapter generation,
+Chroma can be rebuilt from SQLite from the Story Memory tab. During chapter generation,
 the app retrieves relevant story-specific records and global characters, formats
 them through `prompts/story_memory_section.txt`, and injects them into the story
 chapter prompt.

@@ -79,7 +79,7 @@ The services layer contains the business logic of the application, orchestrating
 - Constructs detailed prompts from templates
 - Iterates through chapter generation
 - Handles character integration
-- Injects RAG story memory into chapter prompts
+- Injects story memory into chapter prompts
 - Aborts generation when a required body or summary LLM call fails
 - Indexes chapter summaries and triggers fail-safe story-beat extraction
 
@@ -98,14 +98,14 @@ The services layer contains the business logic of the application, orchestrating
 `revelation`, `unresolved_thread`, `time_jump`,
 `world_or_setting_detail`, `character_state_change`.
 
-### `rag_service.py` and `rag_indexing_service.py`
+### `story_memory_service.py` and `story_memory_indexing_service.py`
 **Purpose**: Chroma-backed retrieval and rebuildable memory indexing.
 
 **Key Functions**:
 - `safe_search_memory(...)`: Safe Chroma search
 - `safe_list_memory_items(...)`: Inspect persisted Chroma records
 - `build_story_generation_memory(...)`: Retrieve and format prompt memory
-- `rebuild_rag_index_from_sqlite()`: Rebuild Chroma from SQLite source data
+- `rebuild_story_memory_index_from_sqlite()`: Rebuild Chroma from SQLite source data
 
 **Memory Types**:
 Stories, chapter summaries, characters, and story beats. The injected STORY
@@ -161,6 +161,7 @@ See `docs/language_aids.md` for the end-to-end reading comprehension workflow.
 - Gemini, Groq, OpenRouter integration
 - Model capability descriptions
 - Default model selection
+- Sidebar default persistence to `.env` through `llm_defaults_service.py`
 
 ### `sync_service.py`
 **Purpose**: MongoDB synchronization (optional)

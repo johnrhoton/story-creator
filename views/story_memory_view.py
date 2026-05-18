@@ -1,8 +1,8 @@
 import streamlit as st
 
 from database import get_story_beats, get_story_chapters
-from services.rag_indexing_service import rebuild_rag_index_from_sqlite
-from services.rag_service import (
+from services.story_memory_indexing_service import rebuild_story_memory_index_from_sqlite
+from services.story_memory_service import (
     build_story_generation_memory,
     group_memory_items_by_type,
     safe_list_memory_items,
@@ -14,8 +14,8 @@ from services.story_beat_service import (
 )
 
 
-def render_rag_tab():
-    st.header("RAG")
+def render_story_memory_tab():
+    st.header("Story Memory")
 
     render_rebuild_section()
 
@@ -33,15 +33,15 @@ def render_rag_tab():
 
 
 def render_rebuild_section():
-    st.subheader("Chroma index")
+    st.subheader("Retrieval-Augmented Generation (RAG)")
 
     if st.button(
         "Rebuild Chroma index from SQLite",
-        key="rag_rebuild_index"
+        key="story_memory_rebuild_index"
     ):
         try:
             with st.spinner("Rebuilding Chroma index from SQLite..."):
-                counts = rebuild_rag_index_from_sqlite()
+                counts = rebuild_story_memory_index_from_sqlite()
             st.success("Chroma index rebuilt from SQLite.")
             st.write(
                 "Indexed "
@@ -51,7 +51,7 @@ def render_rebuild_section():
                 f"{counts.get('characters', 0)} characters."
             )
         except Exception as error:
-            st.error(f"RAG rebuild failed: {error}")
+            st.error(f"Story Memory rebuild failed: {error}")
 
 
 def render_search_section():
@@ -59,7 +59,7 @@ def render_search_section():
 
     query = st.text_input(
         "Query",
-        key="rag_search_query"
+        key="story_memory_search_query"
     )
 
     col_results, col_story = st.columns(2)
@@ -71,18 +71,18 @@ def render_search_section():
             max_value=25,
             value=5,
             step=1,
-            key="rag_search_n_results"
+            key="story_memory_search_n_results"
         )
 
     with col_story:
         story_id_input = st.text_input(
             "Story ID for injected memory preview",
-            key="rag_story_id"
+            key="story_memory_story_id"
         )
 
     user_request = st.text_area(
         "Generation request preview",
-        key="rag_user_request",
+        key="story_memory_user_request",
         height=120,
     )
 
@@ -91,13 +91,13 @@ def render_search_section():
     with col_search:
         search = st.button(
             "Search memory",
-            key="rag_search"
+            key="story_memory_search"
         )
 
     with col_preview:
         show_memory = st.button(
             "Preview injected STORY MEMORY",
-            key="rag_show_memory"
+            key="story_memory_show_memory"
         )
 
     if search:
@@ -115,7 +115,7 @@ def render_search_results(query, n_results):
     try:
         matches = search_memory(query, n_results=n_results)
     except Exception as error:
-        st.error(f"RAG search failed: {error}")
+        st.error(f"Story Memory search failed: {error}")
         return
 
     if not matches:
@@ -147,7 +147,7 @@ def render_story_memory_preview(story_id_input, user_request, n_results):
         return
 
     try:
-        rag_context = build_story_generation_memory(
+        story_memory_context = build_story_generation_memory(
             story_id=story_id,
             user_request=user_request or "",
             n_results=n_results,
@@ -156,12 +156,12 @@ def render_story_memory_preview(story_id_input, user_request, n_results):
         st.error(f"Failed to build story memory: {error}")
         return
 
-    if not rag_context:
+    if not story_memory_context:
         st.info("No story memory would be injected.")
         return
 
     st.markdown("**STORY MEMORY injected into prompt**")
-    st.code(rag_context)
+    st.code(story_memory_context)
 
 
 def render_index_section():
@@ -173,7 +173,7 @@ def render_index_section():
         max_value=500,
         value=100,
         step=25,
-        key="rag_index_limit"
+        key="story_memory_index_limit"
     )
 
     items = safe_list_memory_items(limit=int(limit))
@@ -213,7 +213,7 @@ def render_story_beats_debug_section():
     with col_story:
         story_id_input = st.text_input(
             "Story ID",
-            key="rag_beats_story_id"
+            key="story_memory_beats_story_id"
         )
 
     with col_chapter:
@@ -222,7 +222,7 @@ def render_story_beats_debug_section():
             min_value=0,
             value=0,
             step=1,
-            key="rag_beats_chapter_number"
+            key="story_memory_beats_chapter_number"
         )
 
     col_view, col_extract, col_missing = st.columns(3)
@@ -230,19 +230,19 @@ def render_story_beats_debug_section():
     with col_view:
         view_beats = st.button(
             "View extracted beats",
-            key="rag_view_story_beats"
+            key="story_memory_view_story_beats"
         )
 
     with col_extract:
         run_extraction = st.button(
             "Run beat extraction",
-            key="rag_run_story_beats"
+            key="story_memory_run_story_beats"
         )
 
     with col_missing:
         run_missing = st.button(
             "Extract missing beats",
-            key="rag_run_missing_story_beats"
+            key="story_memory_run_missing_story_beats"
         )
 
     story_id = parse_optional_int(story_id_input)
@@ -263,7 +263,7 @@ def render_story_beats_debug_section():
     st.markdown("**Search story beats**")
     beat_query = st.text_input(
         "Beat query",
-        key="rag_story_beat_search_query"
+        key="story_memory_story_beat_search_query"
     )
     beat_results = st.number_input(
         "Beat results",
@@ -271,10 +271,10 @@ def render_story_beats_debug_section():
         max_value=25,
         value=5,
         step=1,
-        key="rag_story_beat_search_results"
+        key="story_memory_story_beat_search_results"
     )
 
-    if st.button("Search story beats", key="rag_search_story_beats"):
+    if st.button("Search story beats", key="story_memory_search_story_beats"):
         render_story_beat_search_results(
             beat_query,
             int(beat_results),

@@ -11,7 +11,7 @@ from database import (
 )
 from llm_client import generate_text
 from prompts import build_story_beats_prompt
-from services.rag_service import (
+from services.story_memory_service import (
     safe_delete_memory,
     safe_list_memory_items,
     safe_upsert_memory,

@@ -16,7 +16,7 @@ from database import (
     update_story,
     update_story_chapter,
 )
-from services.rag_indexing_service import (
+from services.story_memory_indexing_service import (
     delete_chapter_summary_memory,
     delete_story_memory,
     index_chapter_summary,

@@ -14,7 +14,7 @@ LLM-powered, displayed in the UI, and downloadable as CSV.
 
 ### User Flow
 
-1. Open a story or chapter in the Stories tab, or open the standalone Glossary tab.
+1. Open a story or chapter in the Stories tab, or open the Language Aids tab.
 2. Choose the number of glossary entries. The default is 15.
 3. Enter one or more dictionary languages, such as `German, Spanish`.
 4. Click Create glossary.
@@ -57,7 +57,7 @@ The CSV columns are:
 
 1. Open a story or chapter in the Stories tab.
 2. Choose the number of questions. The default is 15.
-3. Optionally enter an interrogative language.
+3. Optionally enter a question language.
 4. Click Create questions.
 5. Review the generated table.
 6. Download the result as CSV.
@@ -71,30 +71,31 @@ The prompt asks for:
 - Questions about important events, motivations, relationships, revealed
   information, and consequences
 - Questions and answers in the original textual language
-- Optional translated questions in the interrogative language
+- Optional translated questions in the question language
 - JSON-only output
 
 ### Output
 
-If no interrogative language is supplied, the CSV columns are:
+If no question language is supplied, the CSV columns are:
 - `question`
 - `answer`
 
-If an interrogative language is supplied, the CSV columns are:
+If a question language is supplied, the CSV columns are:
 - `question`
 - `answer`
 - `translated_question`
 
-## Standalone Glossary Tab
+## Standalone Language Aids Tab
 
-The Glossary tab can be opened directly or from story/chapter controls. It can
-serve as a browser-tab pop-out while the Stories tab remains open elsewhere.
+The Language Aids tab can be opened directly or from story/chapter controls. It
+can serve as a browser-tab pop-out while the Stories tab remains open elsewhere.
+Inside it, choose between Glossary and Reading comprehension.
 
 Example URLs:
 
 ```text
-?view=Glossary&story_id=7
-?view=Glossary&story_id=7&chapter_number=3
+?view=Language%20Aids&story_id=7&aid=Glossary
+?view=Language%20Aids&story_id=7&aid=Reading%20comprehension&chapter_number=3
 ```
 
 ## Important Files
@@ -104,7 +105,7 @@ Example URLs:
 - `services/glossary_service.py`: Glossary generation, parsing, table formatting, CSV export
 - `services/reading_comprehension_service.py`: Question generation, parsing, table formatting, CSV export
 - `views/stories_view.py`: Embedded story/chapter controls
-- `views/glossary_view.py`: Standalone glossary page
+- `views/language_aids_view.py`: Standalone Language Aids page
 
 ## Storage
 

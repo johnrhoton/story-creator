@@ -13,11 +13,11 @@ from database import (
 )
 from views.characters_view import render_characters_tab
 from views.export_import_view import render_export_import_tab
-from views.glossary_view import render_glossary_tab
+from views.language_aids_view import render_language_aids_tab
 from views.history_view import render_history_tab
 from views.models_view import render_models_tab
 from views.profiles_view import render_profiles_tab
-from views.rag_debug_view import render_rag_tab
+from views.story_memory_view import render_story_memory_tab
 from views.sidebar_view import render_llm_settings_sidebar
 from views.stories_view import render_stories_tab
 from views.templates_view import render_templates_tab
@@ -28,6 +28,12 @@ def get_view_index_from_query_params(view_options):
 
     if isinstance(view, list):
         view = view[0] if view else None
+
+    if view == "Glossary":
+        view = "Language Aids"
+
+    if view == "RAG":
+        view = "Story Memory"
 
     if view in view_options:
         return view_options.index(view)
@@ -64,8 +70,8 @@ VIEW_OPTIONS = [
     "Profiles",
     "Templates",
     "Stories",
-    "RAG",
-    "Glossary",
+    "Story Memory",
+    "Language Aids",
     "Models",
     "History",
     "Export / Import"
@@ -92,11 +98,11 @@ elif active_view == "Templates":
 elif active_view == "Stories":
     render_stories_tab()
 
-elif active_view == "RAG":
-    render_rag_tab()
+elif active_view == "Story Memory":
+    render_story_memory_tab()
 
-elif active_view == "Glossary":
-    render_glossary_tab()
+elif active_view == "Language Aids":
+    render_language_aids_tab()
 
 elif active_view == "Models":
     render_models_tab()

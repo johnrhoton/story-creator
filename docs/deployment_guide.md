@@ -102,6 +102,8 @@ Planned for local, offline-capable deployment:
 | `GOOGLE_API_KEY` | Google Gemini API key | No* |
 | `GROQ_API_KEY` | Groq API key | No* |
 | `OPENROUTER_API_KEY` | OpenRouter API key | No* |
+| `DEFAULT_LLM_PROVIDER` | Default provider selected in the sidebar | No |
+| `DEFAULT_LLM_MODEL` | Default model selected in the sidebar | No |
 | `MONGODB_URI` | MongoDB connection URI | No |
 | `DATABASE_PASSWORD` | Database encryption password | No |
 
@@ -113,14 +115,15 @@ Planned for local, offline-capable deployment:
 - **Backup**: Use Export/Import feature for data backup
 - **Encryption**: Optional field-level encryption
 - **MongoDB Sync**: Optional cloud backup synchronization
-- **Chroma RAG Index**: Stored under `data/chroma_db`; rebuildable from SQLite via the RAG tab
+- **Chroma Story Memory Index**: Stored under `data/chroma_db`; rebuildable from SQLite via the Story Memory tab
+- **LLM Defaults**: Sidebar model changes update `.env`; keep deployment `.env` files local and uncommitted
 
 ### Monitoring and Maintenance
 
 - **Logs**: Check Streamlit logs for errors
 - **LLM History**: Monitor API usage in History tab
 - **Object History**: Inspect CRUD history in the History tab
-- **RAG Index**: Inspect or rebuild Chroma from the RAG tab after imports or deployments
+- **Story Memory Index**: Inspect or rebuild Chroma from the Story Memory tab after imports or deployments
 - **Database Health**: Regular export/import testing
 - **Updates**: Pull latest code and run migrations
 

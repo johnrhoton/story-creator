@@ -1,4 +1,4 @@
-# Story Memory and RAG
+# Story Memory
 
 ## Purpose
 
@@ -7,7 +7,7 @@ character state, relationship changes, unresolved threads, and chapter events.
 It combines SQLite source data with a local Chroma vector index.
 
 SQLite is the source of truth. Chroma is the retrieval index and can be rebuilt
-from SQLite from the RAG tab.
+from SQLite from the Story Memory tab.
 
 ## Main User Workflows
 
@@ -16,8 +16,8 @@ from SQLite from the RAG tab.
 1. The user creates or regenerates a story chapter.
 2. `services/story_generation_service.py` builds a chapter prompt.
 3. Before the prompt is sent to the LLM, it calls
-   `build_story_generation_memory(...)` in `services/rag_service.py`.
-4. RAG searches Chroma for records relevant to the current chapter request.
+   `build_story_generation_memory(...)` in `services/story_memory_service.py`.
+4. Story Memory searches Chroma for records relevant to the current chapter request.
 5. Retrieved records are filtered so unrelated story-specific records do not
    leak into the current story.
 6. The memory block is rendered through `prompts/story_memory_section.txt`.
@@ -25,9 +25,9 @@ from SQLite from the RAG tab.
    - `prompts/story_chapter.txt`
    - `prompts/story_chapter_zero.txt`
 
-### In the RAG Tab
+### In the Story Memory Tab
 
-The RAG tab supports:
+The Story Memory tab supports:
 - Rebuilding the Chroma index from SQLite
 - Searching memory
 - Previewing the exact STORY MEMORY block that would be injected
@@ -115,7 +115,7 @@ The current collection is named:
 story_memory
 ```
 
-The index can be rebuilt from SQLite using the RAG tab. Rebuild counts include:
+The index can be rebuilt from SQLite using the Story Memory tab. Rebuild counts include:
 - Stories
 - Chapter summaries
 - Story beats
@@ -126,17 +126,17 @@ appears stale.
 
 ## Important Files
 
-- `services/rag_service.py`: Chroma access, retrieval, filtering, and memory formatting
-- `services/rag_indexing_service.py`: Rebuildable indexing from SQLite
+- `services/story_memory_service.py`: Chroma access, retrieval, filtering, and memory formatting
+- `services/story_memory_indexing_service.py`: Rebuildable indexing from SQLite
 - `services/story_beat_service.py`: Beat extraction, validation, persistence, and indexing
 - `database/story_beats.py`: SQLite access for story beats
 - `prompts/story_memory_section.txt`: STORY MEMORY prompt format
 - `prompts/story_beats.txt`: Beat extraction prompt
-- `views/rag_debug_view.py`: RAG UI
+- `views/story_memory_view.py`: Story Memory UI
 
 ## Failure Behavior
 
 - Chroma operations use safe wrappers where appropriate.
-- Missing or failed RAG retrieval results in no STORY MEMORY block rather than a
+- Missing or failed Story Memory retrieval results in no STORY MEMORY block rather than a
   failed chapter generation.
 - Failed beat extraction returns no beats and does not break normal story saving.

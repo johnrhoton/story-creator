@@ -5,8 +5,8 @@ from views.history_view import (
     build_object_history_label,
 )
 from views.profiles_view import build_profile_expander_label
-from views.rag_debug_view import order_memory_groups
-from views.rag_debug_view import build_memory_item_label
+from views.story_memory_view import order_memory_groups
+from views.story_memory_view import build_memory_item_label
 from views.stories_view import (
     build_story_expander_title,
     count_story_words,
@@ -56,7 +56,7 @@ class ViewLabelTests(unittest.TestCase):
             "hero"
         )
 
-    def test_rag_memory_groups_use_preferred_order(self):
+    def test_story_memory_groups_use_preferred_order(self):
         grouped = {
             "character": ["character"],
             "unknown": ["unknown"],
@@ -70,7 +70,7 @@ class ViewLabelTests(unittest.TestCase):
             ["story", "chapter_summary", "story_beat", "character", "unknown"]
         )
 
-    def test_rag_inspect_labels_use_ids_without_type_prefix(self):
+    def test_story_memory_inspect_labels_use_ids_without_type_prefix(self):
         self.assertEqual(
             build_memory_item_label(
                 1,

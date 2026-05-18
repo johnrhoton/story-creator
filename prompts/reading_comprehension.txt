@@ -6,14 +6,14 @@ Rules:
 - Ask questions that check understanding of important events, motivations, relationships, revealed information, and consequences.
 - Questions and answers must be in the original textual language of the source text.
 - Answers should be concise but specific.
-- If an interrogative language is provided, also translate each question into that language.
+- If a question language is provided, also translate each question into that language.
 - Return structured JSON only.
 
 Original textual language:
 {source_language}
 
-Interrogative language:
-{interrogative_language}
+Question language:
+{question_language}
 
 Text:
 {source_text}

@@ -1,3 +1,6 @@
+import os
+
+
 DB_NAME = "story_builder.db"
 
 DATABASE_ENCRYPTION_KDF_ITERATIONS = 100000
@@ -11,5 +14,8 @@ MONGODB_LEGACY_SYNC_DOCUMENT_ID = "story_creator_main"
 
 GENDER_OPTIONS = ["female", "male"]
 
-DEFAULT_LLM_PROVIDER = "Groq"
-DEFAULT_LLM_MODEL = "llama-3.3-70b-versatile"
+DEFAULT_LLM_PROVIDER = os.getenv("DEFAULT_LLM_PROVIDER", "Groq")
+DEFAULT_LLM_MODEL = os.getenv(
+    "DEFAULT_LLM_MODEL",
+    "llama-3.3-70b-versatile"
+)

@@ -90,8 +90,8 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 - Template validation
 - Progress reporting and abort-on-failed-LLM behavior
 
-### `test_rag_helpers.py` and `test_rag_generation_memory.py`
-**Purpose**: RAG and Chroma helper behavior
+### `test_story_memory_helpers.py` and `test_story_memory_generation.py`
+**Purpose**: Story Memory and Chroma helper behavior
 
 **Test Cases**:
 - Metadata cleaning

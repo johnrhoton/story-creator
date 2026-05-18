@@ -8,6 +8,7 @@ from services.model_service import (
     list_llm_models,
     set_existing_llm_model_as_default,
 )
+from services.llm_defaults_service import save_llm_defaults
 from views.bulk_actions import render_bulk_actions
 
 
@@ -94,6 +95,7 @@ def render_models_tab():
                         key=f"default_llm_model_{model_id}"
                     ):
                         set_existing_llm_model_as_default(model_id)
+                        save_llm_defaults(_provider, model)
                         st.success("Default model updated.")
                         st.rerun()
 

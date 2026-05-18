@@ -5,7 +5,7 @@ from database import (
     get_story_beats,
     get_story_chapters,
 )
-from services.rag_service import (
+from services.story_memory_service import (
     reset_collection,
     safe_delete_memory,
     safe_upsert_memory,
@@ -103,7 +103,7 @@ def delete_story_memory(story_id) -> None:
     safe_delete_memory(f"story_{story_id}")
 
 
-def rebuild_rag_index_from_sqlite() -> dict:
+def rebuild_story_memory_index_from_sqlite() -> dict:
     reset_collection()
 
     counts = {

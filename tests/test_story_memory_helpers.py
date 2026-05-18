@@ -2,15 +2,15 @@ import unittest
 from unittest.mock import patch
 
 from prompts import build_story_chapter_prompt, build_story_chapter_summary_prompt
-from services.rag_indexing_service import (
+from services.story_memory_indexing_service import (
     build_story_memory_text,
     build_character_memory_text,
     index_chapter_summary,
-    rebuild_rag_index_from_sqlite,
+    rebuild_story_memory_index_from_sqlite,
 )
-from services.rag_service import (
+from services.story_memory_service import (
     clean_metadata,
-    format_rag_context,
+    format_memory_context,
     group_memory_items_by_type,
     safe_delete_memory,
     safe_search_memory,
@@ -18,7 +18,7 @@ from services.rag_service import (
 )
 
 
-class RagHelperTests(unittest.TestCase):
+class StoryMemoryHelperTests(unittest.TestCase):
     def test_clean_metadata_keeps_chroma_supported_values(self):
         metadata = clean_metadata({
             "name": "Mira",
@@ -40,8 +40,8 @@ class RagHelperTests(unittest.TestCase):
             }
         )
 
-    def test_format_rag_context_uses_metadata_label(self):
-        context = format_rag_context([
+    def test_format_memory_context_uses_metadata_label(self):
+        context = format_memory_context([
             {
                 "text": "Mira remembers every coastline.",
                 "metadata": {
@@ -95,16 +95,16 @@ class RagHelperTests(unittest.TestCase):
         self.assertEqual(grouped["story"][0]["id"], "story_1")
         self.assertEqual(grouped["unknown"][0]["id"], "loose")
 
-    @patch("services.rag_indexing_service.index_story_beat")
-    @patch("services.rag_indexing_service.index_chapter_summary")
-    @patch("services.rag_indexing_service.index_story")
-    @patch("services.rag_indexing_service.index_character")
-    @patch("services.rag_indexing_service.get_story_beats")
-    @patch("services.rag_indexing_service.get_story_chapters")
-    @patch("services.rag_indexing_service.get_stories")
-    @patch("services.rag_indexing_service.get_characters")
-    @patch("services.rag_indexing_service.reset_collection")
-    def test_rebuild_rag_index_returns_category_counts(
+    @patch("services.story_memory_indexing_service.index_story_beat")
+    @patch("services.story_memory_indexing_service.index_chapter_summary")
+    @patch("services.story_memory_indexing_service.index_story")
+    @patch("services.story_memory_indexing_service.index_character")
+    @patch("services.story_memory_indexing_service.get_story_beats")
+    @patch("services.story_memory_indexing_service.get_story_chapters")
+    @patch("services.story_memory_indexing_service.get_stories")
+    @patch("services.story_memory_indexing_service.get_characters")
+    @patch("services.story_memory_indexing_service.reset_collection")
+    def test_rebuild_story_memory_index_returns_category_counts(
         self,
         mock_reset_collection,
         mock_get_characters,
@@ -142,7 +142,7 @@ class RagHelperTests(unittest.TestCase):
             }
         ]
 
-        counts = rebuild_rag_index_from_sqlite()
+        counts = rebuild_story_memory_index_from_sqlite()
 
         self.assertEqual(
             counts,
@@ -207,9 +207,9 @@ class RagHelperTests(unittest.TestCase):
         self.assertIn("Target language proficiency level: B1 CEFR", prompt)
         self.assertIn("Chapter body", prompt)
 
-    def test_safe_rag_operations_do_not_raise_when_backend_fails(self):
+    def test_safe_story_memory_operations_do_not_raise_when_backend_fails(self):
         with patch(
-            "services.rag_service.get_collection",
+            "services.story_memory_service.get_collection",
             side_effect=RuntimeError("backend unavailable")
         ):
             self.assertFalse(
@@ -243,7 +243,7 @@ class RagHelperTests(unittest.TestCase):
         self.assertIn("Attached profile: navigator", text)
         self.assertIn("Profile personality traits: observant", text)
 
-    @patch("services.rag_indexing_service.safe_delete_memory")
+    @patch("services.story_memory_indexing_service.safe_delete_memory")
     def test_blank_chapter_summary_removes_existing_memory(
         self,
         mock_safe_delete_memory

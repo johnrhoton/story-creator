@@ -6,6 +6,11 @@ from services.glossary_service import (
     glossary_entries_to_csv,
     normalize_dictionary_languages,
 )
+from services.reading_comprehension_service import (
+    build_reading_comprehension_table,
+    generate_reading_comprehension_questions,
+    reading_comprehension_to_csv,
+)
 from services.story_service import (
     build_full_story_markdown,
     list_stories,
@@ -13,13 +18,22 @@ from services.story_service import (
 )
 
 
-def render_glossary_tab():
-    st.header("Glossary")
+LANGUAGE_AID_OPTIONS = [
+    "Glossary",
+    "Reading comprehension",
+]
+
+
+def render_language_aids_tab():
+    st.header("Language Aids")
 
     initial_story_id = parse_optional_int(get_query_param("story_id"))
     initial_chapter_number = parse_optional_int(
         get_query_param("chapter_number")
     )
+    initial_aid = get_query_param("aid")
+    if initial_aid not in LANGUAGE_AID_OPTIONS:
+        initial_aid = "Glossary"
 
     stories = list_stories()
     story_options = [story[0] for story in stories]
@@ -39,7 +53,7 @@ def render_glossary_tab():
         format_func=lambda story_id: (
             f"{story_id}: {story_names.get(story_id, '')}"
         ),
-        key="glossary_story_id"
+        key="language_aids_story_id"
     ) if story_options else None
 
     if not selected_story_id:
@@ -66,22 +80,41 @@ def render_glossary_tab():
             if value == "Full story"
             else f"Chapter {value}"
         ),
-        key="glossary_scope"
+        key="language_aids_scope"
     )
 
-    source_text, text_type, file_name = resolve_glossary_source(
+    source_text, text_type, file_name_prefix = resolve_language_aid_source(
         selected_story_id,
         selected_scope,
         chapters
     )
 
-    render_glossary_generator(
-        source_text=source_text,
-        text_type=text_type,
-        file_name=file_name,
-        key_prefix="glossary_page",
-        source_language=story_languages.get(selected_story_id, "")
+    selected_aid = st.radio(
+        "Aid type",
+        LANGUAGE_AID_OPTIONS,
+        horizontal=True,
+        index=find_option_index(LANGUAGE_AID_OPTIONS, initial_aid),
+        key="language_aid_type"
     )
+
+    source_language = story_languages.get(selected_story_id, "")
+
+    if selected_aid == "Glossary":
+        render_glossary_generator(
+            source_text=source_text,
+            text_type=text_type,
+            file_name=f"{file_name_prefix}_glossary.csv",
+            key_prefix="language_aids_glossary",
+            source_language=source_language
+        )
+    else:
+        render_reading_comprehension_generator(
+            source_text=source_text,
+            text_type=text_type,
+            file_name=f"{file_name_prefix}_questions.csv",
+            key_prefix="language_aids_questions",
+            source_language=source_language
+        )
 
 
 def render_glossary_generator(
@@ -151,12 +184,80 @@ def render_glossary_generator(
         )
 
 
-def resolve_glossary_source(story_id, selected_scope, chapters):
+def render_reading_comprehension_generator(
+    source_text,
+    text_type,
+    file_name,
+    key_prefix,
+    source_language=""
+):
+    col_count, col_language = st.columns([1, 3])
+
+    with col_count:
+        question_count = st.number_input(
+            "Questions",
+            min_value=1,
+            max_value=100,
+            value=15,
+            step=1,
+            key=f"{key_prefix}_question_count"
+        )
+
+    with col_language:
+        question_language = st.text_input(
+            "Question language",
+            placeholder="Optional, e.g. German",
+            key=f"{key_prefix}_question_language"
+        )
+
+    if not source_text or not str(source_text).strip():
+        st.info("No text is available for this selection.")
+        return
+
+    with st.expander("Source preview"):
+        st.text(source_text[:4000])
+
+    if st.button("Create questions", key=f"{key_prefix}_create"):
+        with st.spinner("Creating reading comprehension questions..."):
+            questions = generate_reading_comprehension_questions(
+                source_text,
+                question_count=int(question_count),
+                source_language=source_language,
+                question_language=question_language.strip(),
+                text_type=text_type,
+            )
+
+        if not questions:
+            st.warning("Question generation did not return entries.")
+            return
+
+        include_translation = bool(question_language.strip())
+        csv_data = reading_comprehension_to_csv(
+            questions,
+            include_translation=include_translation
+        )
+        st.dataframe(
+            build_reading_comprehension_table(
+                questions,
+                include_translation=include_translation
+            ),
+            use_container_width=True
+        )
+        st.download_button(
+            "Download questions CSV",
+            data=csv_data,
+            file_name=file_name,
+            mime="text/csv",
+            key=f"{key_prefix}_download"
+        )
+
+
+def resolve_language_aid_source(story_id, selected_scope, chapters):
     if selected_scope == "Full story":
         return (
             build_full_story_markdown(chapters),
             "full story",
-            f"story_{story_id}_glossary.csv",
+            f"story_{story_id}",
         )
 
     chapter = next(
@@ -169,23 +270,40 @@ def resolve_glossary_source(story_id, selected_scope, chapters):
     )
 
     if not chapter:
-        return "", "chapter", f"story_{story_id}_chapter_glossary.csv"
+        return "", "chapter", f"story_{story_id}_chapter"
 
     chapter_number = chapter[2]
     return (
         chapter[4] or "",
         f"chapter {chapter_number}",
-        f"story_{story_id}_chapter_{chapter_number}_glossary.csv",
+        f"story_{story_id}_chapter_{chapter_number}",
     )
 
 
-def build_glossary_url(story_id, chapter_number=None):
-    url = f"?view=Glossary&story_id={story_id}"
+def resolve_glossary_source(story_id, selected_scope, chapters):
+    text, text_type, file_name_prefix = resolve_language_aid_source(
+        story_id,
+        selected_scope,
+        chapters
+    )
+    return text, text_type, f"{file_name_prefix}_glossary.csv"
+
+
+def build_language_aids_url(story_id, chapter_number=None, aid="Glossary"):
+    url = f"?view=Language%20Aids&story_id={story_id}&aid={aid.replace(' ', '%20')}"
 
     if chapter_number is not None:
         url += f"&chapter_number={chapter_number}"
 
     return url
+
+
+def build_glossary_url(story_id, chapter_number=None):
+    return build_language_aids_url(
+        story_id,
+        chapter_number=chapter_number,
+        aid="Glossary"
+    )
 
 
 def get_query_param(name):

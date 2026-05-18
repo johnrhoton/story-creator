@@ -154,7 +154,7 @@ Each table has dedicated module:
 - Selective record export
 - Data validation on import
 - Foreign key relationship preservation
-- Includes story beats and object history so RAG can be rebuilt after import
+- Includes story beats and object history so story memory can be rebuilt after import
 
 ## Security Features
 
