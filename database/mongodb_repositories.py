@@ -3,12 +3,15 @@ import json
 import re
 from datetime import datetime, timezone
 
+import yaml
+
 from database.authorized_users import (
     ADMINISTRATOR_ROLE,
     DEFAULT_ADMIN_EMAIL,
     DEFAULT_ADMIN_ROLE,
 )
 from database.common_names import FEMALE_NAMES, MALE_NAMES
+from database.export_crypto import decrypt_export_values, encrypt_export_values
 from database.mongodb_connection import get_collection, get_mongo_database, get_next_id
 
 
@@ -918,8 +921,13 @@ def export_database_to_dict(include_database_encryption_metadata=False):
     return data
 
 
-def prepare_export_data(*_args, **_kwargs):
-    return export_database_to_dict()
+def prepare_export_data(encrypt_values=False, password=""):
+    data = export_database_to_dict()
+
+    if encrypt_values:
+        return encrypt_export_values(data, password)
+
+    return data
 
 
 def serialize_export_to_json(data):
@@ -932,40 +940,128 @@ def serialize_export_to_yaml(data):
     return yaml.safe_dump(data, allow_unicode=True, sort_keys=False)
 
 
-def export_database_to_json():
-    return serialize_export_to_json(export_database_to_dict())
+def export_database_to_json(encrypt_values=False, password=""):
+    return serialize_export_to_json(
+        prepare_export_data(
+            encrypt_values=encrypt_values,
+            password=password,
+        )
+    )
 
 
-def export_database_to_yaml():
-    return serialize_export_to_yaml(export_database_to_dict())
+def export_database_to_yaml(encrypt_values=False, password=""):
+    return serialize_export_to_yaml(
+        prepare_export_data(
+            encrypt_values=encrypt_values,
+            password=password,
+        )
+    )
 
 
-def import_database_from_dict(data):
+def import_database_from_dict(
+    data,
+    replace_existing=False,
+    database_password=""
+):
+    if replace_existing:
+        clear_imported_collections()
+
     counts = {}
     for key, rows in (data or {}).items():
         if key not in TABLE_COLLECTIONS or key == "sync_metadata":
             continue
         collection = get_collection(TABLE_COLLECTIONS[key])
         count = 0
+        max_id = 0
         for row in rows or []:
             doc = dict(row)
-            doc["_id"] = doc.get("id") or get_next_id(TABLE_COLLECTIONS[key])
-            doc["id"] = doc["_id"]
+            doc.pop("_id", None)
+            doc_id = coerce_import_id(
+                doc.get("id")
+                or get_next_id(TABLE_COLLECTIONS[key])
+            )
+            doc["_id"] = doc_id
+            doc["id"] = doc_id
             collection.replace_one({"id": doc["id"]}, doc, upsert=True)
+            if isinstance(doc_id, int):
+                max_id = max(max_id, doc_id)
             count += 1
+        if max_id:
+            sync_counter(TABLE_COLLECTIONS[key], max_id)
         counts[key] = count
     mark_local_data_modified()
     return counts
 
 
-def import_database_from_json(json_data):
-    return import_database_from_dict(json.loads(json_data or "{}"))
+def import_database_from_json(
+    json_data,
+    replace_existing=False,
+    password="",
+    database_password=""
+):
+    data = json.loads(read_import_text(json_data) or "{}")
+
+    if password:
+        data = decrypt_export_values(data, password)
+
+    return import_database_from_dict(
+        data,
+        replace_existing=replace_existing,
+        database_password=database_password,
+    )
 
 
-def import_database_from_yaml(yaml_data):
-    import yaml
+def import_database_from_yaml(
+    yaml_data,
+    replace_existing=False,
+    password="",
+    database_password=""
+):
+    data = yaml.safe_load(read_import_text(yaml_data) or "{}") or {}
 
-    return import_database_from_dict(yaml.safe_load(yaml_data or "{}"))
+    if password:
+        data = decrypt_export_values(data, password)
+
+    return import_database_from_dict(
+        data,
+        replace_existing=replace_existing,
+        database_password=database_password,
+    )
+
+
+def read_import_text(value):
+    if hasattr(value, "read"):
+        value = value.read()
+
+    if isinstance(value, bytes):
+        return value.decode("utf-8")
+
+    return value or ""
+
+
+def clear_imported_collections():
+    for key, collection_name in TABLE_COLLECTIONS.items():
+        if key == "sync_metadata":
+            continue
+        get_collection(collection_name).delete_many({})
+
+
+def coerce_import_id(value):
+    if isinstance(value, int):
+        return value
+
+    if isinstance(value, str) and value.isdigit():
+        return int(value)
+
+    return value
+
+
+def sync_counter(collection_name, max_id):
+    get_collection("counters").update_one(
+        {"_id": collection_name},
+        {"$max": {"value": max_id}},
+        upsert=True,
+    )
 
 
 def decrypt_database_row(table_name, row, columns):

@@ -1,3 +1,4 @@
+import io
 import os
 import subprocess
 import sys
@@ -94,6 +95,71 @@ class DatabaseProviderTests(unittest.TestCase):
         self.assertEqual(
             result.stdout.strip().splitlines(),
             ["mongodb", "True", "True"]
+        )
+
+    def test_mongodb_import_functions_accept_ui_kwargs(self):
+        from database import mongodb_repositories
+
+        uploaded_file = io.BytesIO(b"stories:\n- id: 1\n  story_name: Test\n")
+
+        with patch.object(
+            mongodb_repositories,
+            "import_database_from_dict",
+            return_value={"stories": 1},
+        ) as mock_import:
+            result = mongodb_repositories.import_database_from_yaml(
+                uploaded_file,
+                password="",
+                database_password="",
+            )
+
+        self.assertEqual(result, {"stories": 1})
+        mock_import.assert_called_once_with(
+            {"stories": [{"id": 1, "story_name": "Test"}]},
+            replace_existing=False,
+            database_password="",
+        )
+
+    def test_mongodb_json_import_accepts_sync_pull_kwargs(self):
+        from database import mongodb_repositories
+
+        uploaded_file = io.BytesIO(b'{"stories": [{"id": 1, "story_name": "Test"}]}')
+
+        with patch.object(
+            mongodb_repositories,
+            "import_database_from_dict",
+            return_value={"stories": 1},
+        ) as mock_import:
+            result = mongodb_repositories.import_database_from_json(
+                uploaded_file,
+                replace_existing=True,
+                database_password="secret",
+            )
+
+        self.assertEqual(result, {"stories": 1})
+        mock_import.assert_called_once_with(
+            {"stories": [{"id": 1, "story_name": "Test"}]},
+            replace_existing=True,
+            database_password="secret",
+        )
+
+    def test_mongodb_export_functions_accept_ui_kwargs(self):
+        from database import mongodb_repositories
+
+        with patch.object(
+            mongodb_repositories,
+            "prepare_export_data",
+            return_value={"stories": []},
+        ) as mock_prepare:
+            output = mongodb_repositories.export_database_to_json(
+                encrypt_values=False,
+                password="",
+            )
+
+        self.assertIn('"stories": []', output)
+        mock_prepare.assert_called_once_with(
+            encrypt_values=False,
+            password="",
         )
 
 
