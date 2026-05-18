@@ -66,7 +66,7 @@ The services layer contains the business logic of the application, orchestrating
 - Handles chapter ordering
 - Supports character assignments
 - Logs object history for story operations
-- Coordinates Chroma cleanup for deleted story/chapter memory
+- Coordinates vector-memory cleanup for deleted story/chapter memory
 
 ### `story_generation_service.py`
 **Purpose**: LLM-powered story creation
@@ -91,21 +91,25 @@ The services layer contains the business logic of the application, orchestrating
 - `parse_story_beats_response(...)`: JSON-only parser with graceful failure
 - `validate_story_beat(...)`: Normalizes and validates beat objects
 - `safe_extract_save_and_index_story_beats(...)`: Best-effort extraction that never breaks chapter saving
-- `index_story_beat(...)`: Adds beat records to Chroma
+- `index_story_beat(...)`: Adds beat records to the configured vector provider
 
 **Beat Types**:
 `scene`, `transition`, `relationship_progression`, `emotional_shift`,
 `revelation`, `unresolved_thread`, `time_jump`,
 `world_or_setting_detail`, `character_state_change`.
 
-### `story_memory_service.py` and `story_memory_indexing_service.py`
-**Purpose**: Chroma-backed retrieval and rebuildable memory indexing.
+### `vector_store.py`, `story_memory_service.py`, and `story_memory_indexing_service.py`
+**Purpose**: Configurable Story Memory retrieval and rebuildable memory indexing.
 
 **Key Functions**:
-- `safe_search_memory(...)`: Safe Chroma search
-- `safe_list_memory_items(...)`: Inspect persisted Chroma records
+- `safe_search_memory(...)`: Safe vector search
+- `safe_list_memory_items(...)`: Inspect persisted vector records
 - `build_story_generation_memory(...)`: Retrieve and format prompt memory
-- `rebuild_story_memory_index_from_sqlite()`: Rebuild Chroma from SQLite source data
+- `rebuild_story_memory_index_from_sqlite()`: Rebuild vector memory from the active database provider
+
+**Vector Providers**:
+`none`, `chroma`, and `mongodb_vector`. Chroma and MongoDB Atlas Vector Search
+share the `all-MiniLM-L6-v2` embedding model.
 
 **Memory Types**:
 Stories, chapter summaries, characters, and story beats. The injected STORY

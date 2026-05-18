@@ -4,6 +4,7 @@ from database import get_story_beats, get_story_chapters
 from services.story_memory_indexing_service import rebuild_story_memory_index_from_sqlite
 from services.story_memory_service import (
     build_story_generation_memory,
+    get_vector_provider_status,
     group_memory_items_by_type,
     safe_list_memory_items,
     search_memory,
@@ -16,6 +17,13 @@ from services.story_beat_service import (
 
 def render_story_memory_tab():
     st.header("Story Memory")
+    vector_status = get_vector_provider_status()
+    st.caption(
+        "Vector provider: "
+        f"{vector_status['label']} | "
+        "Embedding model: "
+        f"{vector_status['embedding_model']}"
+    )
 
     render_rebuild_section()
 
@@ -34,15 +42,19 @@ def render_story_memory_tab():
 
 def render_rebuild_section():
     st.subheader("Retrieval-Augmented Generation (RAG)")
+    vector_status = get_vector_provider_status()
 
     if st.button(
-        "Rebuild Chroma index from SQLite",
+        "Rebuild Story Memory index",
         key="story_memory_rebuild_index"
     ):
         try:
-            with st.spinner("Rebuilding Chroma index from SQLite..."):
+            with st.spinner("Rebuilding Story Memory index..."):
                 counts = rebuild_story_memory_index_from_sqlite()
-            st.success("Chroma index rebuilt from SQLite.")
+            st.success(
+                "Story Memory index rebuilt using "
+                f"{vector_status['label']}."
+            )
             st.write(
                 "Indexed "
                 f"{counts.get('stories', 0)} stories, "
@@ -179,12 +191,12 @@ def render_index_section():
     items = safe_list_memory_items(limit=int(limit))
 
     if not items:
-        st.info("No Chroma memory items found.")
+        st.info("No Story Memory index items found.")
         return
 
     grouped_items = order_memory_groups(group_memory_items_by_type(items))
 
-    st.caption(f"{len(items)} item(s) loaded from Chroma.")
+    st.caption(f"{len(items)} item(s) loaded from the Story Memory index.")
 
     tabs = st.tabs([
         f"{format_memory_type_label(item_type)} ({len(grouped)})"

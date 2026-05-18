@@ -108,6 +108,9 @@ Planned for local, offline-capable deployment:
 | `MONGO_URI` | MongoDB Atlas connection URI for the `mongodb` provider | Required for MongoDB |
 | `MONGO_DATABASE` | MongoDB database name; defaults to `story_builder` | No |
 | `MONGODB_URI` | Legacy MongoDB sync URI; also accepted as a fallback for `MONGO_URI` | No |
+| `VECTOR_PROVIDER` | Story Memory vector provider: `none`, `chroma`, or `mongodb_vector` | No |
+| `VECTOR_COLLECTION_NAME` | Vector collection name; defaults to `story_memory` | No |
+| `VECTOR_INDEX_NAME` | MongoDB Atlas Vector Search index name | Required for `mongodb_vector` |
 | `DATABASE_PASSWORD` | Database encryption password | No |
 
 *At least one LLM API key required for story/character generation
@@ -120,7 +123,9 @@ Planned for local, offline-capable deployment:
 - **Backup**: Use Export/Import feature for data backup
 - **Encryption**: Optional field-level encryption
 - **MongoDB Sync**: Optional cloud backup synchronization
+- **Vector Provider**: `chroma` by default locally; use `mongodb_vector` on Streamlit Cloud or `none` to disable RAG
 - **Chroma Story Memory Index**: Stored under `data/chroma_db`; rebuildable from the active database provider via the Story Memory tab
+- **MongoDB Atlas Vector Search**: Stores text, metadata, and embeddings in the configured vector collection; create the Atlas vector index named by `VECTOR_INDEX_NAME`
 - **LLM Defaults**: Sidebar model changes update `.env`; keep deployment `.env` files local and uncommitted
 
 ### Monitoring and Maintenance
@@ -128,7 +133,7 @@ Planned for local, offline-capable deployment:
 - **Logs**: Check Streamlit logs for errors
 - **LLM History**: Monitor API usage in History tab
 - **Object History**: Inspect CRUD history in the History tab
-- **Story Memory Index**: Inspect or rebuild Chroma from the Story Memory tab after imports or deployments
+- **Story Memory Index**: Inspect or rebuild the configured vector index from the Story Memory tab after imports or deployments
 - **Database Health**: Regular export/import testing
 - **Updates**: Pull latest code and run migrations
 

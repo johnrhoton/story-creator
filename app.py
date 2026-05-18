@@ -13,6 +13,7 @@ from database import (
     seed_common_names,
 )
 from services.auth_service import current_user_is_administrator, require_login
+from services.vector_store import get_vector_provider_status
 
 
 def get_view_index_from_query_params(view_options):
@@ -42,7 +43,9 @@ st.set_page_config(
 database_provider_status = get_database_provider_status()
 st.caption(
     "Database provider: "
-    f"{database_provider_status['label']}"
+    f"{database_provider_status['label']} | "
+    "Vector provider: "
+    f"{get_vector_provider_status()['label']}"
 )
 
 try:

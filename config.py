@@ -2,6 +2,7 @@ import os
 
 
 ALLOWED_DB_PROVIDERS = {"sqlite", "mongodb"}
+ALLOWED_VECTOR_PROVIDERS = {"none", "chroma", "mongodb_vector"}
 
 DB_NAME = "story_builder.db"
 
@@ -54,3 +55,29 @@ def get_db_provider():
 
 
 DB_PROVIDER = get_db_provider()
+
+
+def get_vector_provider():
+    provider = str(
+        get_config_value("VECTOR_PROVIDER", "chroma")
+    ).strip().lower()
+
+    if provider not in ALLOWED_VECTOR_PROVIDERS:
+        raise ValueError(
+            "VECTOR_PROVIDER must be one of: "
+            f"{', '.join(sorted(ALLOWED_VECTOR_PROVIDERS))}"
+        )
+
+    return provider
+
+
+VECTOR_PROVIDER = get_vector_provider()
+
+VECTOR_COLLECTION_NAME = get_config_value(
+    "VECTOR_COLLECTION_NAME",
+    "story_memory"
+)
+VECTOR_INDEX_NAME = get_config_value(
+    "VECTOR_INDEX_NAME",
+    "story_memory_vector_index"
+)

@@ -209,7 +209,7 @@ class StoryMemoryHelperTests(unittest.TestCase):
 
     def test_safe_story_memory_operations_do_not_raise_when_backend_fails(self):
         with patch(
-            "services.story_memory_service.get_collection",
+            "services.story_memory_service.get_vector_store",
             side_effect=RuntimeError("backend unavailable")
         ):
             self.assertFalse(

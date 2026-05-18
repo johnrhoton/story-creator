@@ -61,10 +61,10 @@ The app uses a tab-based interface with the following sections:
   - Optional question language adds a translated-question column
 
 ### Story Memory Tab
-- **Rebuild Chroma Index**: Rebuild story memory from SQLite source data
-- **Search Memory**: Search Chroma memory records
+- **Rebuild Story Memory Index**: Rebuild story memory from the active database provider
+- **Search Memory**: Search configured vector memory records
 - **Preview STORY MEMORY**: See the exact memory block that would be injected into a chapter prompt
-- **Inspect Index**: Browse persisted Chroma entries grouped by Stories, Chapter Summaries, Story Beats, and Characters
+- **Inspect Index**: Browse persisted vector entries grouped by Stories, Chapter Summaries, Story Beats, and Characters
 - **Story Beats**: View, extract, or search structured story-memory beats
 - For an end-to-end explanation, see `docs/story_memory.md`.
 
@@ -120,7 +120,7 @@ The app uses a tab-based interface with the following sections:
 3. **Monitor Usage**: Check the History tab for API usage and costs
 4. **Regular Backups**: Use Export/Import for data safety
 5. **Experiment**: Try different models and settings for varied results
-6. **Rebuild Story Memory After Imports**: Rebuild the Chroma index after importing data or when memory looks stale
+6. **Rebuild Story Memory After Imports**: Rebuild the Story Memory index after importing data or when memory looks stale
 
 ## Troubleshooting
 
@@ -128,4 +128,4 @@ The app uses a tab-based interface with the following sections:
 - **Database Issues**: Run migrations manually: `python scripts/migrate.py`
 - **Import Problems**: Ensure file format matches export format
 - **Performance**: Monitor LLM call history for rate limiting
-- **Story Memory Looks Empty**: Rebuild Chroma from the Story Memory tab; persisted source data remains in SQLite
+- **Story Memory Looks Empty**: Rebuild the index from the Story Memory tab; persisted source data remains in the active database provider

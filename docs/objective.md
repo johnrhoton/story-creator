@@ -23,7 +23,7 @@ The codebase prioritizes changes that support learning, clarity, and architectur
 - Story templates with chapter structures
 - LLM-powered story generation
 - Optional story generation instructions, target language, and CEFR level
-- Chroma-backed story memory using Chroma
+- Configurable story memory using local Chroma, MongoDB Atlas Vector Search, or no vector store
 - Structured story beats for continuity, including transitions, revelations, emotional shifts, and unresolved threads
 - Glossary generation for full stories and individual chapters, with CSV download
 - Reading comprehension question generation for full stories and individual chapters, with CSV download

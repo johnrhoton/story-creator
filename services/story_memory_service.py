@@ -1,59 +1,22 @@
-CHROMA_PATH = "data/chroma_db"
-COLLECTION_NAME = "story_memory"
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-
-_client = None
-_embedding_fn = None
-
 from prompts import render_prompt_template_section
+from services.vector_store import (
+    clean_metadata,
+    get_chroma_collection,
+    get_vector_provider_status,
+    get_vector_store,
+)
 
 
 def get_collection():
-    global _client, _embedding_fn
-
-    if _client is None or _embedding_fn is None:
-        import chromadb
-        from chromadb.utils import embedding_functions
-
-        _embedding_fn = (
-            embedding_functions.SentenceTransformerEmbeddingFunction(
-                model_name=EMBEDDING_MODEL
-            )
-        )
-        _client = chromadb.PersistentClient(path=CHROMA_PATH)
-
-    return _client.get_or_create_collection(
-        name=COLLECTION_NAME,
-        embedding_function=_embedding_fn,
-    )
+    return get_chroma_collection()
 
 
 def reset_collection() -> None:
-    global _client
-
-    if _client is None:
-        import chromadb
-
-        _client = chromadb.PersistentClient(path=CHROMA_PATH)
-
-    try:
-        _client.delete_collection(COLLECTION_NAME)
-    except Exception:
-        pass
-
-    get_collection()
+    get_vector_store().reset()
 
 
 def upsert_memory(item_id: str, text: str, metadata: dict) -> None:
-    if not text or not text.strip():
-        return
-
-    collection = get_collection()
-    collection.upsert(
-        ids=[item_id],
-        documents=[text.strip()],
-        metadatas=[clean_metadata(metadata)],
-    )
+    get_vector_store().upsert(item_id, text, metadata)
 
 
 def safe_upsert_memory(item_id: str, text: str, metadata: dict) -> bool:
@@ -70,108 +33,11 @@ def search_memory(
     n_results: int = 5,
     where: dict | None = None
 ) -> list[dict]:
-    if not query or not query.strip():
-        return []
-
-    collection = get_collection()
-    kwargs = {
-        "query_texts": [query],
-        "n_results": n_results,
-    }
-    if where:
-        kwargs["where"] = where
-
-    results = collection.query(**kwargs)
-
-    matches = []
-    documents = results.get("documents", [[]])[0]
-    metadatas = results.get("metadatas", [[]])[0]
-    distances = results.get("distances", [[]])[0]
-
-    for index, document in enumerate(documents):
-        matches.append({
-            "text": document,
-            "metadata": (
-                metadatas[index]
-                if index < len(metadatas) and metadatas[index]
-                else {}
-            ),
-            "distance": (
-                distances[index]
-                if index < len(distances)
-                else None
-            ),
-        })
-
-    return matches
-
-
-def list_memory_items(
-    limit: int | None = None,
-    where: dict | None = None
-) -> list[dict]:
-    collection = get_read_collection()
-    kwargs = {
-        "include": ["documents", "metadatas"],
-    }
-
-    if limit:
-        kwargs["limit"] = limit
-
-    if where:
-        kwargs["where"] = where
-
-    results = collection.get(**kwargs)
-    ids = results.get("ids", [])
-    documents = results.get("documents", [])
-    metadatas = results.get("metadatas", [])
-
-    items = []
-
-    for index, item_id in enumerate(ids):
-        items.append({
-            "id": item_id,
-            "text": (
-                documents[index]
-                if index < len(documents)
-                else ""
-            ),
-            "metadata": (
-                metadatas[index]
-                if index < len(metadatas) and metadatas[index]
-                else {}
-            ),
-        })
-
-    return items
-
-
-def get_read_collection():
-    import chromadb
-
-    client = chromadb.PersistentClient(path=CHROMA_PATH)
-    return client.get_or_create_collection(name=COLLECTION_NAME)
-
-
-def safe_list_memory_items(
-    limit: int | None = None,
-    where: dict | None = None
-) -> list[dict]:
-    try:
-        return list_memory_items(limit=limit, where=where)
-    except Exception:
-        return []
-
-
-def group_memory_items_by_type(items: list[dict]) -> dict[str, list[dict]]:
-    grouped = {}
-
-    for item in items:
-        metadata = item.get("metadata", {})
-        item_type = metadata.get("type") or "unknown"
-        grouped.setdefault(item_type, []).append(item)
-
-    return dict(sorted(grouped.items()))
+    return get_vector_store().search(
+        query,
+        n_results=n_results,
+        where=where,
+    )
 
 
 def safe_search_memory(
@@ -185,9 +51,25 @@ def safe_search_memory(
         return []
 
 
+def list_memory_items(
+    limit: int | None = None,
+    where: dict | None = None
+) -> list[dict]:
+    return get_vector_store().list_items(limit=limit, where=where)
+
+
+def safe_list_memory_items(
+    limit: int | None = None,
+    where: dict | None = None
+) -> list[dict]:
+    try:
+        return list_memory_items(limit=limit, where=where)
+    except Exception:
+        return []
+
+
 def delete_memory(item_id: str) -> None:
-    collection = get_collection()
-    collection.delete(ids=[item_id])
+    get_vector_store().delete(item_id)
 
 
 def safe_delete_memory(item_id: str) -> bool:
@@ -197,6 +79,17 @@ def safe_delete_memory(item_id: str) -> bool:
         return False
 
     return True
+
+
+def group_memory_items_by_type(items: list[dict]) -> dict[str, list[dict]]:
+    grouped = {}
+
+    for item in items:
+        metadata = item.get("metadata", {})
+        item_type = metadata.get("type") or "unknown"
+        grouped.setdefault(item_type, []).append(item)
+
+    return dict(sorted(grouped.items()))
 
 
 def format_memory_context(matches: list[dict]) -> str:
@@ -221,15 +114,6 @@ def build_story_generation_memory(
     user_request: str,
     n_results: int = 6,
 ) -> str:
-    """
-    Build a STORY MEMORY text block for chapter generation.
-
-    - Prefer records where metadata.story_id == story_id.
-    - Fill remaining slots with global-scope character records.
-    - Always filter out records that do not belong to the current story or global scope.
-    - Group records so prompts can distinguish characters, continuity, beats, and
-      unresolved threads.
-    """
     if not user_request or not user_request.strip():
         return ""
 
@@ -388,18 +272,3 @@ def format_story_memory_section(matches: list[dict]) -> str:
         )
 
     return "\n".join(lines)
-
-
-def clean_metadata(metadata: dict) -> dict:
-    cleaned = {}
-
-    for key, value in (metadata or {}).items():
-        if value is None:
-            continue
-
-        if isinstance(value, (str, int, float, bool)):
-            cleaned[key] = value
-        else:
-            cleaned[key] = str(value)
-
-    return cleaned

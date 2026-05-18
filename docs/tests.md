@@ -94,6 +94,15 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 - `DB_PROVIDER` defaults and validation
 - Mongo URI lookup from environment
 - MongoDB provider facade exports expected repository functions
+- `VECTOR_PROVIDER` defaults and validation
+
+### `test_vector_store.py`
+**Purpose**: Vector store provider behavior.
+
+**Test Cases**:
+- Disabled vector provider no-op behavior
+- MongoDB Atlas Vector Search record shape and pipeline construction
+- Metadata filter conversion
 
 ### `test_story_service.py`
 **Purpose**: Story generation workflows
@@ -106,7 +115,7 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 - Progress reporting and abort-on-failed-LLM behavior
 
 ### `test_story_memory_helpers.py` and `test_story_memory_generation.py`
-**Purpose**: Story Memory and Chroma helper behavior
+**Purpose**: Story Memory helper behavior
 
 **Test Cases**:
 - Metadata cleaning
@@ -121,7 +130,7 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 **Test Cases**:
 - Valid and invalid JSON parsing
 - Beat validation
-- Chroma indexing text and metadata
+- Vector indexing text and metadata
 - Generation memory includes story beats
 - Extraction failures do not break generation
 

@@ -4,7 +4,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from config import get_db_provider
+from config import get_db_provider, get_vector_provider
 from database.mongodb_connection import get_mongo_database_name, get_mongo_uri
 
 
@@ -32,6 +32,37 @@ class DatabaseProviderTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("DB_PROVIDER must be one of", result.stderr)
+
+    def test_get_vector_provider_defaults_to_chroma(self):
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(get_vector_provider(), "chroma")
+
+    def test_get_vector_provider_accepts_none_and_mongodb_vector(self):
+        with patch.dict(os.environ, {"VECTOR_PROVIDER": "none"}, clear=True):
+            self.assertEqual(get_vector_provider(), "none")
+
+        with patch.dict(
+            os.environ,
+            {"VECTOR_PROVIDER": "mongodb_vector"},
+            clear=True
+        ):
+            self.assertEqual(get_vector_provider(), "mongodb_vector")
+
+    def test_invalid_vector_provider_fails_fast(self):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import config",
+            ],
+            env={**os.environ, "VECTOR_PROVIDER": "pinecone"},
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("VECTOR_PROVIDER must be one of", result.stderr)
 
     def test_mongo_uri_supports_mongo_uri_env_name(self):
         with patch.dict(os.environ, {"MONGO_URI": "mongodb+srv://example"}, clear=True):

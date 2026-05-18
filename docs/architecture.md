@@ -13,7 +13,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `profiles_view.py`: Profile creation and editing
   - `templates_view.py`: Story template management
   - `stories_view.py`: Story generation and viewing
-  - `story_memory_view.py`: Chroma Story Memory rebuild, search, index inspection, story-memory preview, and story-beat tools
+  - `story_memory_view.py`: Story Memory rebuild, search, index inspection, story-memory preview, and story-beat tools
   - `language_aids_view.py`: Standalone Language Aids page for glossary and comprehension question generation
   - `models_view.py`: LLM model configuration
   - `history_view.py`: Object history and LLM call history
@@ -30,9 +30,10 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `profile_service.py`: Profile CRUD operations
   - `story_service.py`: Story creation and chapter management
   - `story_generation_service.py`: LLM-powered story generation
-  - `story_beat_service.py`: Story-memory beat extraction, validation, SQLite persistence, and Chroma indexing
-  - `story_memory_service.py`: Chroma access, search, and injected STORY MEMORY formatting
-  - `story_memory_indexing_service.py`: Rebuildable Chroma indexing from SQLite
+  - `story_beat_service.py`: Story-memory beat extraction, validation, persistence, and vector indexing
+  - `story_memory_service.py`: Vector memory search and injected STORY MEMORY formatting
+  - `story_memory_indexing_service.py`: Rebuildable vector indexing from the active database provider
+  - `vector_store.py`: Disabled, Chroma, and MongoDB Atlas Vector Search providers
   - `glossary_service.py`: Glossary generation, JSON parsing, table formatting, and CSV export
   - `reading_comprehension_service.py`: Reading comprehension question generation, JSON parsing, and CSV export
   - `template_service.py`: Template management
@@ -81,9 +82,9 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
 
 1. **User Interaction**: Views capture user input via Streamlit components
 2. **Business Logic**: Services process requests, validate data, and orchestrate operations
-3. **Data Persistence**: Database layer handles CRUD operations on SQLite
+3. **Data Persistence**: Database layer handles CRUD operations using SQLite or MongoDB
 4. **External Integration**: LLM client handles AI-powered content generation
-5. **Memory Indexing**: Chapter summaries, story records, characters, and story beats are indexed in Chroma for retrieval
+5. **Memory Indexing**: Chapter summaries, story records, characters, and story beats are indexed in the configured vector provider for retrieval
 6. **Response**: Results flow back through services to update views
 
 ## Prompt Templates
@@ -97,12 +98,13 @@ and supplies dynamic values.
 
 ## Story Memory
 
-Story Memory uses Chroma with a persistent local path, `data/chroma_db`. SQLite
-remains the source of truth for stories, chapters, characters, and story beats.
-Chroma can be rebuilt from SQLite from the Story Memory tab. During chapter generation,
-the app retrieves relevant story-specific records and global characters, formats
-them through `prompts/story_memory_section.txt`, and injects them into the story
-chapter prompt.
+Story Memory uses a configurable vector provider: disabled, local Chroma, or
+MongoDB Atlas Vector Search. SQLite or MongoDB remains the source of truth for
+stories, chapters, characters, and story beats. The vector index can be rebuilt
+from the active database provider from the Story Memory tab. During chapter
+generation, the app retrieves relevant story-specific records and global
+characters, formats them through `prompts/story_memory_section.txt`, and
+injects them into the story chapter prompt.
 
 For the end-to-end flow, see `docs/story_memory.md`.
 
@@ -124,7 +126,7 @@ For the end-to-end flow, see `docs/language_aids.md`.
 
 - **Frontend/UI**: Streamlit
 - **Backend**: Python
-- **Database**: SQLite
-- **Vector Store**: Chroma, persisted under `data/chroma_db`
+- **Database**: SQLite locally by default, or MongoDB Atlas
+- **Vector Store**: Disabled, local Chroma, or MongoDB Atlas Vector Search
 - **LLM Providers**: Google Gemini, Groq, OpenRouter
 - **Additional**: PyMongo for optional MongoDB sync, Cryptography for encryption
