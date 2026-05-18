@@ -11,16 +11,7 @@ from database import (
     run_migrations,
     seed_common_names,
 )
-from views.characters_view import render_characters_tab
-from views.export_import_view import render_export_import_tab
-from views.language_aids_view import render_language_aids_tab
-from views.history_view import render_history_tab
-from views.models_view import render_models_tab
-from views.profiles_view import render_profiles_tab
-from views.story_memory_view import render_story_memory_tab
-from views.sidebar_view import render_llm_settings_sidebar
-from views.stories_view import render_stories_tab
-from views.templates_view import render_templates_tab
+from services.auth_service import current_user_is_administrator, require_login
 
 
 def get_view_index_from_query_params(view_options):
@@ -41,15 +32,30 @@ def get_view_index_from_query_params(view_options):
     return view_options.index("Stories")
 
 
-run_migrations()
-create_tables()
-seed_common_names()
-
 st.set_page_config(
     page_title="Story Builder",
     page_icon="✍️",
     layout="wide"
 )
+
+run_migrations()
+create_tables()
+seed_common_names()
+
+require_login()
+
+from views.administration_view import render_administration_tab
+from views.characters_view import render_characters_tab
+from views.export_import_view import render_export_import_tab
+from views.language_aids_view import render_language_aids_tab
+from views.history_view import render_history_tab
+from views.models_view import render_models_tab
+from views.profiles_view import render_profiles_tab
+from views.story_memory_view import render_story_memory_tab
+from views.sidebar_view import render_llm_settings_sidebar
+from views.stories_view import render_stories_tab
+from views.templates_view import render_templates_tab
+
 
 st.title("Story Builder")
 
@@ -76,6 +82,9 @@ VIEW_OPTIONS = [
     "History",
     "Export / Import"
 ]
+
+if current_user_is_administrator():
+    VIEW_OPTIONS.append("Administration")
 
 active_view = st.radio(
     "View",
@@ -112,3 +121,6 @@ elif active_view == "History":
 
 elif active_view == "Export / Import":
     render_export_import_tab()
+
+elif active_view == "Administration":
+    render_administration_tab()

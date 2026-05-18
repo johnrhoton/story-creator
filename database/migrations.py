@@ -69,6 +69,10 @@ def run_migrations():
             "20260517110000_story_beats",
             migrate_20260517110000_story_beats
         ),
+        (
+            "20260518120000_authorized_users",
+            migrate_20260518120000_authorized_users
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -594,3 +598,22 @@ def migrate_20260514101000_llm_model_defaults(cursor):
         "is_default",
         "INTEGER NOT NULL DEFAULT 0"
     )
+
+
+# 2026-05-18 12:00
+# Store the Google-authenticated user whitelist and roles in SQLite.
+def migrate_20260518120000_authorized_users(cursor):
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS authorized_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            role TEXT NOT NULL,
+            google_sub TEXT UNIQUE,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+    """)
+
+    from database.authorized_users import seed_default_authorized_user
+
+    seed_default_authorized_user(cursor)

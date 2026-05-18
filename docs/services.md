@@ -163,6 +163,16 @@ See `docs/language_aids.md` for the end-to-end reading comprehension workflow.
 - Default model selection
 - Sidebar default persistence to `.env` through `llm_defaults_service.py`
 
+### `auth_service.py` and `admin_service.py`
+**Purpose**: Google OIDC authentication and SQLite-backed authorization.
+
+**Key Functions**:
+- `require_login()`: Requires Google login and checks the authorized user table
+- `current_user_is_administrator()`: Gates the Administration tab
+- `list_authorized_users()`: Lists the whitelist for administrators
+- `create_authorized_user(...)`, `edit_authorized_user(...)`, `delete_existing_authorized_user(...)`: Manage users and roles
+
+
 ### `sync_service.py`
 **Purpose**: MongoDB synchronization (optional)
 

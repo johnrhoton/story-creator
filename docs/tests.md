@@ -80,6 +80,13 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 - Error handling
 - Rate limiting logic
 
+### `test_auth_service.py`
+**Purpose**: Authentication helper behavior.
+
+**Test Cases**:
+- Named Google provider selection for Streamlit OIDC
+- Default provider fallback
+
 ### `test_story_service.py`
 **Purpose**: Story generation workflows
 

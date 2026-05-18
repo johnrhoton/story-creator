@@ -8,6 +8,14 @@ from io import StringIO
 from pathlib import Path
 
 from config import DB_NAME
+from database.authorized_users import (
+    add_authorized_user,
+    bind_authorized_user_google_sub,
+    delete_authorized_user,
+    get_authorized_user_by_identity,
+    get_authorized_users,
+    update_authorized_user,
+)
 from database.characters import get_characters, save_character
 from database.db_encryption import (
     DATABASE_ENCRYPTION_EXPORT_KEY,
@@ -69,6 +77,59 @@ def get_columns(table_name):
 
 
 class DatabaseBehaviourTests(unittest.TestCase):
+    def test_authorized_users_seed_default_administrator(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            users = get_authorized_users()
+
+            self.assertEqual(len(users), 1)
+            self.assertEqual(users[0][1], "rhoton@gmail.com")
+            self.assertEqual(users[0][2], "Administrator")
+
+    def test_authorized_users_support_crud_and_identity_binding(self):
+        with isolated_database_directory():
+            run_migrations()
+            create_tables()
+
+            user_id = add_authorized_user(" User@Example.com ", "User")
+
+            user = get_authorized_user_by_identity(email="user@example.com")
+            self.assertEqual(user[0], user_id)
+            self.assertEqual(user[1], "user@example.com")
+            self.assertEqual(user[2], "User")
+            self.assertFalse(user[3])
+
+            self.assertTrue(
+                bind_authorized_user_google_sub(user_id, "google-sub-1")
+            )
+            user = get_authorized_user_by_identity(
+                google_sub="google-sub-1"
+            )
+            self.assertEqual(user[0], user_id)
+            self.assertEqual(user[3], "google-sub-1")
+
+            self.assertTrue(
+                update_authorized_user(
+                    user_id,
+                    "updated@example.com",
+                    "Administrator"
+                )
+            )
+            user = get_authorized_user_by_identity(
+                google_sub="google-sub-1"
+            )
+            self.assertEqual(user[1], "updated@example.com")
+            self.assertEqual(user[2], "Administrator")
+
+            self.assertTrue(delete_authorized_user(user_id))
+            self.assertIsNone(
+                get_authorized_user_by_identity(
+                    google_sub="google-sub-1"
+                )
+            )
+
     def test_object_history_round_trips_contents(self):
         with isolated_database_directory():
             run_migrations()

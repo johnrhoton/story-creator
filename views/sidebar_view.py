@@ -6,6 +6,7 @@ from database import (
     set_active_database_password,
 )
 from config import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
+from services.auth_service import render_auth_sidebar
 from services.llm_defaults_service import save_llm_defaults
 from services.model_service import list_llm_models_by_provider
 
@@ -20,6 +21,8 @@ DEFAULT_MODELS = {
 
 
 def render_llm_settings_sidebar():
+    render_auth_sidebar()
+
     with st.sidebar:
         st.header("LLM Settings")
 

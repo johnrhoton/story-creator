@@ -171,6 +171,21 @@ def create_tables():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS authorized_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            role TEXT NOT NULL,
+            google_sub TEXT UNIQUE,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+    """)
+
+    from database.authorized_users import seed_default_authorized_user
+
+    seed_default_authorized_user(cursor)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS sync_metadata (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL

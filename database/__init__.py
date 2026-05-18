@@ -10,6 +10,17 @@ from database.characters import (
     update_character,
 )
 
+from database.authorized_users import (
+    ADMINISTRATOR_ROLE,
+    add_authorized_user,
+    bind_authorized_user_google_sub,
+    delete_authorized_user,
+    get_authorized_user_by_identity,
+    get_authorized_users,
+    seed_default_authorized_user,
+    update_authorized_user,
+)
+
 from database.import_export import (
     export_database_to_dict,
     export_database_to_json,

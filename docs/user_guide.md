@@ -94,6 +94,12 @@ The app uses a tab-based interface with the following sections:
   - Supports JSON/YAML formats
   - Handles encrypted imports
 
+### Administration Tab
+- Visible only to users with the `Administrator` role
+- Manage the authorized Google user whitelist
+- Create, edit, and delete users with roles
+- Review each user's last-updated timestamp and bound Google user ID
+
 ## LLM Configuration
 
 ### Sidebar Settings

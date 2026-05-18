@@ -18,6 +18,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `models_view.py`: LLM model configuration
   - `history_view.py`: Object history and LLM call history
   - `export_import_view.py`: Data import/export functionality
+  - `administration_view.py`: Administrator-only authorized user management
   - `sidebar_view.py`: Shared UI components like LLM settings
   - `bulk_actions.py`: Bulk operation interfaces
 - **Technology**: Streamlit components and forms
@@ -36,6 +37,8 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `reading_comprehension_service.py`: Reading comprehension question generation, JSON parsing, and CSV export
   - `template_service.py`: Template management
   - `model_service.py`: LLM model operations
+  - `auth_service.py`: Google OIDC login and SQLite authorization checks
+  - `admin_service.py`: Authorized user CRUD workflow
   - `sync_service.py`: MongoDB synchronization
 - **Technology**: Python business logic, integrates with database and LLM client
 
@@ -51,6 +54,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `llm_calls.py`: LLM interaction logging
   - `object_history.py`: CRUD history records for user-visible objects
   - `story_beats.py`: Persisted story-memory beats extracted from chapters
+  - `authorized_users.py`: Authorized Google user whitelist and roles
 - **Technology**: SQLite with optional encryption
 
 ### 4. LLM Integration

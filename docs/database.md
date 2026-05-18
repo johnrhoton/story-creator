@@ -125,6 +125,16 @@ Audit trail for user-visible objects:
 - `operation`: CRUD-style operation such as Create, Update, Delete, Clone
 - `contents`: Snapshot after create/update/clone and before delete
 
+#### `authorized_users`
+Google-authenticated user whitelist:
+- `id`: Primary key
+- `email`: User email, used for display and initial bootstrap matching
+- `role`: Application role, such as `Administrator` or `User`
+- `google_sub`: Stable Google user ID, bound after first successful login
+- `created_at`, `updated_at`: Timestamps
+
+The database is seeded with `rhoton@gmail.com` as `Administrator`.
+
 ### Synchronization
 
 #### `sync_metadata`
