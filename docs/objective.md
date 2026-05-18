@@ -22,8 +22,13 @@ The codebase prioritizes changes that support learning, clarity, and architectur
 - Reusable character profiles
 - Story templates with chapter structures
 - LLM-powered story generation
+- Optional story generation instructions, target language, and CEFR level
+- RAG-backed story memory using Chroma
+- Structured story beats for continuity, including transitions, revelations, emotional shifts, and unresolved threads
+- Glossary generation for full stories and individual chapters, with CSV download
+- Reading comprehension question generation for full stories and individual chapters, with CSV download
 - JSON import/export functionality
 - Optional MongoDB backup sync
-- LLM call history tracking
+- Object history plus LLM call and failure history tracking
 - Multiple LLM provider support (Gemini, Groq, OpenRouter)
 - Database encryption capabilities

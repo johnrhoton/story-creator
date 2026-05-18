@@ -88,6 +88,45 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 - Chapter generation
 - Character integration
 - Template validation
+- Progress reporting and abort-on-failed-LLM behavior
+
+### `test_rag_helpers.py` and `test_rag_generation_memory.py`
+**Purpose**: RAG and Chroma helper behavior
+
+**Test Cases**:
+- Metadata cleaning
+- Memory grouping
+- Rebuild counts by category
+- Story-memory prompt injection
+- Filtering to avoid unrelated story memory
+
+### `test_story_beats.py`
+**Purpose**: Story beat extraction and indexing helpers
+
+**Test Cases**:
+- Valid and invalid JSON parsing
+- Beat validation
+- Chroma indexing text and metadata
+- Generation memory includes story beats
+- Extraction failures do not break generation
+
+### `test_glossary_service.py`
+**Purpose**: Glossary generation helpers
+
+**Test Cases**:
+- Prompt construction
+- JSON response parsing
+- CSV output
+- Glossary source selection and pop-out URL helpers
+
+### `test_reading_comprehension_service.py`
+**Purpose**: Reading comprehension question helpers
+
+**Test Cases**:
+- Prompt construction
+- JSON response parsing
+- Optional translated-question column
+- CSV and table output
 
 ### `test_ui_helpers.py`
 **Purpose**: UI utility functions

@@ -146,6 +146,27 @@ def build_glossary_prompt(
     )
 
 
+def build_reading_comprehension_prompt(
+    source_text,
+    question_count=15,
+    source_language="",
+    interrogative_language="",
+    text_type="story section"
+):
+    return render_prompt_template(
+        "reading_comprehension.txt",
+        question_count=question_count,
+        source_language=source_language or "Use the language of the source text.",
+        interrogative_language=(
+            interrogative_language
+            if interrogative_language
+            else "None. Do not include translated_question values."
+        ),
+        text_type=text_type,
+        source_text=source_text or "",
+    )
+
+
 def build_story_memory_section(story_memory_context):
     if not story_memory_context:
         return ""

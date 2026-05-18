@@ -10,6 +10,11 @@ from services.glossary_service import (
     glossary_entries_to_csv,
     normalize_dictionary_languages,
 )
+from services.reading_comprehension_service import (
+    build_reading_comprehension_table,
+    generate_reading_comprehension_questions,
+    reading_comprehension_to_csv,
+)
 from services.story_service import (
     build_full_story_markdown,
     clone_existing_story,
@@ -447,6 +452,13 @@ def render_story_chapters_section(
                     story_id=story_id,
                     source_language=source_language
                 )
+                render_reading_comprehension_controls(
+                    source_text=story_markdown,
+                    text_type="full story",
+                    key_prefix=f"story_{story_id}",
+                    file_name=f"story_{story_id}_questions.csv",
+                    source_language=source_language
+                )
             else:
                 st.info("No chapter body text yet.")
 
@@ -636,6 +648,15 @@ def render_story_chapter_expander(chapter, source_language=""):
             chapter_number=chapter_number,
             source_language=source_language
         )
+        render_reading_comprehension_controls(
+            source_text=chapter_body,
+            text_type=f"chapter {chapter_number}",
+            key_prefix=f"chapter_{chapter_id}",
+            file_name=(
+                f"story_{story_id}_chapter_{chapter_number}_questions.csv"
+            ),
+            source_language=source_language
+        )
 
         if st.button(
             "Delete chapter",
@@ -718,6 +739,76 @@ def render_glossary_controls(
             file_name=file_name,
             mime="text/csv",
             key=f"{key_prefix}_download_glossary"
+        )
+
+
+def render_reading_comprehension_controls(
+    source_text,
+    text_type,
+    key_prefix,
+    file_name,
+    source_language=""
+):
+    st.markdown("### Reading comprehension")
+
+    col_count, col_language = st.columns([1, 3])
+
+    with col_count:
+        question_count = st.number_input(
+            "Questions",
+            min_value=1,
+            max_value=100,
+            value=15,
+            step=1,
+            key=f"{key_prefix}_question_count"
+        )
+
+    with col_language:
+        interrogative_language = st.text_input(
+            "Interrogative language",
+            placeholder="Optional, e.g. German",
+            key=f"{key_prefix}_interrogative_language"
+        )
+
+    if st.button(
+        "Create questions",
+        key=f"{key_prefix}_create_questions"
+    ):
+        if not source_text or not str(source_text).strip():
+            st.info("No text available for question generation.")
+            return
+
+        with st.spinner("Creating reading comprehension questions..."):
+            questions = generate_reading_comprehension_questions(
+                source_text,
+                question_count=int(question_count),
+                source_language=source_language,
+                interrogative_language=interrogative_language.strip(),
+                text_type=text_type,
+            )
+
+        if not questions:
+            st.warning("Question generation did not return entries.")
+            return
+
+        include_translation = bool(interrogative_language.strip())
+        csv_data = reading_comprehension_to_csv(
+            questions,
+            include_translation=include_translation
+        )
+        st.dataframe(
+            build_reading_comprehension_table(
+                questions,
+                include_translation=include_translation
+            ),
+            use_container_width=True
+        )
+        st.download_button(
+            "Download questions CSV",
+            data=csv_data,
+            file_name=file_name,
+            mime="text/csv",
+            key=f"{key_prefix}_download_questions"
         )
 
 

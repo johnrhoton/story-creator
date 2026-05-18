@@ -47,9 +47,30 @@ The app uses a tab-based interface with the following sections:
 - **Create Story**: Generate complete stories
   - Select a template
   - Choose male/female characters
+  - Optionally provide additional instructions
+  - Optionally choose target language and CEFR level
   - LLM generates story chapters based on template
 - **View Stories**: Read generated stories with chapter navigation
 - **Edit Chapters**: Modify individual chapter content
+- **Glossary**: Generate a CSV glossary for a full story or a chapter
+  - Choose number of entries (default 15)
+  - Enter dictionary languages such as `German, Spanish`
+  - Headwords are kept in the story language and translations are added per dictionary language
+- **Reading Comprehension**: Generate CSV comprehension questions for a full story or chapter
+  - Choose number of questions (default 15)
+  - Optional interrogative language adds a translated-question column
+
+### RAG Tab
+- **Rebuild Chroma Index**: Rebuild story memory from SQLite source data
+- **Search Memory**: Search Chroma memory records
+- **Preview STORY MEMORY**: See the exact memory block that would be injected into a chapter prompt
+- **Inspect Index**: Browse persisted Chroma entries grouped by Stories, Chapter Summaries, Story Beats, and Characters
+- **Story Beats**: View, extract, or search structured story-memory beats
+
+### Glossary Tab
+- Open a standalone glossary generator for a selected story or chapter
+- Can be opened via URL/query parameters from story/chapter controls
+- Useful as a browser-tab "pop-out" while keeping the story open elsewhere
 
 ### Models Tab
 - **Configure LLM Models**: Add/edit available AI models
@@ -58,10 +79,9 @@ The app uses a tab-based interface with the following sections:
   - Mark default models
 
 ### History Tab
-- **View LLM Calls**: Browse all AI interactions
-  - Successful and failed calls
-  - Request/response details
-  - Error information for debugging
+- **Objects**: Browse CRUD history for Characters, Profiles, Templates, and Stories
+- **LLM Calls**: Browse successful and failed AI interactions
+- Filter history type without scrolling through unrelated sections
 
 ### Export/Import Tab
 - **Export Data**: Download app data as JSON/YAML
@@ -92,6 +112,7 @@ The app uses a tab-based interface with the following sections:
 3. **Monitor Usage**: Check the History tab for API usage and costs
 4. **Regular Backups**: Use Export/Import for data safety
 5. **Experiment**: Try different models and settings for varied results
+6. **Rebuild RAG After Imports**: Rebuild the Chroma index after importing data or when memory looks stale
 
 ## Troubleshooting
 
@@ -99,3 +120,4 @@ The app uses a tab-based interface with the following sections:
 - **Database Issues**: Run migrations manually: `python scripts/migrate.py`
 - **Import Problems**: Ensure file format matches export format
 - **Performance**: Monitor LLM call history for rate limiting
+- **RAG Looks Empty**: Rebuild Chroma from the RAG tab; persisted source data remains in SQLite

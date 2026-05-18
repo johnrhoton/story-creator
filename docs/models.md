@@ -35,19 +35,20 @@ Each database table has a corresponding module that serves as a data access laye
 
 ### `database/profiles.py`
 - `get_profiles()`: List all profiles
-- `save_profile(data)`: Create profile
-- `update_profile(id, data)`: Edit profile
-- `delete_profile(id)`: Remove profile
+- `add_profile(...)`: Create profile
+- `update_profile(...)`: Edit profile
+- `delete_profile(...)`: Remove profile
 
 ### `database/stories.py`
 - `get_stories()`: Retrieve stories
-- `save_story(data)`: Create story
+- `add_story(...)` / `create_story_from_template(...)`: Create stories
 - `get_story_chapters(story_id)`: Get chapters for story
-- `save_story_chapter(data)`: Add chapter
+- `add_story_chapter(...)`: Add chapter
+- `update_story_chapter(...)`: Edit chapter
 
 ### `database/llm_calls.py`
-- `log_llm_call(data)`: Record successful interaction
-- `log_failed_llm_call(data)`: Record failed interaction
+- `save_llm_call(...)`: Record successful interaction
+- `save_failed_llm_call(...)`: Record failed interaction
 - `get_llm_calls()`: Retrieve call history
 
 ## Data Validation
@@ -68,6 +69,7 @@ Validation occurs at the service layer rather than model layer:
   "profiles": [...],
   "stories": [...],
   "story_chapters": [...],
+  "story_beats": [...],
   "llm_calls": [...]
 }
 ```
@@ -78,6 +80,14 @@ Each record includes:
 - Timestamps (`created_at`)
 - Data fields (varies by table)
 - Foreign key references
+
+## Prompt and Memory Data
+
+The project also uses text-based prompt templates rather than model classes for
+generation behavior. Prompt templates live in `prompts/` and are loaded by
+`prompts.py`. RAG memory records are represented as Chroma documents plus
+metadata dictionaries. SQLite remains the source of truth for rebuildable memory
+such as story beats.
 
 ## Advantages of Current Approach
 

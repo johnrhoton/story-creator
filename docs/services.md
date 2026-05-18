@@ -54,28 +54,80 @@ The services layer contains the business logic of the application, orchestrating
 
 **Key Functions**:
 - `list_stories()`: Retrieve stories
-- `create_story(data)`: Initialize story
-- `get_story_chapters(story_id)`: Get chapters
-- `update_story_chapter(id, data)`: Modify chapter
-- `delete_story(id)`: Remove story
+- `create_from_template(...)`: Initialize and generate a story from a template
+- `list_story_chapters(story_id)`: Get chapters
+- `create_story_chapter(...)`: Add chapter
+- `edit_story_chapter(...)`: Modify chapter
+- `delete_existing_story(...)`: Remove story
+- `build_full_story_markdown(chapters)`: Compile chapter bodies for reading/export/learning tools
 
 **Relationships**:
 - Manages story-template associations
 - Handles chapter ordering
 - Supports character assignments
+- Logs object history for story operations
+- Coordinates Chroma cleanup for deleted story/chapter memory
 
 ### `story_generation_service.py`
 **Purpose**: LLM-powered story creation
 
 **Key Functions**:
-- `generate_story(story_data, template_data)`: Create complete story
-- `generate_chapter(story_context, chapter_template)`: Generate individual chapters
+- `generate_story_chapters(story_id, progress_callback=None)`: Generate all chapters for a story
+- `generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callback=None)`: Generate one chapter body and summary
 
 **LLM Workflow**:
 - Constructs detailed prompts from templates
 - Iterates through chapter generation
 - Handles character integration
-- Manages generation parameters (temperature, model)
+- Injects RAG story memory into chapter prompts
+- Aborts generation when a required body or summary LLM call fails
+- Indexes chapter summaries and triggers fail-safe story-beat extraction
+
+### `story_beat_service.py`
+**Purpose**: Extract structured story-memory beats from chapter text.
+
+**Key Functions**:
+- `extract_story_beats(...)`: Calls the LLM with `prompts/story_beats.txt`
+- `parse_story_beats_response(...)`: JSON-only parser with graceful failure
+- `validate_story_beat(...)`: Normalizes and validates beat objects
+- `safe_extract_save_and_index_story_beats(...)`: Best-effort extraction that never breaks chapter saving
+- `index_story_beat(...)`: Adds beat records to Chroma
+
+**Beat Types**:
+`scene`, `transition`, `relationship_progression`, `emotional_shift`,
+`revelation`, `unresolved_thread`, `time_jump`,
+`world_or_setting_detail`, `character_state_change`.
+
+### `rag_service.py` and `rag_indexing_service.py`
+**Purpose**: Chroma-backed retrieval and rebuildable memory indexing.
+
+**Key Functions**:
+- `safe_search_memory(...)`: Safe Chroma search
+- `safe_list_memory_items(...)`: Inspect persisted Chroma records
+- `build_story_generation_memory(...)`: Retrieve and format prompt memory
+- `rebuild_rag_index_from_sqlite()`: Rebuild Chroma from SQLite source data
+
+**Memory Types**:
+Stories, chapter summaries, characters, and story beats. The injected STORY
+MEMORY prompt is grouped through `prompts/story_memory_section.txt`.
+
+### `glossary_service.py`
+**Purpose**: Generate learner glossaries from full stories or chapters.
+
+**Key Functions**:
+- `generate_glossary(...)`: Calls the LLM with `prompts/glossary.txt`
+- `parse_glossary_response(...)`: Parses JSON glossary entries
+- `glossary_entries_to_csv(...)`: Produces downloadable CSV
+- `build_glossary_table(...)`: Formats rows for Streamlit display
+
+### `reading_comprehension_service.py`
+**Purpose**: Generate reading comprehension questions from full stories or chapters.
+
+**Key Functions**:
+- `generate_reading_comprehension_questions(...)`: Calls the LLM with `prompts/reading_comprehension.txt`
+- `parse_reading_comprehension_response(...)`: Parses JSON questions
+- `reading_comprehension_to_csv(...)`: Produces two- or three-column CSV
+- `build_reading_comprehension_table(...)`: Formats rows for Streamlit display
 
 ### `template_service.py`
 **Purpose**: Story template CRUD operations

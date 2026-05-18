@@ -47,6 +47,7 @@ Story structure blueprints:
 - `created_at`: Timestamp
 - `template_name`: Unique name
 - `overview`, `setting_background`, `tone_style`: Template metadata
+- `male_character_roles`, `female_character_roles`: Slot labels such as `M1`, `F1`
 
 #### `story_template_chapters`
 Chapter outlines within templates:
@@ -62,6 +63,9 @@ Generated story instances:
 - `story_name`: Unique title
 - `template_id`: Reference to template (optional)
 - `overview`, `setting_background`, `tone_style`: Story metadata
+- `additional_instructions`: Optional high-priority story generation guidance
+- `language`: Optional target language for story and summaries
+- `language_level`: Optional CEFR level (`A1`-`C2`)
 - `male_characters`, `female_characters`: Character assignments
 
 #### `story_chapters`
@@ -72,6 +76,18 @@ Individual story chapters:
 - `chapter_description`: Chapter outline
 - `chapter_body`: Generated content
 - `chapter_summary`: Chapter summary
+
+#### `story_beats`
+Structured continuity memory extracted from chapter bodies:
+- `id`: Primary key
+- `story_id`: Story reference
+- `chapter_number`, `sequence_number`: Position within the story/chapter
+- `beat_type`: One of `scene`, `transition`, `relationship_progression`,
+  `emotional_shift`, `revelation`, `unresolved_thread`, `time_jump`,
+  `world_or_setting_detail`, `character_state_change`
+- `title`, `location`, `time_span`, `summary`, `continuity_effect`: Beat details
+- `characters`, `unresolved_threads`, `search_keywords`: JSON-serialized lists
+- `created_at`, `updated_at`: Timestamps
 
 ### LLM Integration
 
@@ -100,6 +116,15 @@ Available AI models configuration:
 - `best_use`: Usage description
 - `is_default`: Boolean flag for default selection
 
+#### `object_history`
+Audit trail for user-visible objects:
+- `id`: Primary key
+- `created_at`: Timestamp
+- `object_type`: Characters, Profiles, Templates, Stories
+- `object_id`, `object_name`: Object identity
+- `operation`: CRUD-style operation such as Create, Update, Delete, Clone
+- `contents`: Snapshot after create/update/clone and before delete
+
 ### Synchronization
 
 #### `sync_metadata`
@@ -121,12 +146,15 @@ Each table has dedicated module:
 - `stories.py`: Story and chapter handling
 - `llm_calls.py`: Interaction logging
 - `llm_models.py`: Model configuration
+- `story_beats.py`: Story-beat persistence and retrieval
+- `object_history.py`: CRUD history logging and lookup
 
 ### Import/Export (`database/import_export.py`)
 - JSON/YAML serialization
 - Selective record export
 - Data validation on import
 - Foreign key relationship preservation
+- Includes story beats and object history so RAG can be rebuilt after import
 
 ## Security Features
 
@@ -140,6 +168,9 @@ Each table has dedicated module:
 - Runtime password unlocking
 - Encrypted export support
 - Secure key storage (not persisted)
+
+Encrypted fields include story/chapter text, prompts/responses, story beats,
+object history contents, and other descriptive text fields.
 
 ## Migration System (`database/migrations.py`)
 

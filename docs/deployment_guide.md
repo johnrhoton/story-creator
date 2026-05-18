@@ -113,11 +113,14 @@ Planned for local, offline-capable deployment:
 - **Backup**: Use Export/Import feature for data backup
 - **Encryption**: Optional field-level encryption
 - **MongoDB Sync**: Optional cloud backup synchronization
+- **Chroma RAG Index**: Stored under `data/chroma_db`; rebuildable from SQLite via the RAG tab
 
 ### Monitoring and Maintenance
 
 - **Logs**: Check Streamlit logs for errors
 - **LLM History**: Monitor API usage in History tab
+- **Object History**: Inspect CRUD history in the History tab
+- **RAG Index**: Inspect or rebuild Chroma from the RAG tab after imports or deployments
 - **Database Health**: Regular export/import testing
 - **Updates**: Pull latest code and run migrations
 
