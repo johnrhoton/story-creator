@@ -120,6 +120,8 @@ MEMORY prompt is grouped through `prompts/story_memory_section.txt`.
 - `glossary_entries_to_csv(...)`: Produces downloadable CSV
 - `build_glossary_table(...)`: Formats rows for Streamlit display
 
+See `docs/language_aids.md` for the end-to-end glossary workflow.
+
 ### `reading_comprehension_service.py`
 **Purpose**: Generate reading comprehension questions from full stories or chapters.
 
@@ -128,6 +130,8 @@ MEMORY prompt is grouped through `prompts/story_memory_section.txt`.
 - `parse_reading_comprehension_response(...)`: Parses JSON questions
 - `reading_comprehension_to_csv(...)`: Produces two- or three-column CSV
 - `build_reading_comprehension_table(...)`: Formats rows for Streamlit display
+
+See `docs/language_aids.md` for the end-to-end reading comprehension workflow.
 
 ### `template_service.py`
 **Purpose**: Story template CRUD operations

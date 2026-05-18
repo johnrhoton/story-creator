@@ -66,11 +66,13 @@ The app uses a tab-based interface with the following sections:
 - **Preview STORY MEMORY**: See the exact memory block that would be injected into a chapter prompt
 - **Inspect Index**: Browse persisted Chroma entries grouped by Stories, Chapter Summaries, Story Beats, and Characters
 - **Story Beats**: View, extract, or search structured story-memory beats
+- For an end-to-end explanation, see `docs/story_memory.md`.
 
 ### Glossary Tab
 - Open a standalone glossary generator for a selected story or chapter
 - Can be opened via URL/query parameters from story/chapter controls
 - Useful as a browser-tab "pop-out" while keeping the story open elsewhere
+- For glossary and reading comprehension details, see `docs/language_aids.md`.
 
 ### Models Tab
 - **Configure LLM Models**: Add/edit available AI models

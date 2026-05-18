@@ -97,6 +97,16 @@ the app retrieves relevant story-specific records and global characters, formats
 them through `prompts/story_memory_section.txt`, and injects them into the story
 chapter prompt.
 
+For the end-to-end flow, see `docs/story_memory.md`.
+
+## Language Aids
+
+Glossaries and reading comprehension questions are generated on demand from full
+stories or individual chapters. They use editable prompt templates, service-layer
+JSON parsing, Streamlit display tables, and CSV downloads.
+
+For the end-to-end flow, see `docs/language_aids.md`.
+
 ## Entry Point
 
 - `app.py`: Main Streamlit application file that wires together all components
