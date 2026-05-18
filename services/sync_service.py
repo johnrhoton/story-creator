@@ -9,19 +9,20 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 
 from config import (
+    get_config_value,
     MONGODB_DEFAULT_DATABASE,
     MONGODB_LEGACY_SYNC_DOCUMENT_ID,
     MONGODB_SYNC_COLLECTION,
     MONGODB_SYNC_DOCUMENT_ID,
 )
 from database import (
+    DATABASE_ENCRYPTION_EXPORT_KEY,
     export_database_to_dict,
     get_database_encryption_export_metadata,
     get_sync_metadata,
     import_database_from_json,
     set_sync_metadata,
 )
-from database.db_encryption import DATABASE_ENCRYPTION_EXPORT_KEY
 
 
 SYNC_DOCUMENT_ID = MONGODB_SYNC_DOCUMENT_ID
@@ -57,16 +58,25 @@ def parse_timestamp(value):
 def get_mongo_collection():
     load_dotenv()
 
-    uri = os.getenv("MONGODB_URI")
+    uri = (
+        get_config_value("MONGO_URI")
+        or get_config_value("MONGODB_URI")
+    )
 
-    database_name = os.getenv(
+    database_name = get_config_value(
+        "MONGO_DATABASE",
+        get_config_value(
+            "MONGODB_DATABASE",
+            None
+        )
+    ) or os.getenv(
         "MONGODB_DATABASE",
         MONGODB_DEFAULT_DATABASE
     )
 
     if not uri:
         raise RuntimeError(
-            "MONGODB_URI not found in .env"
+            "MONGO_URI not configured."
         )
 
     client = MongoClient(uri)

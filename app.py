@@ -8,6 +8,7 @@ import streamlit as st
 from database import (
     create_tables,
     get_database_encryption_status,
+    get_database_provider_status,
     run_migrations,
     seed_common_names,
 )
@@ -38,9 +39,22 @@ st.set_page_config(
     layout="wide"
 )
 
-run_migrations()
-create_tables()
-seed_common_names()
+database_provider_status = get_database_provider_status()
+st.caption(
+    "Database provider: "
+    f"{database_provider_status['label']}"
+)
+
+try:
+    run_migrations()
+    create_tables()
+    seed_common_names()
+except Exception as error:
+    st.error(
+        "Database startup failed for "
+        f"{database_provider_status['label']}: {error}"
+    )
+    st.stop()
 
 require_login()
 

@@ -189,7 +189,9 @@ See `docs/language_aids.md` for the end-to-end reading comprehension workflow.
 ## Integration Points
 
 ### Database Layer
-- Direct imports from `database.*` modules
+- Services and views import from the top-level `database` provider facade
+- `DB_PROVIDER=sqlite` exports the existing SQLite repositories
+- `DB_PROVIDER=mongodb` exports MongoDB Atlas repositories with matching function names
 - Transaction management for complex operations
 - Error handling for database constraints
 

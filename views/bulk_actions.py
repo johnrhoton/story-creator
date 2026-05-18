@@ -5,10 +5,10 @@ import yaml
 
 from config import EXPORT_FILENAME_PREFIX
 from database import (
+    DATABASE_ENCRYPTION_EXPORT_KEY,
     get_database_encryption_export_metadata,
     is_database_encryption_enabled,
 )
-from database.db_encryption import DATABASE_ENCRYPTION_EXPORT_KEY
 
 
 def render_bulk_actions(

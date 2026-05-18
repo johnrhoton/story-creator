@@ -45,8 +45,11 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
 ### 3. Database (`database/`)
 - **Purpose**: Data persistence and access layer
 - **Contents**:
+  - `__init__.py`: Provider selection layer exporting the active repository functions
   - `schema.py`: SQLite table definitions
   - `connection.py`: Database connection management
+  - `mongodb_connection.py`: MongoDB Atlas connection and ID counters
+  - `mongodb_repositories.py`: MongoDB-backed repositories matching the SQLite function surface
   - `characters.py`, `profiles.py`, `stories.py`, etc.: Table-specific operations
   - `import_export.py`: Data serialization/deserialization
   - `db_encryption.py`: Field-level encryption
@@ -55,7 +58,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `object_history.py`: CRUD history records for user-visible objects
   - `story_beats.py`: Persisted story-memory beats extracted from chapters
   - `authorized_users.py`: Authorized Google user whitelist and roles
-- **Technology**: SQLite with optional encryption
+- **Technology**: Configurable provider: SQLite locally by default, or MongoDB Atlas with `DB_PROVIDER=mongodb`
 
 ### 4. LLM Integration
 - **Purpose**: External AI service integration

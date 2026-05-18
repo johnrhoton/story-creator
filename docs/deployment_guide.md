@@ -104,18 +104,23 @@ Planned for local, offline-capable deployment:
 | `OPENROUTER_API_KEY` | OpenRouter API key | No* |
 | `DEFAULT_LLM_PROVIDER` | Default provider selected in the sidebar | No |
 | `DEFAULT_LLM_MODEL` | Default model selected in the sidebar | No |
-| `MONGODB_URI` | MongoDB connection URI | No |
+| `DB_PROVIDER` | Active persistence provider: `sqlite` or `mongodb` | No |
+| `MONGO_URI` | MongoDB Atlas connection URI for the `mongodb` provider | Required for MongoDB |
+| `MONGO_DATABASE` | MongoDB database name; defaults to `story_builder` | No |
+| `MONGODB_URI` | Legacy MongoDB sync URI; also accepted as a fallback for `MONGO_URI` | No |
 | `DATABASE_PASSWORD` | Database encryption password | No |
 
 *At least one LLM API key required for story/character generation
 
 ### Database Management
 
-- **Migrations**: Run automatically on startup
+- **Provider**: `sqlite` by default locally; set `DB_PROVIDER=mongodb` for MongoDB Atlas
+- **Streamlit Cloud**: Configure `DB_PROVIDER="mongodb"` and `MONGO_URI` in secrets
+- **Migrations**: SQLite migrations run automatically; MongoDB startup creates indexes and seed records
 - **Backup**: Use Export/Import feature for data backup
 - **Encryption**: Optional field-level encryption
 - **MongoDB Sync**: Optional cloud backup synchronization
-- **Chroma Story Memory Index**: Stored under `data/chroma_db`; rebuildable from SQLite via the Story Memory tab
+- **Chroma Story Memory Index**: Stored under `data/chroma_db`; rebuildable from the active database provider via the Story Memory tab
 - **LLM Defaults**: Sidebar model changes update `.env`; keep deployment `.env` files local and uncommitted
 
 ### Monitoring and Maintenance

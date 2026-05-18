@@ -87,6 +87,14 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 - Named Google provider selection for Streamlit OIDC
 - Default provider fallback
 
+### `test_database_provider.py`
+**Purpose**: Database provider configuration and MongoDB export surface.
+
+**Test Cases**:
+- `DB_PROVIDER` defaults and validation
+- Mongo URI lookup from environment
+- MongoDB provider facade exports expected repository functions
+
 ### `test_story_service.py`
 **Purpose**: Story generation workflows
 
