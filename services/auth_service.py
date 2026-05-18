@@ -94,4 +94,3 @@ def get_login_provider(auth_config):
         return "google"
 
     return None
-
