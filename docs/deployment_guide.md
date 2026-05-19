@@ -36,14 +36,34 @@
    ```
 
 ### Configuration
-- Set root-level values in `.streamlit/secrets.toml`. Use the same keys in
+- Set nested values in `.streamlit/secrets.toml`. Use the same TOML in
   Streamlit Community Cloud's Secrets UI:
   ```toml
-  GEMINI_API_KEY="your_gemini_key"
-  GROQ_API_KEY="your_groq_key"
-  OPENROUTER_API_KEY="your_openrouter_key"
-  APP_MONGO_URI="your_primary_mongodb_uri"  # Optional
-  BACKUP_MONGO_URI="your_backup_mongodb_uri"  # Optional
+  [database]
+  provider="sqlite"
+  uri="your_primary_mongodb_uri"  # Optional
+  database="story_builder"
+
+  [database.backup]
+  uri="your_backup_mongodb_uri"  # Optional
+  database="story_builder"
+
+  [rag]
+  provider="chroma"
+
+  [llm.gemini]
+  api_key="your_gemini_key"
+
+  [llm.groq]
+  api_key="your_groq_key"
+
+  [llm.openrouter]
+  api_key="your_openrouter_key"
+
+  [auth.google]
+  client_id="your_google_oauth_client_id"
+  client_secret="your_google_oauth_client_secret"
+  server_metadata_url="https://accounts.google.com/.well-known/openid-configuration"
   ```
 
 ## Production Deployment
@@ -97,42 +117,43 @@ Planned for local, offline-capable deployment:
 - **Networking**: Optional web access via local network
 - **Power Management**: Low-power operation considerations
 
-### Environment Variables
+### Configuration Keys
 
-| Variable | Description | Required |
+| Key | Description | Required |
 |----------|-------------|----------|
-| `GEMINI_API_KEY` | Google Gemini API key | No* |
-| `GROQ_API_KEY` | Groq API key | No* |
-| `OPENROUTER_API_KEY` | OpenRouter API key | No* |
-| `DEFAULT_LLM_PROVIDER` | Default provider selected in the sidebar | No |
-| `DEFAULT_LLM_MODEL` | Default model selected in the sidebar | No |
-| `DB_PROVIDER` | Active persistence provider: `sqlite` or `mongodb` | No |
-| `APP_MONGO_URI` | Primary MongoDB Atlas URI for `DB_PROVIDER=mongodb` | Required for MongoDB |
-| `APP_MONGO_DATABASE` | Primary MongoDB database name; defaults to `story_builder` | No |
-| `BACKUP_MONGO_URI` | MongoDB URI for push/pull backup snapshots | Required for MongoDB sync |
-| `BACKUP_MONGO_DATABASE` | MongoDB backup database name; defaults to `story_builder` | No |
-| `MONGO_URI` / `MONGO_DATABASE` | Legacy fallback names for app and backup MongoDB settings | No |
-| `MONGODB_URI` / `MONGODB_DATABASE` | Legacy fallback names, mainly from older backup sync setup | No |
-| `VECTOR_PROVIDER` | Story Memory vector provider: `none`, `chroma`, or `mongodb_vector` | No |
-| `VECTOR_COLLECTION_NAME` | Vector collection name; defaults to `story_memory` | No |
-| `VECTOR_INDEX_NAME` | MongoDB Atlas Vector Search index name | Required for `mongodb_vector` |
-| `ENABLE_LLM_CONTENT_LOGGING` | Store full prompts/responses in LLM history; defaults to `false` | No |
+| `llm.gemini.api_key` | Google Gemini API key | No* |
+| `llm.groq.api_key` | Groq API key | No* |
+| `llm.openrouter.api_key` | OpenRouter API key | No* |
+| `llm.default_provider` | Default provider selected in the sidebar | No |
+| `llm.default_model` | Default model selected in the sidebar | No |
+| `database.provider` | Active persistence provider: `sqlite` or `mongodb` | No |
+| `database.uri` | Primary MongoDB Atlas URI for `database.provider="mongodb"` | Required for MongoDB |
+| `database.database` | Primary MongoDB database name; defaults to `story_builder` | No |
+| `database.backup.uri` | MongoDB URI for push/pull backup snapshots | Required for MongoDB sync |
+| `database.backup.database` | MongoDB backup database name; defaults to `story_builder` | No |
+| `rag.provider` | Story Memory vector provider: `none`, `chroma`, or `mongodb_vector` | No |
+| `rag.collection_name` | Vector collection name; defaults to `story_memory` | No |
+| `rag.index_name` | MongoDB Atlas Vector Search index name | Required for `mongodb_vector` |
+| `llm.enable_content_logging` | Store full prompts/responses in LLM history; defaults to `false` | No |
 | `DATABASE_PASSWORD` | Database encryption password | No |
+
+Legacy flat names such as `DB_PROVIDER`, `APP_MONGO_URI`, `MONGODB_URI`, and
+`VECTOR_PROVIDER` are still accepted as compatibility fallbacks.
 
 *At least one LLM API key required for story/character generation
 
 ### Database Management
 
-- **Provider**: `sqlite` by default locally; set `DB_PROVIDER=mongodb` for MongoDB Atlas
-- **Streamlit Cloud**: Configure `DB_PROVIDER="mongodb"` and `APP_MONGO_URI` in secrets
+- **Provider**: `sqlite` by default locally; set `database.provider="mongodb"` for MongoDB Atlas
+- **Streamlit Cloud**: Configure `database.provider="mongodb"` and `database.uri` in secrets
 - **Migrations**: SQLite migrations run automatically; MongoDB startup creates indexes and seed records
 - **Backup**: Use Export/Import feature for data backup
 - **Encryption**: Optional field-level encryption
-- **MongoDB Sync**: Optional cloud backup synchronization using `BACKUP_MONGO_URI`; this may point at a separate cluster/database from the primary app database
+- **MongoDB Sync**: Optional cloud backup synchronization using `database.backup.uri`; this may point at a separate cluster/database from the primary app database
 - **Vector Provider**: `chroma` by default locally; use `mongodb_vector` on Streamlit Cloud or `none` to disable RAG
 - **Chroma Story Memory Index**: Stored under `data/chroma_db`; rebuildable from the active database provider via the Story Memory tab
 - **MongoDB Atlas Vector Search**: Stores text, metadata, and embeddings in the configured vector collection; create the Atlas vector index named by `VECTOR_INDEX_NAME`
-- **LLM Defaults**: Sidebar model changes update local `.streamlit/secrets.toml`; set the same root-level keys in Streamlit Community Cloud secrets
+- **LLM Defaults**: Sidebar model changes update the local `[llm]` section in `.streamlit/secrets.toml`; set the same keys in Streamlit Community Cloud secrets
 
 ### Monitoring and Maintenance
 

@@ -40,7 +40,7 @@ class LLMDefaultsServiceTests(unittest.TestCase):
             secrets_path = Path(temp_dir) / ".streamlit" / "secrets.toml"
             secrets_path.parent.mkdir(parents=True)
             secrets_path.write_text(
-                'GROQ_API_KEY="secret"\n\n[auth]\n'
+                '[llm.groq]\napi_key="secret"\n\n[auth]\n'
                 'redirect_uri="http://localhost:8501/oauth2callback"\n',
                 encoding="utf-8"
             )
@@ -54,10 +54,12 @@ class LLMDefaultsServiceTests(unittest.TestCase):
 
             contents = secrets_path.read_text(encoding="utf-8")
 
-            self.assertIn('GROQ_API_KEY="secret"', contents)
-            self.assertIn('DEFAULT_LLM_PROVIDER="Groq"', contents)
+            self.assertIn('[llm.groq]', contents)
+            self.assertIn('api_key="secret"', contents)
+            self.assertIn("[llm]", contents)
+            self.assertIn('default_provider="Groq"', contents)
             self.assertIn(
-                'DEFAULT_LLM_MODEL="llama-3.3-70b-versatile"',
+                'default_model="llama-3.3-70b-versatile"',
                 contents
             )
             self.assertIn("[auth]", contents)

@@ -61,7 +61,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `story_beats.py`: Persisted story-memory beats extracted from chapters
   - `authorized_users.py`: Authorized Google user whitelist and roles
   - `observability.py`: App event logging and recent-event lookup
-- **Technology**: Configurable provider: SQLite locally by default, or MongoDB Atlas with `DB_PROVIDER=mongodb` and `APP_MONGO_URI`
+- **Technology**: Configurable provider: SQLite locally by default, or MongoDB Atlas with `database.provider="mongodb"` and `database.uri`
 
 ### 4. LLM Integration
 - **Purpose**: External AI service integration
@@ -125,7 +125,7 @@ for structured events such as app startup, story/chapter generation, RAG search,
 imports, exports, and LLM calls. Timing helpers live in
 `services/observability_service.py`. The Streamlit Administration-only
 `Debug / Observability` tab shows recent events. Full prompt/response storage is
-disabled by default and controlled by `ENABLE_LLM_CONTENT_LOGGING`.
+disabled by default and controlled by `llm.enable_content_logging`.
 
 ## Entry Point
 

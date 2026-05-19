@@ -62,35 +62,54 @@ adding new architectural styles.
 ## Configuration And Secrets
 
 Local secrets live in `.streamlit/secrets.toml`, matching Streamlit Community
-Cloud's root-level Secrets UI. Do not depend on `.env` for new work.
+Cloud's Secrets UI. Do not depend on `.env` for new work.
 
-Common root-level Streamlit secret keys:
+Preferred Streamlit secret shape:
 
 ```toml
-GEMINI_API_KEY="..."
-GROQ_API_KEY="..."
-OPENROUTER_API_KEY="..."
-DEFAULT_LLM_PROVIDER="Groq"
-DEFAULT_LLM_MODEL="llama-3.3-70b-versatile"
-DB_PROVIDER="sqlite"
-VECTOR_PROVIDER="chroma"
-APP_MONGO_URI="..."
-APP_MONGO_DATABASE="story_builder"
-BACKUP_MONGO_URI="..."
-BACKUP_MONGO_DATABASE="story_builder"
-ENABLE_LLM_CONTENT_LOGGING="false"
+[database]
+provider="sqlite"
+uri=""
+database="story_builder"
+
+[database.backup]
+uri=""
+database="story_builder"
+
+[rag]
+provider="chroma"
+
+[llm]
+default_provider="Groq"
+default_model="llama-3.3-70b-versatile"
+enable_content_logging=false
+
+[llm.gemini]
+api_key=""
+
+[llm.groq]
+api_key=""
+
+[llm.openrouter]
+api_key=""
+
+[auth.google]
+client_id=""
+client_secret=""
+server_metadata_url="https://accounts.google.com/.well-known/openid-configuration"
 ```
 
 Important config behavior:
 
 - Use `config.get_config_value()` for settings that may come from environment
   variables or Streamlit secrets.
-- Environment variables still take precedence, but Streamlit secrets are the
+- Environment variables still take precedence, and legacy flat Streamlit keys
+  are accepted as fallbacks, but nested Streamlit secrets are the preferred
   parity path for local and cloud usage.
-- `DEFAULT_LLM_PROVIDER` and `DEFAULT_LLM_MODEL` are read from the shared config
-  helper and saved locally by `services/llm_defaults_service.py`.
+- `llm.default_provider` and `llm.default_model` are read from the shared
+  config helper and saved locally by `services/llm_defaults_service.py`.
 - Full prompt/response storage in LLM history is disabled by default. Use
-  `ENABLE_LLM_CONTENT_LOGGING=true` only for intentional local debugging.
+  `llm.enable_content_logging=true` only for intentional local debugging.
 - `.streamlit/secrets.toml`, `.env`, database files, WAL/SHM files, exports,
   logs, and virtualenv folders are local-only and should not be committed.
 
@@ -98,11 +117,11 @@ Important config behavior:
 
 SQLite is the default local provider. MongoDB Atlas is optional.
 
-- Set `DB_PROVIDER="sqlite"` or `DB_PROVIDER="mongodb"`.
-- For live MongoDB app persistence, use `APP_MONGO_URI` and
-  `APP_MONGO_DATABASE`.
-- For backup snapshot sync, use `BACKUP_MONGO_URI` and
-  `BACKUP_MONGO_DATABASE`.
+- Set `database.provider="sqlite"` or `database.provider="mongodb"`.
+- For live MongoDB app persistence, use `database.uri` and
+  `database.database`.
+- For backup snapshot sync, use `database.backup.uri` and
+  `database.backup.database`.
 - Legacy fallback names are still accepted: `MONGO_URI`, `MONGO_DATABASE`,
   `MONGODB_URI`, and `MONGODB_DATABASE`.
 
@@ -112,9 +131,9 @@ MongoDB startup creates indexes and seed records where needed.
 
 Story Memory uses a configurable vector provider:
 
-- `VECTOR_PROVIDER="none"` disables vector memory.
-- `VECTOR_PROVIDER="chroma"` uses local Chroma under `data/chroma_db`.
-- `VECTOR_PROVIDER="mongodb_vector"` uses MongoDB Atlas Vector Search.
+- `rag.provider="none"` disables vector memory.
+- `rag.provider="chroma"` uses local Chroma under `data/chroma_db`.
+- `rag.provider="mongodb_vector"` uses MongoDB Atlas Vector Search.
 
 SQLite or MongoDB remains the source of truth. Vector indexes are rebuildable
 from the Story Memory tab.

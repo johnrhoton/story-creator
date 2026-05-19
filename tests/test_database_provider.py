@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from config import (
+    get_config_value,
     get_app_mongo_database,
     get_app_mongo_uri,
     get_backup_mongo_database,
@@ -122,6 +123,45 @@ class DatabaseProviderTests(unittest.TestCase):
         ):
             self.assertEqual(get_backup_mongo_uri(), "mongodb+srv://legacy-backup")
             self.assertEqual(get_backup_mongo_database(), "legacy_backup_db")
+
+    def test_nested_streamlit_secrets_are_supported(self):
+        fake_secrets = {
+            "database": {
+                "provider": "mongodb",
+                "uri": "mongodb+srv://app-nested",
+                "database": "app_nested_db",
+                "backup": {
+                    "uri": "mongodb+srv://backup-nested",
+                    "database": "backup_nested_db",
+                },
+            },
+            "rag": {
+                "provider": "mongodb_vector",
+            },
+            "llm": {
+                "openrouter": {
+                    "api_key": "openrouter-secret",
+                },
+            },
+        }
+
+        class FakeStreamlit:
+            secrets = fake_secrets
+
+        with patch.dict(os.environ, {}, clear=True), patch.dict(
+            sys.modules,
+            {"streamlit": FakeStreamlit}
+        ):
+            self.assertEqual(get_config_value("DB_PROVIDER"), "mongodb")
+            self.assertEqual(get_app_mongo_uri(), "mongodb+srv://app-nested")
+            self.assertEqual(get_app_mongo_database(), "app_nested_db")
+            self.assertEqual(get_backup_mongo_uri(), "mongodb+srv://backup-nested")
+            self.assertEqual(get_backup_mongo_database(), "backup_nested_db")
+            self.assertEqual(get_config_value("VECTOR_PROVIDER"), "mongodb_vector")
+            self.assertEqual(
+                get_config_value("OPENROUTER_API_KEY"),
+                "openrouter-secret"
+            )
 
     def test_database_package_exports_mongo_provider_functions(self):
         result = subprocess.run(

@@ -6,7 +6,7 @@ Story Memory helps generated chapters stay consistent with earlier story facts,
 character state, relationship changes, unresolved threads, and chapter events.
 It combines persisted app data with a configurable vector index.
 
-SQLite or MongoDB is the source of truth, depending on `DB_PROVIDER`. The vector
+SQLite or MongoDB is the source of truth, depending on `database.provider`. The vector
 store is a retrieval index and can be rebuilt from the active database provider
 from the Story Memory tab.
 
@@ -105,7 +105,7 @@ headings and item formatting shown to the LLM.
 
 ## Vector Providers
 
-Story Memory uses a configurable vector provider. Set `VECTOR_PROVIDER` to:
+Story Memory uses a configurable vector provider. Set `rag.provider` to:
 - `none`: Disable RAG retrieval and indexing. Story generation continues without injected memory.
 - `chroma`: Use the existing local Chroma persistence under `data/chroma_db`.
 - `mongodb_vector`: Store memory records and embeddings in MongoDB Atlas and

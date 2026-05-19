@@ -17,6 +17,57 @@ MONGODB_LEGACY_SYNC_DOCUMENT_ID = "story_creator_main"
 
 GENDER_OPTIONS = ["female", "male"]
 
+CONFIG_ALIASES = {
+    "APP_MONGO_DATABASE": [
+        ("database", "database"),
+    ],
+    "APP_MONGO_URI": [
+        ("database", "uri"),
+    ],
+    "BACKUP_MONGO_DATABASE": [
+        ("database", "backup", "database"),
+    ],
+    "BACKUP_MONGO_URI": [
+        ("database", "backup", "uri"),
+    ],
+    "DB_PROVIDER": [
+        ("database", "provider"),
+    ],
+    "DEFAULT_LLM_MODEL": [
+        ("llm", "default_model"),
+    ],
+    "DEFAULT_LLM_PROVIDER": [
+        ("llm", "default_provider"),
+    ],
+    "ENABLE_LLM_CONTENT_LOGGING": [
+        ("llm", "enable_content_logging"),
+    ],
+    "GEMINI_API_BASE_URL": [
+        ("llm", "gemini", "api_base_url"),
+    ],
+    "GEMINI_API_KEY": [
+        ("llm", "gemini", "api_key"),
+    ],
+    "GROQ_API_KEY": [
+        ("llm", "groq", "api_key"),
+    ],
+    "HF_TOKEN": [
+        ("huggingface", "token"),
+    ],
+    "OPENROUTER_API_KEY": [
+        ("llm", "openrouter", "api_key"),
+    ],
+    "VECTOR_COLLECTION_NAME": [
+        ("rag", "collection_name"),
+    ],
+    "VECTOR_INDEX_NAME": [
+        ("rag", "index_name"),
+    ],
+    "VECTOR_PROVIDER": [
+        ("rag", "provider"),
+    ],
+}
+
 
 def get_config_value(name, default=None):
     value = os.getenv(name)
@@ -27,6 +78,11 @@ def get_config_value(name, default=None):
     try:
         import streamlit as st
 
+        for path in CONFIG_ALIASES.get(name, []):
+            value = get_nested_secret(st.secrets, path)
+            if value not in (None, ""):
+                return value
+
         value = st.secrets.get(name)
         if value not in (None, ""):
             return value
@@ -34,6 +90,21 @@ def get_config_value(name, default=None):
         pass
 
     return default
+
+
+def get_nested_secret(secrets, path):
+    value = secrets
+
+    for key in path:
+        if not hasattr(value, "get"):
+            return None
+
+        value = value.get(key)
+
+        if value is None:
+            return None
+
+    return value
 
 
 def get_config_bool(name, default=False):
@@ -61,6 +132,11 @@ DEFAULT_LLM_MODEL = get_config_value(
 
 
 def get_first_config_value(names, default=None):
+    for name in names:
+        value = os.getenv(name)
+        if value not in (None, ""):
+            return value
+
     for name in names:
         value = get_config_value(name)
         if value not in (None, ""):

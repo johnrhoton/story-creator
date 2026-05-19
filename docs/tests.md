@@ -91,10 +91,10 @@ Story Builder uses Python's built-in `unittest` framework for regression testing
 **Purpose**: Database provider configuration and MongoDB export surface.
 
 **Test Cases**:
-- `DB_PROVIDER` defaults and validation
+- `database.provider` / legacy `DB_PROVIDER` defaults and validation
 - Mongo URI lookup from environment
 - MongoDB provider facade exports expected repository functions
-- `VECTOR_PROVIDER` defaults and validation
+- `rag.provider` / legacy `VECTOR_PROVIDER` defaults and validation
 
 ### `test_vector_store.py`
 **Purpose**: Vector store provider behavior.

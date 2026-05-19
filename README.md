@@ -55,25 +55,53 @@ for each provider.
 
 ## Streamlit Secrets
 
-Local configuration lives in `.streamlit/secrets.toml`, matching the root-level
-keys used in Streamlit Community Cloud secrets:
+Local configuration lives in `.streamlit/secrets.toml`, matching the nested
+tables used in Streamlit Community Cloud secrets:
 
-```text
-GEMINI_API_KEY=
-GROQ_API_KEY=
-OPENROUTER_API_KEY=
-APP_MONGO_URI=
-APP_MONGO_DATABASE=story_builder
-BACKUP_MONGO_URI=
-BACKUP_MONGO_DATABASE=story_builder
-ENABLE_LLM_CONTENT_LOGGING=false
+```toml
+[database]
+provider="sqlite"
+uri=""
+database="story_builder"
+
+[database.backup]
+uri=""
+database="story_builder"
+
+[rag]
+provider="chroma"
+
+[llm]
+default_provider="Groq"
+default_model="llama-3.3-70b-versatile"
+enable_content_logging=false
+
+[llm.gemini]
+api_key=""
+
+[llm.groq]
+api_key=""
+
+[llm.openrouter]
+api_key=""
+
+[auth]
+redirect_uri="http://localhost:8501/oauth2callback"
+cookie_secret="..."
+
+[auth.google]
+client_id="..."
+client_secret="..."
+server_metadata_url="https://accounts.google.com/.well-known/openid-configuration"
 ```
 
 Mongo database names are optional. If omitted, the app uses `story_builder`.
 Existing legacy MongoDB backups using the `story_creator_main` document ID are
 still checked as a fallback.
+Google OAuth stays under `[auth.google]` because that is the section Streamlit's
+built-in login reads.
 Full prompt/response storage in LLM call history is disabled by default; set
-`ENABLE_LLM_CONTENT_LOGGING=true` only when you intentionally want that local
+`llm.enable_content_logging=true` only when you intentionally want that local
 debug detail.
 
 ## Import, Export, And Sync
