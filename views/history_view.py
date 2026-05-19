@@ -1,9 +1,13 @@
 import json
+import logging
 
 import streamlit as st
 
 from database import get_failed_llm_calls, get_llm_calls, get_object_history
 from ui_helpers import format_display_timestamp
+
+
+logger = logging.getLogger(__name__)
 
 
 OBJECT_TYPE_OPTIONS = [
@@ -120,6 +124,7 @@ def safe_json_loads(value):
     try:
         return json.loads(value)
     except Exception:
+        logger.exception("Could not parse history JSON.")
         return {"raw": value}
 
 

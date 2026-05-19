@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch
 
 from llm_logging import extract_error_codes, extract_error_details
+from llm_logging import prepare_llm_content_for_storage
 from llm_providers import (
     generate_with_openrouter,
     generate_with_provider,
@@ -96,6 +97,26 @@ class LlmHelperTests(unittest.TestCase):
             calls[0][1]["json"]["messages"][0]["content"],
             "hello"
         )
+
+    def test_llm_content_logging_is_disabled_by_default(self):
+        with patch("llm_logging.get_config_bool", return_value=False):
+            prompt, response = prepare_llm_content_for_storage(
+                "secret prompt",
+                "secret response"
+            )
+
+        self.assertNotIn("secret prompt", prompt)
+        self.assertNotIn("secret response", response)
+
+    def test_llm_content_logging_can_be_enabled(self):
+        with patch("llm_logging.get_config_bool", return_value=True):
+            prompt, response = prepare_llm_content_for_storage(
+                "debug prompt",
+                "debug response"
+            )
+
+        self.assertEqual(prompt, "debug prompt")
+        self.assertEqual(response, "debug response")
 
 
 if __name__ == "__main__":

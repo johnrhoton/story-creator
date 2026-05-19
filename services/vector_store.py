@@ -1,10 +1,14 @@
 from abc import ABC, abstractmethod
+import logging
 
 from config import (
     VECTOR_COLLECTION_NAME,
     VECTOR_INDEX_NAME,
     VECTOR_PROVIDER,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 CHROMA_PATH = "data/chroma_db"
@@ -82,7 +86,7 @@ class ChromaVectorStore(VectorStore):
         try:
             client.delete_collection(COLLECTION_NAME)
         except Exception:
-            pass
+            logger.exception("Could not delete Chroma collection during reset.")
 
         get_chroma_collection()
 

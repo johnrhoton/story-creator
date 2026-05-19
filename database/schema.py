@@ -171,6 +171,26 @@ def create_tables():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS app_events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_type TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            status TEXT,
+            duration_ms REAL,
+            story_id INTEGER,
+            chapter_id INTEGER,
+            template_id INTEGER,
+            character_id INTEGER,
+            provider TEXT,
+            model TEXT,
+            token_estimate INTEGER,
+            error_type TEXT,
+            error_message TEXT,
+            metadata_json TEXT
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS authorized_users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL UNIQUE,

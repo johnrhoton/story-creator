@@ -36,6 +36,23 @@ def get_config_value(name, default=None):
     return default
 
 
+def get_config_bool(name, default=False):
+    value = get_config_value(name)
+
+    if value in (None, ""):
+        return default
+
+    if isinstance(value, bool):
+        return value
+
+    return str(value).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
 DEFAULT_LLM_PROVIDER = get_config_value("DEFAULT_LLM_PROVIDER", "Groq")
 DEFAULT_LLM_MODEL = get_config_value(
     "DEFAULT_LLM_MODEL",

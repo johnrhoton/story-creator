@@ -34,6 +34,7 @@ EXPORT_TABLES = [
     ("failed_llm_calls", "failed_llm_calls"),
     ("llm_models", "llm_models"),
     ("object_history", "object_history"),
+    ("app_events", "app_events"),
 ]
 
 
@@ -49,6 +50,7 @@ IMPORT_COUNT_KEYS = [
     "failed_llm_calls",
     "llm_models",
     "object_history",
+    "app_events",
 ]
 
 
@@ -817,6 +819,50 @@ def import_database_from_dict(
 
         counts["object_history"] += 1
 
+    # -------------------------
+    # App Events
+    # -------------------------
+
+    for event in sections["app_events"]:
+        cursor.execute("""
+            INSERT INTO app_events
+            (
+                event_type,
+                timestamp,
+                status,
+                duration_ms,
+                story_id,
+                chapter_id,
+                template_id,
+                character_id,
+                provider,
+                model,
+                token_estimate,
+                error_type,
+                error_message,
+                metadata_json
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            event.get("event_type", ""),
+            event.get("timestamp")
+            or datetime.now().isoformat(timespec="seconds"),
+            event.get("status", ""),
+            event.get("duration_ms"),
+            event.get("story_id"),
+            event.get("chapter_id"),
+            event.get("template_id"),
+            event.get("character_id"),
+            event.get("provider", ""),
+            event.get("model", ""),
+            event.get("token_estimate"),
+            event.get("error_type", ""),
+            event.get("error_message", ""),
+            event.get("metadata_json", ""),
+        ))
+
+        counts["app_events"] += 1
+
     if total_import_count(counts) or replace_existing:
         mark_local_data_modified(cursor)
 
@@ -842,6 +888,7 @@ def get_import_sections(data):
         "failed_llm_calls": data.get("failed_llm_calls", []),
         "llm_models": data.get("llm_models", []),
         "object_history": data.get("object_history", []),
+        "app_events": data.get("app_events", []),
     }
 
 
@@ -867,6 +914,7 @@ def total_import_count(counts):
 
 
 def clear_exported_tables(cursor):
+    cursor.execute("DELETE FROM app_events")
     cursor.execute("DELETE FROM object_history")
     cursor.execute("DELETE FROM llm_models")
     cursor.execute("DELETE FROM failed_llm_calls")

@@ -116,6 +116,7 @@ Planned for local, offline-capable deployment:
 | `VECTOR_PROVIDER` | Story Memory vector provider: `none`, `chroma`, or `mongodb_vector` | No |
 | `VECTOR_COLLECTION_NAME` | Vector collection name; defaults to `story_memory` | No |
 | `VECTOR_INDEX_NAME` | MongoDB Atlas Vector Search index name | Required for `mongodb_vector` |
+| `ENABLE_LLM_CONTENT_LOGGING` | Store full prompts/responses in LLM history; defaults to `false` | No |
 | `DATABASE_PASSWORD` | Database encryption password | No |
 
 *At least one LLM API key required for story/character generation

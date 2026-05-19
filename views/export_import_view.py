@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 import streamlit as st
 
@@ -17,7 +18,15 @@ from services.sync_service import (
     push_local_to_mongo,
     sync_now,
 )
+from services.observability_service import (
+    EVENT_EXPORT_CREATED,
+    EVENT_TEMPLATE_IMPORT,
+    record_event,
+)
 from ui_helpers import format_display_timestamp
+
+
+logger = logging.getLogger(__name__)
 
 
 def render_export_import_tab():
@@ -79,8 +88,19 @@ def render_export_import_tab():
                 "language": preview_language,
                 "signature": export_signature,
             }
+            record_event(
+                EVENT_EXPORT_CREATED,
+                status="completed",
+                metadata={
+                    "format": export_format.lower(),
+                    "filename": export_filename,
+                    "encrypted": encrypt_values,
+                    "bytes": len(export_data.encode("utf-8")),
+                },
+            )
 
         except Exception as error:
+            logger.exception("Export failed.")
             st.error(f"Export failed: {error}")
 
     prepared_export = st.session_state.get("prepared_export")
@@ -128,6 +148,7 @@ def render_export_import_tab():
             st.rerun()
 
         except Exception as error:
+            logger.exception("Database reinitialization failed.")
             st.error(f"Database reinitialization failed: {error}")
 
     st.divider()
@@ -169,10 +190,26 @@ def render_export_import_tab():
 
                 st.success("Import complete.")
                 st.json(result)
+                record_event(
+                    EVENT_TEMPLATE_IMPORT,
+                    status="completed",
+                    metadata={
+                        "filename": uploaded_file.name,
+                        "counts": result,
+                    },
+                )
 
                 st.rerun()
 
             except Exception as error:
+                logger.exception("Import failed.")
+                record_event(
+                    EVENT_TEMPLATE_IMPORT,
+                    status="failed",
+                    error_type=type(error).__name__,
+                    error_message=str(error),
+                    metadata={"filename": uploaded_file.name},
+                )
                 st.error(f"Import failed: {error}")
 
     st.divider()
@@ -204,6 +241,7 @@ def render_export_import_tab():
             st.write("Direction:", status["direction"])
 
         except Exception as error:
+            logger.exception("Could not check MongoDB sync status.")
             st.error(f"Could not check MongoDB sync status: {error}")
 
     if st.button("Sync now"):
@@ -221,6 +259,7 @@ def render_export_import_tab():
             st.rerun()
 
         except Exception as error:
+            logger.exception("MongoDB sync failed.")
             st.error(f"MongoDB sync failed: {error}")
 
     col_pull, col_push = st.columns(2)
@@ -236,6 +275,7 @@ def render_export_import_tab():
                 st.rerun()
 
             except Exception as error:
+                logger.exception("MongoDB pull failed.")
                 st.error(f"MongoDB pull failed: {error}")
 
     with col_push:
@@ -249,6 +289,7 @@ def render_export_import_tab():
                 st.rerun()
 
             except Exception as error:
+                logger.exception("MongoDB push failed.")
                 st.error(f"MongoDB push failed: {error}")
 
 

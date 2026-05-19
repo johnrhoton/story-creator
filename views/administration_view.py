@@ -1,3 +1,5 @@
+import logging
+
 import streamlit as st
 
 from services.admin_service import (
@@ -7,6 +9,9 @@ from services.admin_service import (
     edit_authorized_user,
     list_authorized_users,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def render_administration_tab():
@@ -60,6 +65,7 @@ def render_create_authorized_user_form():
         st.success("Authorized user added.")
         st.rerun()
     except Exception as error:
+        logger.exception("Could not add authorized user.")
         st.error(f"Could not add authorized user: {error}")
 
 
@@ -98,6 +104,7 @@ def render_authorized_user_editor(user):
                     st.success("Authorized user updated.")
                     st.rerun()
                 except Exception as error:
+                    logger.exception("Could not update authorized user.")
                     st.error(f"Could not update authorized user: {error}")
 
         if st.button(
@@ -109,6 +116,7 @@ def render_authorized_user_editor(user):
                 st.success("Authorized user deleted.")
                 st.rerun()
             except Exception as error:
+                logger.exception("Could not delete authorized user.")
                 st.error(f"Could not delete authorized user: {error}")
 
 

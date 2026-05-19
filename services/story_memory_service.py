@@ -1,3 +1,5 @@
+import logging
+
 from prompts import render_prompt_template_section
 from services.vector_store import (
     clean_metadata,
@@ -5,6 +7,15 @@ from services.vector_store import (
     get_vector_provider_status,
     get_vector_store,
 )
+from services.observability_service import (
+    EVENT_RAG_SEARCH_COMPLETED,
+    EVENT_RAG_SEARCH_FAILED,
+    EVENT_RAG_SEARCH_STARTED,
+    operation_events,
+)
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_collection():
@@ -23,6 +34,7 @@ def safe_upsert_memory(item_id: str, text: str, metadata: dict) -> bool:
     try:
         upsert_memory(item_id, text, metadata)
     except Exception:
+        logger.exception("Could not upsert story memory item: %s", item_id)
         return False
 
     return True
@@ -33,11 +45,20 @@ def search_memory(
     n_results: int = 5,
     where: dict | None = None
 ) -> list[dict]:
-    return get_vector_store().search(
-        query,
-        n_results=n_results,
-        where=where,
-    )
+    with operation_events(
+        EVENT_RAG_SEARCH_STARTED,
+        EVENT_RAG_SEARCH_COMPLETED,
+        EVENT_RAG_SEARCH_FAILED,
+        metadata={
+            "n_results": n_results,
+            "where": where or {},
+        },
+    ):
+        return get_vector_store().search(
+            query,
+            n_results=n_results,
+            where=where,
+        )
 
 
 def safe_search_memory(
@@ -48,6 +69,7 @@ def safe_search_memory(
     try:
         return search_memory(query, n_results=n_results, where=where)
     except Exception:
+        logger.exception("Story memory search failed.")
         return []
 
 
@@ -65,6 +87,7 @@ def safe_list_memory_items(
     try:
         return list_memory_items(limit=limit, where=where)
     except Exception:
+        logger.exception("Could not list story memory items.")
         return []
 
 
@@ -76,6 +99,7 @@ def safe_delete_memory(item_id: str) -> bool:
     try:
         delete_memory(item_id)
     except Exception:
+        logger.exception("Could not delete story memory item: %s", item_id)
         return False
 
     return True
@@ -162,6 +186,7 @@ def build_story_generation_memory(
         return format_story_memory_context(filtered)
 
     except Exception:
+        logger.exception("Could not build story generation memory.")
         return ""
 
 

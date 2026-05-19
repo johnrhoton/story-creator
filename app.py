@@ -1,3 +1,5 @@
+import logging
+
 import streamlit as st
 
 from database import (
@@ -8,7 +10,15 @@ from database import (
     seed_common_names,
 )
 from services.auth_service import current_user_is_administrator, require_login
+from services.observability_service import EVENT_APP_START, record_event
 from services.vector_store import get_vector_provider_status
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def get_view_index_from_query_params(view_options):
@@ -48,11 +58,23 @@ try:
     create_tables()
     seed_common_names()
 except Exception as error:
+    logger.exception("Database startup failed.")
     st.error(
         "Database startup failed for "
         f"{database_provider_status['label']}: {error}"
     )
     st.stop()
+
+if not st.session_state.get("observability_app_start_logged"):
+    record_event(
+        EVENT_APP_START,
+        status="completed",
+        metadata={
+            "database_provider": database_provider_status["provider"],
+            "vector_provider": get_vector_provider_status()["provider"],
+        },
+    )
+    st.session_state["observability_app_start_logged"] = True
 
 require_login()
 
@@ -62,6 +84,7 @@ from views.export_import_view import render_export_import_tab
 from views.language_aids_view import render_language_aids_tab
 from views.history_view import render_history_tab
 from views.models_view import render_models_tab
+from views.observability_view import render_observability_tab
 from views.profiles_view import render_profiles_tab
 from views.story_memory_view import render_story_memory_tab
 from views.sidebar_view import render_llm_settings_sidebar
@@ -97,6 +120,7 @@ VIEW_OPTIONS = [
 
 if current_user_is_administrator():
     VIEW_OPTIONS.append("Administration")
+    VIEW_OPTIONS.append("Debug / Observability")
 
 active_view = st.radio(
     "View",
@@ -136,3 +160,6 @@ elif active_view == "Export / Import":
 
 elif active_view == "Administration":
     render_administration_tab()
+
+elif active_view == "Debug / Observability":
+    render_observability_tab()

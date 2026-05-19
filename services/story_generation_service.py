@@ -1,4 +1,5 @@
 import json
+import logging
 
 import streamlit as st
 
@@ -22,6 +23,18 @@ from services.story_memory_service import (
     build_story_generation_memory,
 )
 from services.story_beat_service import safe_extract_save_and_index_story_beats
+from services.observability_service import (
+    EVENT_CHAPTER_GENERATION_COMPLETED,
+    EVENT_CHAPTER_GENERATION_FAILED,
+    EVENT_CHAPTER_GENERATION_STARTED,
+    EVENT_STORY_GENERATION_COMPLETED,
+    EVENT_STORY_GENERATION_FAILED,
+    EVENT_STORY_GENERATION_STARTED,
+    operation_events,
+)
+
+
+logger = logging.getLogger(__name__)
 
 
 class LLMGenerationError(RuntimeError):
@@ -29,6 +42,20 @@ class LLMGenerationError(RuntimeError):
 
 
 def generate_story_chapters(story_id, progress_callback=None):
+    try:
+        with operation_events(
+            EVENT_STORY_GENERATION_STARTED,
+            EVENT_STORY_GENERATION_COMPLETED,
+            EVENT_STORY_GENERATION_FAILED,
+            story_id=story_id,
+        ):
+            return _generate_story_chapters(story_id, progress_callback)
+    except Exception:
+        logger.exception("Story generation failed for story_id=%s", story_id)
+        raise
+
+
+def _generate_story_chapters(story_id, progress_callback=None):
     story = get_story(story_id)
 
     if not story:
@@ -59,14 +86,78 @@ def generate_story_chapters(story_id, progress_callback=None):
     previous_summaries = []
 
     for chapter in chapters:
-        (
+        previous_summaries = generate_chapter_from_story_row(
+            chapter,
+            story_id,
+            total_chapters,
+            progress_callback,
+            overview,
+            setting_background,
+            tone_style,
+            additional_instructions,
+            language,
+            language_level,
+            outline,
+            characters,
+            previous_summaries,
+        )
+
+
+def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callback=None):
+    try:
+        with operation_events(
+            EVENT_CHAPTER_GENERATION_STARTED,
+            EVENT_CHAPTER_GENERATION_COMPLETED,
+            EVENT_CHAPTER_GENERATION_FAILED,
+            story_id=story_id,
+            chapter_id=chapter_id,
+        ):
+            return _generate_story_chapter_body_and_summary(
+                story_id,
+                chapter_id,
+                progress_callback
+            )
+    except Exception:
+        logger.exception(
+            "Chapter generation failed for story_id=%s chapter_id=%s",
+            story_id,
             chapter_id,
-            _chapter_story_id,
-            chapter_number,
-            chapter_description,
-            _chapter_body,
-            _chapter_summary
-        ) = chapter
+        )
+        raise
+
+
+def generate_chapter_from_story_row(
+    chapter,
+    story_id,
+    total_chapters,
+    progress_callback,
+    overview,
+    setting_background,
+    tone_style,
+    additional_instructions,
+    language,
+    language_level,
+    outline,
+    characters,
+    previous_summaries,
+):
+    (
+        chapter_id,
+        _chapter_story_id,
+        chapter_number,
+        chapter_description,
+        _chapter_body,
+        _chapter_summary
+    ) = chapter
+
+    with operation_events(
+        EVENT_CHAPTER_GENERATION_STARTED,
+        EVENT_CHAPTER_GENERATION_COMPLETED,
+        EVENT_CHAPTER_GENERATION_FAILED,
+        story_id=story_id,
+        chapter_id=chapter_id,
+        metadata={"chapter_number": chapter_number},
+    ):
         if progress_callback:
             progress_callback(chapter_number, total_chapters)
 
@@ -165,12 +256,12 @@ def generate_story_chapters(story_id, progress_callback=None):
             chapter_body
         )
 
-        previous_summaries.append(
-            f"Chapter {chapter_number}: {chapter_summary}"
-        )
+    return previous_summaries + [
+        f"Chapter {chapter_number}: {chapter_summary}"
+    ]
 
 
-def generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callback=None):
+def _generate_story_chapter_body_and_summary(story_id, chapter_id, progress_callback=None):
     story = get_story(story_id)
 
     if not story:
@@ -450,4 +541,5 @@ def safe_json_loads(value):
     try:
         return json.loads(value)
     except Exception:
+        logger.exception("Could not parse story character selection JSON.")
         return []

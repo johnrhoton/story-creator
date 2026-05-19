@@ -1,3 +1,5 @@
+import logging
+
 import streamlit as st
 
 from database import (
@@ -9,6 +11,9 @@ from config import DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 from services.auth_service import render_auth_sidebar
 from services.llm_defaults_service import save_llm_defaults
 from services.model_service import list_llm_models_by_provider
+
+
+logger = logging.getLogger(__name__)
 
 
 PROVIDER_OPTIONS = ["Gemini", "Groq", "OpenRouter"]
@@ -162,6 +167,7 @@ def render_llm_settings_sidebar():
                 st.success("Configured database fields encrypted.")
                 st.rerun()
             except Exception as error:
+                logger.exception("Could not update database encryption.")
                 st.error(f"Could not update database encryption: {error}")
 
         st.divider()

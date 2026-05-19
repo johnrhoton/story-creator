@@ -150,6 +150,16 @@ Google-authenticated user whitelist:
 
 The database is seeded with `rhoton@gmail.com` as `Administrator`.
 
+#### `app_events`
+Lightweight structured observability events:
+- `id`: Primary key
+- `event_type`, `timestamp`, `status`: Event identity and state
+- `duration_ms`: Operation duration when measured
+- `story_id`, `chapter_id`, `template_id`, `character_id`: Optional object context
+- `provider`, `model`, `token_estimate`: Optional LLM context
+- `error_type`, `error_message`: Optional failure details
+- `metadata_json`: Optional structured metadata as JSON text
+
 ### Synchronization
 
 #### `sync_metadata`

@@ -28,6 +28,7 @@ TABLE_COLLECTIONS = {
     "failed_llm_calls": "failed_llm_calls",
     "llm_models": "llm_models",
     "object_history": "object_history",
+    "app_events": "app_events",
     "sync_metadata": "sync_metadata",
 }
 
@@ -60,6 +61,7 @@ def ensure_mongo_indexes():
     get_collection("stories").create_index("story_name", unique=True)
     get_collection("llm_models").create_index([("provider", 1), ("model", 1)], unique=True)
     get_collection("common_names").create_index([("gender", 1), ("name", 1)], unique=True)
+    get_collection("app_events").create_index([("timestamp", -1), ("id", -1)])
 
 
 def reinitialize_database():
@@ -795,6 +797,73 @@ def get_object_history():
     return [
         tuple_from_doc(doc, ["id", "created_at", "object_type", "object_id", "object_name", "operation", "contents"])
         for doc in get_collection("object_history").find().sort([("created_at", -1), ("id", -1)])
+    ]
+
+
+def log_app_event(
+    event_type,
+    status="",
+    duration_ms=None,
+    story_id=None,
+    chapter_id=None,
+    template_id=None,
+    character_id=None,
+    provider="",
+    model="",
+    token_estimate=None,
+    error_type="",
+    error_message="",
+    metadata_json="",
+    timestamp=None,
+):
+    event_id = get_next_id("app_events")
+    get_collection("app_events").insert_one({
+        "_id": event_id,
+        "id": event_id,
+        "event_type": event_type,
+        "timestamp": timestamp or now(),
+        "status": status or "",
+        "duration_ms": duration_ms,
+        "story_id": story_id,
+        "chapter_id": chapter_id,
+        "template_id": template_id,
+        "character_id": character_id,
+        "provider": provider or "",
+        "model": model or "",
+        "token_estimate": token_estimate,
+        "error_type": error_type or "",
+        "error_message": error_message or "",
+        "metadata_json": metadata_json or "",
+    })
+    return event_id
+
+
+def get_app_events(limit=100):
+    return [
+        tuple_from_doc(
+            doc,
+            [
+                "id",
+                "event_type",
+                "timestamp",
+                "status",
+                "duration_ms",
+                "story_id",
+                "chapter_id",
+                "template_id",
+                "character_id",
+                "provider",
+                "model",
+                "token_estimate",
+                "error_type",
+                "error_message",
+                "metadata_json",
+            ]
+        )
+        for doc in get_collection("app_events")
+        .find()
+        .sort([("timestamp", -1), ("id", -1)])
+        .limit(int(limit or 100))
     ]
 
 

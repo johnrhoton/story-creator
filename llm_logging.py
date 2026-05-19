@@ -1,15 +1,24 @@
+from config import get_config_bool
 from database import save_failed_llm_call, save_llm_call
+
+
+LLM_CONTENT_LOGGING_FLAG = "ENABLE_LLM_CONTENT_LOGGING"
 
 
 def log_llm_call(provider, model, prompt, response):
     if response is None:
         return
 
+    stored_prompt, stored_response = prepare_llm_content_for_storage(
+        prompt,
+        response
+    )
+
     save_llm_call(
         provider,
         model,
-        prompt,
-        response
+        stored_prompt,
+        stored_response
     )
 
 
@@ -54,15 +63,30 @@ def log_failed_llm_call(
     error_message,
     error_details
 ):
+    stored_prompt, stored_response = prepare_llm_content_for_storage(
+        prompt,
+        response or ""
+    )
+
     save_failed_llm_call(
         provider,
         model,
-        prompt,
-        response or "",
+        stored_prompt,
+        stored_response,
         error_type or "",
         error_codes or "",
         error_message or "",
         error_details or ""
+    )
+
+
+def prepare_llm_content_for_storage(prompt, response):
+    if get_config_bool(LLM_CONTENT_LOGGING_FLAG, False):
+        return prompt or "", response or ""
+
+    return (
+        "[prompt logging disabled]",
+        "[response logging disabled]" if response else "",
     )
 
 

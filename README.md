@@ -66,11 +66,15 @@ APP_MONGO_URI=
 APP_MONGO_DATABASE=story_builder
 BACKUP_MONGO_URI=
 BACKUP_MONGO_DATABASE=story_builder
+ENABLE_LLM_CONTENT_LOGGING=false
 ```
 
 Mongo database names are optional. If omitted, the app uses `story_builder`.
 Existing legacy MongoDB backups using the `story_creator_main` document ID are
 still checked as a fallback.
+Full prompt/response storage in LLM call history is disabled by default; set
+`ENABLE_LLM_CONTENT_LOGGING=true` only when you intentionally want that local
+debug detail.
 
 ## Import, Export, And Sync
 

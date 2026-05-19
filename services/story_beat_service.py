@@ -1,4 +1,5 @@
 import json
+import logging
 
 import streamlit as st
 
@@ -16,6 +17,9 @@ from services.story_memory_service import (
     safe_list_memory_items,
     safe_upsert_memory,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 ALLOWED_BEAT_TYPES = {
@@ -151,6 +155,11 @@ def safe_extract_save_and_index_story_beats(
         save_and_index_story_beats(story_id, chapter_number, beats)
         return beats
     except Exception:
+        logger.exception(
+            "Could not extract story beats for story_id=%s chapter_number=%s",
+            story_id,
+            chapter_number,
+        )
         return []
 
 
@@ -164,6 +173,7 @@ def safe_extract_missing_story_beats_for_story(story_id: int) -> dict:
     try:
         chapters = get_story_chapters(story_id)
     except Exception:
+        logger.exception("Could not load chapters for story beat extraction.")
         return counts
 
     for chapter in chapters:
@@ -187,6 +197,7 @@ def safe_extract_missing_story_beats_for_story(story_id: int) -> dict:
                 chapter_number=chapter_number
             )
         except Exception:
+            logger.exception("Could not load existing story beats.")
             existing_beats = []
 
         if existing_beats:

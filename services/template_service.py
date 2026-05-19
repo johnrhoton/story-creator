@@ -1,4 +1,5 @@
 import json
+import logging
 
 from database import (
     add_story_template,
@@ -17,6 +18,9 @@ from database import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 def parse_character_roles(roles_value):
     if not roles_value:
         return []
@@ -29,7 +33,7 @@ def parse_character_roles(roles_value):
         if isinstance(parsed, list):
             return [str(role) for role in parsed if role is not None]
     except Exception:
-        pass
+        logger.exception("Could not parse template character roles JSON.")
 
     return [line.strip() for line in str(roles_value).splitlines() if line.strip()]
 

@@ -73,6 +73,10 @@ def run_migrations():
             "20260518120000_authorized_users",
             migrate_20260518120000_authorized_users
         ),
+        (
+            "20260519070000_app_events",
+            migrate_20260519070000_app_events
+        ),
     ]
 
     for migration_id, migration in migrations:
@@ -617,3 +621,27 @@ def migrate_20260518120000_authorized_users(cursor):
     from database.authorized_users import seed_default_authorized_user
 
     seed_default_authorized_user(cursor)
+
+
+# 2026-05-19 07:00
+# Store structured application events for lightweight observability.
+def migrate_20260519070000_app_events(cursor):
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS app_events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_type TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            status TEXT,
+            duration_ms REAL,
+            story_id INTEGER,
+            chapter_id INTEGER,
+            template_id INTEGER,
+            character_id INTEGER,
+            provider TEXT,
+            model TEXT,
+            token_estimate INTEGER,
+            error_type TEXT,
+            error_message TEXT,
+            metadata_json TEXT
+        )
+    """)

@@ -40,6 +40,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `model_service.py`: LLM model operations
   - `auth_service.py`: Google OIDC login and SQLite authorization checks
   - `admin_service.py`: Authorized user CRUD workflow
+  - `observability_service.py`: Lightweight structured app events and timing helpers
   - `sync_service.py`: MongoDB synchronization
 - **Technology**: Python business logic, integrates with database and LLM client
 
@@ -59,6 +60,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `object_history.py`: CRUD history records for user-visible objects
   - `story_beats.py`: Persisted story-memory beats extracted from chapters
   - `authorized_users.py`: Authorized Google user whitelist and roles
+  - `observability.py`: App event logging and recent-event lookup
 - **Technology**: Configurable provider: SQLite locally by default, or MongoDB Atlas with `DB_PROVIDER=mongodb` and `APP_MONGO_URI`
 
 ### 4. LLM Integration
@@ -115,6 +117,15 @@ stories or individual chapters. They use editable prompt templates, service-laye
 JSON parsing, Streamlit display tables, and CSV downloads.
 
 For the end-to-end flow, see `docs/language_aids.md`.
+
+## Observability
+
+The app uses standard Python logging plus a backend-neutral `app_events` table
+for structured events such as app startup, story/chapter generation, RAG search,
+imports, exports, and LLM calls. Timing helpers live in
+`services/observability_service.py`. The Streamlit Administration-only
+`Debug / Observability` tab shows recent events. Full prompt/response storage is
+disabled by default and controlled by `ENABLE_LLM_CONTENT_LOGGING`.
 
 ## Entry Point
 

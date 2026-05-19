@@ -78,6 +78,7 @@ APP_MONGO_URI="..."
 APP_MONGO_DATABASE="story_builder"
 BACKUP_MONGO_URI="..."
 BACKUP_MONGO_DATABASE="story_builder"
+ENABLE_LLM_CONTENT_LOGGING="false"
 ```
 
 Important config behavior:
@@ -88,6 +89,8 @@ Important config behavior:
   parity path for local and cloud usage.
 - `DEFAULT_LLM_PROVIDER` and `DEFAULT_LLM_MODEL` are read from the shared config
   helper and saved locally by `services/llm_defaults_service.py`.
+- Full prompt/response storage in LLM history is disabled by default. Use
+  `ENABLE_LLM_CONTENT_LOGGING=true` only for intentional local debugging.
 - `.streamlit/secrets.toml`, `.env`, database files, WAL/SHM files, exports,
   logs, and virtualenv folders are local-only and should not be committed.
 

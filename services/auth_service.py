@@ -1,4 +1,5 @@
 from collections.abc import Mapping
+import logging
 
 import streamlit as st
 from streamlit.errors import StreamlitAuthError
@@ -8,6 +9,9 @@ from database import (
     bind_authorized_user_google_sub,
     get_authorized_user_by_identity,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def require_login():
@@ -24,8 +28,10 @@ def require_login():
                     st.login()
             except StreamlitAuthError as error:
                 if "Authlib" not in str(error):
+                    logger.exception("Streamlit authentication failed.")
                     raise
 
+                logger.exception("Authlib is missing for Streamlit authentication.")
                 st.error(
                     "Authentication requires Authlib. Install dependencies "
                     "with `venv/bin/pip install -r requirements.txt`, then "

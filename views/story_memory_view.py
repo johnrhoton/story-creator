@@ -1,3 +1,5 @@
+import logging
+
 import streamlit as st
 
 from database import get_story_beats, get_story_chapters
@@ -13,6 +15,9 @@ from services.story_beat_service import (
     safe_extract_missing_story_beats_for_story,
     safe_extract_save_and_index_story_beats,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def render_story_memory_tab():
@@ -63,6 +68,7 @@ def render_rebuild_section():
                 f"{counts.get('characters', 0)} characters."
             )
         except Exception as error:
+            logger.exception("Story Memory rebuild failed.")
             st.error(f"Story Memory rebuild failed: {error}")
 
 
@@ -127,6 +133,7 @@ def render_search_results(query, n_results):
     try:
         matches = search_memory(query, n_results=n_results)
     except Exception as error:
+        logger.exception("Story Memory search failed.")
         st.error(f"Story Memory search failed: {error}")
         return
 
@@ -165,6 +172,7 @@ def render_story_memory_preview(story_id_input, user_request, n_results):
             n_results=n_results,
         )
     except Exception as error:
+        logger.exception("Failed to build story memory preview.")
         st.error(f"Failed to build story memory: {error}")
         return
 
@@ -367,6 +375,7 @@ def render_story_beat_search_results(query, n_results, story_id=None):
             where={"type": "story_beat"}
         )
     except Exception as error:
+        logger.exception("Story beat search failed.")
         st.error(f"Story beat search failed: {error}")
         return
 

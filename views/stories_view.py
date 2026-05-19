@@ -1,6 +1,7 @@
 # views/stories_view.py
 
 import json
+import logging
 
 import streamlit as st
 
@@ -38,6 +39,9 @@ from services.template_service import parse_character_roles
 from views.bulk_actions import render_bulk_actions
 from views.language_aids_view import build_language_aids_url
 from ui_helpers import format_display_timestamp
+
+
+logger = logging.getLogger(__name__)
 
 
 CEFR_LEVEL_OPTIONS = ["", "A1", "A2", "B1", "B2", "C1", "C2"]
@@ -229,6 +233,7 @@ def render_stories_tab():
                     st.rerun()
 
                 except Exception as error:
+                    logger.exception("Story creation failed.")
                     st.error(f"Story creation failed: {error}")
 
     st.divider()
@@ -543,6 +548,7 @@ def render_story_chapters_section(
             st.rerun()
 
         except Exception as error:
+            logger.exception("Chapter generation failed.")
             st.error(f"Chapter generation failed: {error}")
 
 
@@ -635,6 +641,7 @@ def render_story_chapter_expander(chapter, source_language=""):
                         "Chapter generation did not return any text."
                     )
             except Exception as error:
+                logger.exception("Chapter generation failed.")
                 st.error(f"Chapter generation failed: {error}")
 
         render_glossary_controls(
@@ -819,6 +826,7 @@ def safe_json_loads(value):
     try:
         return json.loads(value)
     except Exception:
+        logger.exception("Could not parse story view JSON.")
         return []
 
 

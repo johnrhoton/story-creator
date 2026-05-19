@@ -59,6 +59,7 @@ if using_mongodb():
         get_llm_models_by_provider,
         get_llm_models_for_export,
         get_object_history,
+        get_app_events,
         get_profiles,
         get_profiles_for_export,
         get_stories,
@@ -79,6 +80,7 @@ if using_mongodb():
         is_database_encrypted_value,
         is_database_encryption_enabled,
         log_object_history,
+        log_app_event,
         mark_local_data_modified,
         prepare_export_data,
         reinitialize_database,
@@ -168,6 +170,11 @@ else:
     from database.object_history import (
         get_object_history,
         log_object_history,
+    )
+
+    from database.observability import (
+        get_app_events,
+        log_app_event,
     )
 
     from database.migrations import run_migrations
