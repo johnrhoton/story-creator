@@ -71,6 +71,9 @@ def reinitialize_database():
     db["common_names"].delete_many({})
     db["counters"].delete_many({})
     create_tables()
+    from database.load_seed import seed_database_from_load_folder
+
+    seed_database_from_load_folder()
 
 
 def mark_local_data_modified(_cursor=None, timestamp=None):

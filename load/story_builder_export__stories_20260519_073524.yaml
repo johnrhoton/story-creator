@@ -1,0 +1,1861 @@
+exported_at: '2026-05-19T07:35:24'
+stories:
+- id: 29
+  created_at: '2026-05-19T06:38:49'
+  story_name: French Detective Noir B2
+  template_id: 24
+  overview: Mason investigates a murder connected to corruption, organised crime,
+    and the disappearance of Millie.
+  setting_background: Rain-soaked city streets, smoky bars, corrupt institutions,
+    and dangerous criminal networks.
+  tone_style: Cynical, tense, morally ambiguous
+  additional_instructions: ''
+  language: French
+  language_level: B2
+  male_characters: '["Mason", "William"]'
+  female_characters: '["Millie", "Rose"]'
+- id: 30
+  created_at: '2026-05-19T06:45:08'
+  story_name: German Enchanted Fairy Tale B1
+  template_id: 25
+  overview: Jasper discovers that Rose is connected to an ancient magical curse threatening
+    the kingdom.
+  setting_background: A medieval kingdom of enchanted forests, hidden ruins, magical
+    creatures, and isolated castles.
+  tone_style: Wonder-filled, adventurous, emotional
+  additional_instructions: ''
+  language: German
+  language_level: B1
+  male_characters: '["Jasper", "Noah"]'
+  female_characters: '["Rose", "Violet"]'
+- id: 31
+  created_at: '2026-05-19T06:53:44'
+  story_name: Swedish Historical Mystery A1
+  template_id: 27
+  overview: Maisie investigates a political conspiracy after Vinnie disappears under
+    suspicious circumstances.
+  setting_background: A politically divided historical capital filled with class tensions,
+    noble estates, and secret societies.
+  tone_style: Atmospheric, suspenseful, intelligent
+  additional_instructions: ''
+  language: Swedish
+  language_level: A1
+  male_characters: '["Vinnie", "Noah"]'
+  female_characters: '["Maisie", "Isabelle"]'
+- id: 32
+  created_at: '2026-05-19T07:00:47'
+  story_name: Turkish Romantic Drama A1
+  template_id: 30
+  overview: Mason and Iris form an unexpected emotional connection while struggling
+    with past wounds and conflicting ambitions.
+  setting_background: Modern urban life shaped by careers, family expectations, cafés,
+    apartments, and social gatherings.
+  tone_style: Emotional, character-driven, realistic
+  additional_instructions: ''
+  language: Turkish
+  language_level: A1
+  male_characters: '["Mason"]'
+  female_characters: '["Iris", "Maisie"]'
+story_chapters:
+- id: 129
+  story_id: 29
+  chapter_number: 0
+  chapter_description: Establish the setting and introduce the characters.
+  chapter_body: 'La pluie tombait sans relâche sur les rues pavées de la ville, chaque
+    gouttelette reflétant la lueur malsaine des réverbères. L''air, lourd d''humidité,
+    transportait des odeurs âcres de gaz d''échappement et de fumée rance, s''insinuant
+    dans les vêtements et collant à la peau. C''était une ville qui vivait dans l''ombre,
+    où les institutions tremblaient sous le poids de la corruption et où les réseaux
+    criminels tissaient leurs toiles dans l''obscurité.
+
+
+    Dans un bar enfumé, le « Black Cat », où les néons fatigués peignaient des auréoles
+    malsaines sur les visages des rares clients, Mason remuait distraitement son verre
+    d''alcool tiède. Ses lunettes à monture métallique glissaient sur le bout de son
+    nez, et ses yeux, derrière elles, balayaient la salle d''un air nerveux. D''apparence
+    frêle, presque éthérée, il dégageait pourtant un charisme étrange, une aisance
+    sociale qui contrastait avec sa nervosité palpable. Son esprit agile, habitué
+    aux subtilités des interactions humaines, semblait un peu perdu dans ce décor
+    brut. Il préférait de loin les labyrinthes intellectuels aux ruelles sombres,
+    mais la ville avait une façon de le ramener à ses instincts.
+
+
+    Une silhouette se pencha alors vers sa table, une présence imposante dans ce décor
+    étriqué. William, malgré les cicatrices qui marquaient son visage et ses bras,
+    dégageait une aura de résilience indéniable et une forme de discipline qui semblait
+    anachronique. Ses yeux, pourtant fatigués par une vie peut-être trop longue, conservaient
+    une étincelle d''optimisme, une quête incessante de sens qui le tenait en mouvement.
+    Il s''assit avec une fluidité surprenante pour quelqu''un qui semblait porter
+    le poids des siècles.
+
+
+    « Ce n’est pas un endroit pour réfléchir, Mason », lança William, sa voix un murmure
+    grave couvrant le brouhaha ambiant. Il posa une main sur la table, ses doigts
+    marqués par le temps mais ses gestes précis.
+
+
+    Mason leva les yeux, un léger sourire effleurant ses lèvres. « J’y suis invité,
+    apparemment. Par les circonstances. » Sa nature parfois manipulatrice se réveillait,
+    même dans ce cadre peu propice.
+
+
+    La porte du Black Cat s''ouvrit brusquement, laissant entrer un courant d''air
+    froid et le silhouette de Millie. Elle s''avançait avec une détermination qui
+    semblait capable de fendre les murs. Ses bras musclés, ses vêtements pratiques
+    et sa posture robuste témoignaient d''une vie façonnée par l''effort physique.
+    Il y avait en elle une énergie irrépressible, une farouche protection de ce qui
+    lui était cher. Son regard scrutateur semblait évaluer chaque recoin de la pièce,
+    à la recherche de quelque chose ou de quelqu''un. Elle n''était pas du genre à
+    attendre. Elle agissait.
+
+
+    Au comptoir, à l''abri des regards les plus insistants, Rose observait la scène
+    d''un œil froid et calculateur. Son corps athlétique était gainé dans des vêtements
+    fonctionnels, et ses mains, marquées par les épreuves, reposaient calmement sur
+    la surface polie du bar. Son regard intense trahissait une discipline de fer et
+    une ambition qui la poussaient sans relâche. Une certaine distance émotionnelle
+    émanait d''elle, le fruit d''une vie où les défis avaient imposé une autosuffisance
+    redoutable.
+
+
+    La pluie continuait de laver la ville de ses péchés, mais pour Mason, William,
+    Millie et Rose, elle ne faisait qu''intensifier la tension sous-jacente, annonçant
+    les événements à venir. Chacun, à sa manière, était une pièce sur un échiquier
+    sombre, où la corruption et le crime jouaient sans pitié, et où les vies humaines
+    n''étaient souvent que des pions négligeables.'
+  chapter_summary: "Voici un résumé du chapitre sous forme de notes de continuité\
+    \ concises, en français au niveau B2 CEFR :\n\n**Notes de continuité :**\n\n*\
+    \   **Lieu :** Ville pluvieuse et sombre, marquée par la corruption. Bar \"Black\
+    \ Cat\", enfumé, atmosphère lourde.\n*   **Personnages introduits/présents :**\n\
+    \    *   **Mason :** Apparence frêle, intellectuel, nerveux, charismatique maladroitement.\
+    \ À l'aise en interaction mais désorienté par le monde réel. Arrivé au bar \"\
+    par les circonstances\".\n    *   **William :** Présence imposante, cicatrices,\
+    \ résilient, discipliné, optimiste malgré une vie longue. Recherche de sens. S'assoit\
+    \ avec Mason.\n    *   **Millie :** Arrive au bar. Déterminée, musclée, pratique,\
+    \ énergie forte, protective. Recherche activement.\n    *   **Rose :** Au comptoir,\
+    \ observatrice, froide, calculatrice, athlétique, disciplinée, ambitieuse, émotionnellement\
+    \ distante, auto-suffisante.\n*   **Événements :** La pluie persiste. Les quatre\
+    \ personnages sont réunis (ou présents) dans le même bar. William s'adresse à\
+    \ Mason. Millie entre avec détermination. Rose observe.\n*   **Révélations :**\
+    \ La ville est corrompue et dominée par le crime. Chaque personnage semble avoir\
+    \ un rôle à jouer dans un jeu plus large et dangereux.\n*   **Tensions irrésolues\
+    \ :** Pourquoi Mason est-il là ? Qu'est-ce que Millie recherche ? Quelle est la\
+    \ connexion entre ces personnages ? L'ambiance générale est tendue, annonçant\
+    \ des événements futurs.\n*   **Changement émotionnel :** Nervosité chez Mason,\
+    \ sentiment de résilience et d'optimisme chez William, détermination chez Millie,\
+    \ calcul et distance chez Rose. Globalement, une atmosphère d'anticipation et\
+    \ de danger.\n*   **État final :** Les quatre personnages sont maintenant dans\
+    \ le même espace, leur présence conjuguée accentue la tension. La pluie continue,\
+    \ symbolisant une atmosphère persistante de malaise et d'intrigue. Ils sont tous\
+    \ décrits comme des \"pièces sur un échiquier sombre\"."
+- id: 130
+  story_id: 29
+  chapter_number: 1
+  chapter_description: Mason is hired to investigate the disappearance of Millie.
+  chapter_body: 'La pluie n''avait pas cessé depuis des jours, transformant les rues
+    de la ville en rivières d''eau sale sous des réverbères malades. Mason s''était
+    réfugié dans l''obscurité enfumée du "Black Cat", le col de son manteau remonté,
+    l''esprit aussi embrouillé que l''air chargé d''odeurs de bière éventée et de
+    regrets. Il n''était pas du genre à fréquenter ce genre d''endroits, mais les
+    circonstances, comme il l''avait dit à William la veille, avaient une façon bien
+    à elles de vous pousser dans vos retranchements. La conversation avec l''homme
+    cicatrisé, aussi énigmatique qu''une énigme non résolue, n''avait fait qu''épaissir
+    son malaise. Il n''avait aucune idée de ce qu''il faisait là, à part s''efforcer
+    de paraître moins perdu qu''il ne l''était.
+
+
+    C''est alors qu''elle entra, fendant l''air déjà lourd d''une brise glaciale.
+    Millie. Elle avait la détermination brute d''une force de la nature, chaque mouvement
+    de ses bras musclés trahissant une puissance contenue. Ses yeux scrutaient la
+    salle avec une intensité qui transperçait le brouillard ambiant. Elle ne cherchait
+    pas une place pour boire, elle cherchait quelque chose, ou quelqu''un. Son regard
+    croisa brièvement celui de Mason, un éclair de reconnaissance muette avant de
+    se fixer sur une table dans le fond, où un homme à l''air affairé semblait attendre.
+
+
+    Mason resta figé, l''observation de Millie et de sa quête active le ramenant brutalement
+    à la réalité de cette ville. Le souvenir de sa propre arrivée au "Black Cat",
+    presque par accident, lui semblait maintenant étrangement lointain. Il avait l''impression
+    d''être une pièce déplacée sur un échiquier dont il ignorait encore les règles.
+    C''est alors qu''une femme s''approcha de sa table, discrètement mais avec une
+    assurance qui réprimait le bruit environnant. Rose. Elle portait la même rigueur
+    disciplinée que William, mais émanait d''elle une froideur calculatrice que l''homme
+    plus âgé n''avait pas.
+
+
+    "Monsieur Mason ?" Sa voix était juste assez forte pour être entendue, coupant
+    à travers le murmure du bar. Mason se redressa, surpris. Il ne se souvenait pas
+    avoir donné son nom à qui que ce soit.
+
+
+    "C''est moi," répondit-il, sa voix un peu plus ténue qu''il ne l''aurait souhaité.
+    Il n''avait pas la carrure de William, ni l''énergie brute de Millie. Il se sentait
+    toujours un peu fragile au milieu de cette faune urbaine. Les lunettes sur son
+    nez semblaient tout à coup particulièrement ridicules.
+
+
+    Rose inclina légèrement la tête, son regard intense ne le quittant pas. "J''ai
+    une proposition pour vous. Une affaire." Elle marqua une pause, observant sa réaction.
+    "Il s''agit de retrouver quelqu''un. Une jeune femme..." Son regard dévia brièvement
+    vers Millie, qui était maintenant assise et discutait à voix basse avec l''homme
+    assis en face d''elle. "...disparue."
+
+
+    Mason sentit un frisson lui parcourir l''échine, un mélange d''appréhension et
+    de ce curieux mélange de crainte et d''excitation qui le traversait lorsqu''une
+    énigme se présentait à lui. Le mot "disparue" résonnait étrangement, se greffant
+    à l''image de Millie, si manifestement présente et déterminée. "Une disparition
+    ?" répéta-t-il, essayant de dissimuler sa nervosité derrière une façade d''intérêt
+    professionnel. Bien qu''il préférât les chiffres et les intellectuels aux rues
+    sombres, un appel à l''aide, une énigme humaine, avait toujours une certaine emprise
+    sur lui.
+
+
+    Rose hocha la tête, son regard reprenant sa concentration sur Mason. "Oui. Et
+    les circonstances de cette disparition... elles ne sont pas claires. On parle
+    de gens peu recommandables, de beaucoup d''argent. Le genre de choses qui attirent
+    les ennuis." Elle lui tendit une carte de visite, d''une simplicité déconcertante.
+    "Mon patron pense que vous avez le profil pour mener cette enquête discrètement.
+    Il est prêt à vous rémunérer généreusement."
+
+
+    Mason prit la carte, ses doigts fins effleurant le papier glacé. L''argent était
+    un problème, et le mystère, une tentation. Par les circonstances, comme il l''avait
+    appris à ses dépens, il était souvent confronté à des situations qui le tiraient
+    hors de sa zone de confort intellectuel. Et là, devant lui, se trouvait l''opportunité
+    parfaite pour s''enfoncer encore plus profondément dans ce monde qu''il essayait
+    tant bien que mal de comprendre. La pluie continuait de tambouriner sur les vitres
+    crasseuses du bar, un battement régulier qui semblait marquer le rythme de cette
+    ville corrompue et de ses secrets. Il était obligé d''admettre que cette affaire
+    de disparition, surtout avec la présence de Millie, avait quelque chose de plus
+    qu''une simple question de personne perdue. Il y avait un dessous, une toile dont
+    il ne voyait pas encore les fils, mais qu''il allait devoir démêler. Son intuition
+    lui soufflait que cette femme, Millie, était bien plus qu''une victime.'
+  chapter_summary: "Voici un résumé concis sous forme de notes de continuité, pour\
+    \ génération future de chapitres, dans la langue et au niveau CEFR demandés :\n\
+    \n**Mason au \"Black Cat\"**\n\n*   **Événements Clés:**\n    *   Mason se réfugie\
+    \ dans le bar \"Black Cat\" à cause de la pluie persistante et de sa propre confusion\
+    \ suite à une conversation avec un homme cicatrisé.\n    *   Millie entre dans\
+    \ le bar, visiblement à la recherche de quelqu'un, son regard intense balayant\
+    \ la salle.\n    *   Rose approche Mason. Elle le surprend en connaissant son\
+    \ nom et lui propose une affaire : retrouver une jeune femme disparue.\n    *\
+    \   Rose mentionne que la disparition implique des gens peu recommandables et\
+    \ de l'argent.\n    *   Mason reçoit une carte de visite de Rose.\n*   **Décisions\
+    \ des Personnages:**\n    *   Mason prend la décision d'accepter implicitement\
+    \ la proposition de Rose, attiré par le mystère et le potentiel gain financier,\
+    \ malgré sa réticence initiale à être impliqué dans ce genre d'affaires.\n*  \
+    \ **Changements Émotionnels:**\n    *   Mason passe de l'encombrement mental et\
+    \ du malaise à une appréhension mêlée d'une excitation due à l'apparition d'une\
+    \ nouvelle énigme.\n    *   Il ressent une fragilité face à la présence physique\
+    \ de Millie et au caractère déterminé de Rose.\n*   **Informations Révélées:**\n\
+    \    *   La ville est dépeinte comme pluvieuse, sale et remplie d'odeurs désagréables.\n\
+    \    *   Millie est une personne déterminée physiquement et est activement à la\
+    \ recherche de quelqu'un.\n    *   Rose travaille pour un patron et représente\
+    \ une organisation ou une personne impliquée dans des affaires louches.\n    *\
+    \   Une jeune femme a disparu dans des circonstances suspectes impliquant de l'argent\
+    \ et des personnes \"peu recommandables\".\n    *   Mason est décrit comme quelqu'un\
+    \ qui préfère les chiffres et les choses intellectuelles, mais qui est attiré\
+    \ par les \"énigmes humaines\".\n*   **Tension Irrégulière:**\n    *   La présence\
+    \ de Millie dans le bar et sa recherche semblent connectées à l'affaire de disparition\
+    \ proposée par Rose. Mason pressent que Millie est plus qu'une simple victime.\n\
+    \    *   La véritable nature de l'organisation de Rose et de son patron reste\
+    \ inconnue.\n    *   Les raisons précises de la disparition de la jeune femme\
+    \ et les dangers impliqués ne sont pas clairs.\n*   **État Final:**\n    *   Mason\
+    \ est maintenant confronté à une nouvelle affaire de disparition.\n    *   Il\
+    \ a une carte de visite et une proposition concrète, acceptée dans son esprit\
+    \ par curiosité et nécessité.\n    *   L'intrigue s'épaissit avec la présence\
+    \ ambiguë de Millie et le mystère annoncé par Rose."
+- id: 131
+  story_id: 29
+  chapter_number: 2
+  chapter_description: Evidence connects the case to organised crime and political
+    corruption.
+  chapter_body: 'La pluie continuait de tambouriner sur le verre sale du "Black Cat",
+    un rythme monocorde qui se fondait dans le brouhaha sourd des conversations et
+    le cliquetis des verres. Mason, une pile de papiers brouillons et une tasse de
+    café froid à portée de main, tentait de donner un sens aux informations fragmentaires
+    que Rose lui avait fournies. Une jeune femme disparue. Des gens peu recommandables.
+    Beaucoup d''argent. Des éléments qui, juxtaposés, commençaient à dessiner une
+    silhouette troublante. Ce n''était pas une simple disparition ; c''était un coup
+    de pied dans la fourmilière bien organisée de cette ville où le pouvoir et le
+    crime se partageaient le pouvoir dans une étreinte vicieuse.
+
+
+    Il avait le nom de la disparue : Clara Dubois. Une employée de bureau sans histoire,
+    apparemment. Mais Rose avait ajouté, avec cette froideur calculée qui le mettait
+    mal à l''aise, que Clara travaillait sur des audits sensibles. Des audits qui
+    touchaient, selon ses mots, « des gens qui aiment rester dans l''ombre ». Les
+    « gens de l''ombre » étaient légion dans cette ville, des hommes d''affaires aux
+    mains aussi propres que leurs livres de comptes étaient entachés, des politiciens
+    qui vendaient leur âme au plus offrant, et des truands qui faisaient le sale boulot
+    avec une efficacité glaçante.
+
+
+    Mason parcourut une liste de transactions financières suspectes. Des sommes énormes
+    transitaient par des sociétés écrans, des flux d''argent difficiles à suivre,
+    comme une fumée s''évaporant dans la nuit. Il y avait des noms qui revenaient
+    sans cesse, des figures publiques côtoyant celles qui préféraient les bas-fonds.
+    Un dénominateur commun semblait émerger : une entreprise de construction, la "Horizon
+    Development", qui avait récemment obtenu plusieurs marchés publics lucratifs,
+    malgré des pratiques douteuses évidentes. Les rapports d''audit que Clara avait
+    ébauchés pointaient du doigt des surfacturations massives, des malversations qui
+    alimentaient les poches de certains et finançaient, sans doute, bien d''autres
+    choses moins avouables.
+
+
+    Ses doigts tapotaient nerveusement le bord de sa chemise. Le lien était là, tangible.
+    La disparition de Clara Dubois n''était pas un acte isolé, mais une conséquence
+    directe de ses découvertes. Quelqu''un avait voulu faire disparaître les preuves,
+    et Clara était cette preuve vivante. L''organisation de Rose, quelle qu''elle
+    soit, semblait bien informée. Et leur intérêt pour cette affaire suggérait qu''ils
+    n''étaient pas de simples spectateurs. Avaient-ils eux-mêmes des intérêts dans
+    cette corruption ? Ou travaillaient-ils pour les victimes, cherchant à démanteler
+    le réseau ? L''ambiguïté était le pain quotidien dans ce métier, et Mason apprenait
+    à s''en accommoder.
+
+
+    Il jeta un coup d''œil à la porte du bar, comme s''il s''attendait à voir Millie
+    réapparaître, son regard intense cherchant quelque chose qu''il n''arrivait pas
+    encore à identifier. Il la sentait, cette présence, comme une vibration basse
+    fréquente qui annonçait un orage. Avait-elle un lien avec cette affaire ? Ou était-elle
+    là par coïncidence ? Une autre pièce sur cet échiquier sombre, une pièce dont
+    il ne connaissait pas encore le jeu. Son instinct lui disait que Millie était
+    bien plus qu''une simple personne à retrouver. Elle cherchait quelque chose, elle
+    aussi, peut-être la même chose que Clara avait trouvé, et qui l''avait menée à
+    sa perte. La pluie dehors redoubla d''intensité, comme si la ville elle-même pleurait
+    sa propre décomposition.'
+  chapter_summary: "**Notes de continuité – Chapitre « Black Cat »**  \n\n- **Lieu\
+    \ & ambiance** : Le bar « Black Cat », pluie battante, verre sale, bruit de fond.\
+    \ Atmosphère morose qui reflète le malaise de Mason.  \n\n- **Protagoniste** :\
+    \ Mason, entouré de papiers brouillons et d’un café froid.  \n  - **État émotionnel**\
+    \ : Stress, frustration, suspicion croissante.  \n\n- **Informations reçues**\
+    \ :  \n  - Disparition de **Clara Dubois**, employée de bureau.  \n  - Clara travaillait\
+    \ sur des **audits sensibles** touchant des « gens de l’ombre » (hommes d’affaires,\
+    \ politiciens corrompus, truands).  \n  - Rose, la source, donne ces détails avec\
+    \ une froideur qui met Mason mal à l’aise.  \n\n- **Enquête de Mason** :  \n \
+    \ - Analyse de transactions suspectes : grosses sommes, sociétés écrans, flux\
+    \ d’argent opaques.  \n  - **Dénominateur commun** identifié : **Horizon Development**,\
+    \ entreprise de construction obtenant des marchés publics douteux.  \n  - Audits\
+    \ de Clara pointaient des **surfacturations** et des malversations alimentant\
+    \ un réseau criminel.  \n\n- **Déduction** :  \n  - Disparition de Clara = tentative\
+    \ d’éliminer la preuve vivante.  \n  - L’organisation de Rose possède des informations\
+    \ et un intérêt direct (peut être alliée ou complice).  \n\n- **Présence secondaire**\
+    \ :  \n  - **Millie** (personnage encore vague) apparaît brièvement à la porte\
+    \ du bar.  \n  - Mason ressent une vibration, pense qu’elle est liée à l’affaire,\
+    \ mais le rôle exact reste inconnu.  \n\n- **Tensions non résolues** :  \n  -\
+    \ Motives réels de Rose et de son organisation (démantèlement du réseau ou participation).\
+    \  \n  - Connexion exacte entre Millie et la disparition de Clara.  \n  - Risque\
+    \ que Mason devienne à son tour une cible.  \n\n- **État final du chapitre** :\
+    \  \n  - Mason possède des pistes claires (Horizon Development, audits de Clara)\
+    \ mais aucune preuve concrète.  \n  - Ambiance renforcée par l’augmentation de\
+    \ la pluie, symbolisant la décadence de la ville.  \n  - Le lecteur attend la\
+    \ prochaine confrontation avec Millie et la mise en lumière du réseau corrompu.\
+    \  "
+- id: 132
+  story_id: 29
+  chapter_number: 3
+  chapter_description: William warns Mason to abandon the investigation.
+  chapter_body: "**Chapitre 3 – Le conseil de William**\n\nLa pluie continuait de\
+    \ marteler les rues, chaque goutte résonnant comme un rappel sourd du poids qui\
+    \ s’accumulait dans la ville. À l’intérieur du « Black Cat », la fumée des cigarettes\
+    \ dessinait des spirales paresseuses au-dessus des verres ternis. Le crépitement\
+    \ d’un vieux juke‑box jouait un blues grinçant, tandis que le bourdonnement des\
+    \ clients masquait les pensées qui tourbillonnaient dans la tête de Mason.\n\n\
+    Mason était installé à une table du fond, les papiers de Rose étalés devant lui\
+    \ comme un puzzle incomplète. Un café depuis longtemps froid reposait à côté d’un\
+    \ cahier griffonné aux marges tachées d’encre. Son regard parcourait les noms\
+    \ et les chiffres : **Horizon Development**, les montants gonflés, les sociétés\
+    \ écrans. Chaque ligne semblait attiser le feu d’une vérité trop dangereuse pour\
+    \ être dévoilée.\n\nÀ la porte du bar, Millie restait immobile, son silhouette\
+    \ massive encadrée par le néon pâle. Elle observait, les bras croisés, comme si\
+    \ elle attendait un signal. Rose, assise au comptoir, sirotait un whisky noir,\
+    \ ses yeux perçant la foule, évaluant chaque mouvement. L’atmosphère était déjà\
+    \ saturée de tension lorsqu’une silhouette familière fit irruption dans le brouillard\
+    \ de la porte : William.\n\nLe visage de William était marqué par des cicatrices\
+    \ qui semblaient raconter des histoires que le temps n’avait pas su effacer. Malgré\
+    \ son allure imposante, ses pas étaient lents, calculés. Il s’avança directement\
+    \ vers la table de Mason, jeta un regard furtif à Millie, puis s’assit en face\
+    \ de lui, les mains jointes autour d’un verre de bourbon.\n\n« Mason, » dit William\
+    \ d’une voix rauque, presque un murmure qui se perdit dans le vacarme du bar.\
+    \ « Je sais ce que tu fouilles. »\n\nMason leva les yeux, surpris. « Tu sais ? »\n\
+    \nWilliam sourit, un sourire qui ne touchait pas les yeux. « J’ai vu assez de\
+    \ choses pour reconnaître les ombres quand elles s’allongent. » Il posa son verre\
+    \ sur la table, faisant claquer le liquide noir contre le bois usé. « Ce que Rose\
+    \ t’a donné… ce n’est pas juste une enquête ordinaire. Ce sont des pièces d’un\
+    \ puzzle qui, une fois assemblé, expose des hommes qui ne laissent jamais tomber\
+    \ leurs intérêts. »\n\nMason serra les dents, la gorge sèche. « Et Millie ? Elle…\
+    \ elle cherchait quelqu’un. »\n\nWilliam croisa les bras, son regard s’attardant\
+    \ sur la porte où Millie restait en retrait. « Millie n’est pas une victime. C’est\
+    \ une garde‑frontière. Elle protège… quelque chose que tu ne comprends pas encore. »\n\
+    \nUn silence pesant s’installa, ponctué seulement par le cliquetis du verre et\
+    \ le tintement de la pluie contre les fenêtres.\n\n« Tu devrais abandonner, Mason, »\
+    \ continua William, plus ferme. « Ce que tu fouilles ne concerne pas seulement\
+    \ des comptes et des contrats. Il y a des hommes qui commandent les politiciens,\
+    \ des chefs de bande qui utilisent la police comme un moyen de pression. Si tu\
+    \ t’enfonces davantage, ils ne laisseront pas le jeu se terminer sans faire payer\
+    \ le perdant. »\n\nMason sentit une vague de colère mêlée à la peur. « Pourquoi\
+    \ me prévenir ? Pourquoi moi ? »\n\nLe vieil homme inspira profondément, sentant\
+    \ l’odeur rance du tabac et du cuir. « Parce que, autrefois, je pensais que la\
+    \ justice était un chemin clair. J’ai vu des gens comme toi : intelligents, curieux,\
+    \ mais trop confiants. J’ai perdu des amis à cause de cette même confiance. Je\
+    \ ne veux pas que tu deviennes… un autre chiffre dans leurs dossiers. »\n\nUn\
+    \ frisson parcourut l’échine de Mason. Il repensa à la carte de visite de Rose,\
+    \ aux noms de sociétés écrans, à la facture gonflée d’Horizon Development qui\
+    \ venait de surgir. Chaque indice semblait désormais un fil tendu vers un piège\
+    \ mortel.\n\n« Et si je refuse, » demanda-t-il, la voix légèrement tremblante.\
+    \ « Si je continue ? »\n\nWilliam fixa le verre, comme s’il cherchait une réponse\
+    \ dans le liquide sombre. « Alors prépare-toi à perdre plus que de l’argent. La\
+    \ ville ne respecte pas les curieux. Elle les avale. »\n\nÀ cet instant, la porte\
+    \ du bar s’ouvrit à nouveau. Millie entra, ses yeux d’acier cherchant William,\
+    \ puis Mason. Sans dire un mot, elle s’avança, posa une main ferme sur l’épaule\
+    \ de Mason, et, d’un souffle, murmura :\n\n« Si tu continues, tu ne seras plus\
+    \ seul. »\n\nLe regard de William se durcit. Il se leva, la chaise grinça contre\
+    \ le parquet, et, d’une voix basse, conclut :\n\n« Réfléchis bien, Mason. Le prix\
+    \ de la vérité est parfois une vie. »\n\nIl quitta le bar aussi silencieusement\
+    \ qu’il était venu, laissant derrière lui le cliquetis du verre, le grondement\
+    \ de la pluie, et un Mason qui, pour la première fois depuis ce soir, ressentait\
+    \ le vrai poids du choix qui l’attendait. \n\nLe rideau s’abattait sur le « Black Cat »,\
+    \ mais la vraie scène se jouait désormais dans les ruelles sombres de la ville,\
+    \ où chaque pas pouvait devenir la dernière pièce d’un jeu déjà perdu."
+  chapter_summary: "**Notes de continuité – Chapitre 3 (B2, français)**  \n\n- **Ambiance** :\
+    \ Pluie battante, bar « Black Cat ». Fumée, vieux juke‑box, clients bruyants.\
+    \  \n- **Mason** : Au fond, il répasse les dossiers de Rose : noms d’entreprises\
+    \ (Horizon Development), montants gonflés, sociétés écrans. Sent le poids d’une\
+    \ vérité dangereuse.  \n- **Millie** : Debout à l’entrée, bras croisés, surveille\
+    \ la scène.  \n- **Rose** : Au comptoir, whisky, regarde attentivement.  \n\n\
+    - **Arrivée de William** : Vieil homme cicatrisé, s’assoit face à Mason, boit\
+    \ du bourbon.  \n  - *Révélation* : Il sait ce que Mason enquête et affirme que\
+    \ les papiers de Rose forment un puzzle qui expose des hommes très puissants (politiciens,\
+    \ chefs de bande, police corrompue).  \n  - *Information sur Millie* : Elle n’est\
+    \ pas une victime mais une « garde‑frontière », protectrice d’un secret que Mason\
+    \ ignore.  \n  - *Avertissement* : “Abandonne, sinon tu deviendras une simple\
+    \ case dans leurs dossiers ; la ville avale les curieux.”  \n\n- **Réaction de\
+    \ Mason** : Colère mêlée à la peur, demande pourquoi il est prévenu.  \n  - William\
+    \ explique son passé (perte d’amis à cause de la confiance), veut éviter que Mason\
+    \ subisse le même sort.  \n\n- **Dialogue final** :  \n  - Mason : “Et si je continue ?”\
+    \ (voix tremblante).  \n  - William : “Tu perdras plus que de l’argent, la vie\
+    \ même.”  \n\n- **Intervention de Millie** : Elle franchit le seuil, pose la main\
+    \ sur l’épaule de Mason, murmure « Si tu continues, tu ne seras plus seul. » \
+    \ \n\n- **Départ de William** : “Réfléchis bien, le prix de la vérité peut être\
+    \ une vie.”  \n\n- **Tension non résolue** :  \n  - Mason doit choisir : abandonner\
+    \ ou poursuivre l’enquête, désormais conscient des forces en jeu et soutenu (ou\
+    \ menacé) par Millie.  \n  - Le conflit avec les réseaux puissants reste ouvert\
+    \ ; la prochaine scène se déplacera dans les ruelles sombres de la ville.  \n\n\
+    - **État final du personnage** : Mason ressent le « vrai poids du choix », la\
+    \ peur se mélange à une nouvelle détermination, la menace est palpable.  "
+- id: 133
+  story_id: 29
+  chapter_number: 4
+  chapter_description: Rose reveals a hidden connection between the suspects.
+  chapter_body: "Le néon du « Black Cat » clignotait faiblement, projetant des éclats\
+    \ verts sur le parquet collant. La pluie, toujours aussi persistante, martelait\
+    \ les vitres, transformant la petite salle en une cage de verre où chaque respiration\
+    \ semblait vibrer sous la tension. \n\nMason était installé dans un coin sombre,\
+    \ entouré d’une pile de dossiers, de factures gonflées et de cartes de visite\
+    \ froissées. La lumière jaunâtre du plafond révélait ses yeux cernés, qui parcouraient\
+    \ sans relâche les tableaux Excel imprimés sur des feuilles jaunies. Au fond,\
+    \ le juke‑box grinçait encore de vieux airs de jazz, une bande‑son qui semblait\
+    \ appartenir à un autre temps.\n\nRose s’approcha, son pas mesuré résonnant sur\
+    \ le plancher comme un métronome. Elle tenait un petit porte‑documents en cuir,\
+    \ usé aux coins, et le posa sur la table avec une précision clinique. Ses doigts,\
+    \ marqués de cicatrices, glissèrent sur la couverture avant de s’arrêter sur la\
+    \ première page.\n\n« Vous avez vu ce que Horizon Development manipule, » dit‑elle,\
+    \ la voix basse, presque un murmure qui s’élevait au-dessus du brouhaha. « Mais\
+    \ il y a quelque chose que vous n’avez pas encore relié. »\n\nMason leva les yeux,\
+    \ la gorge serrée. « Quelque chose ? »\n\nRose ouvrit le porte‑documents, révélant\
+    \ un diagramme dessiné à la main. Les lignes reliaient des noms – « Horizon Development »,\
+    \ « Bureau du Maire », « Société Solaris », « Millie » – à des points d’intersection\
+    \ qui formaient une toile d’araignée.\n\n« Regardez, » dit‑elle, pointant du doigt\
+    \ une case au centre. « Solaris n’est pas qu’une société écran. C’est une filiale\
+    \ de Horizon, mais elle possède aussi une licence d’exploitation du port, et —\
+    \ voici le lien qui vous avait échappé — les fonds qui financent les opérations\
+    \ de la police spéciale proviennent d’un compte bancaire géré par le bureau du\
+    \ Maire. »\n\nMason sentit son cœur s’accélérer. Il connaissait déjà Horizon et\
+    \ ses factures gonflées, mais il n’avait jamais suspecté une liaison directe avec\
+    \ la mairie. Il parcourut du regard les lignes qui convergeaient vers le nom de\
+    \ Millie.\n\n« Millie ? » répéta‑t-il, incrédule. « Pourquoi son nom apparaît\
+    \ ici ? »\n\nRose esquissa un sourire qui ne toucha pas ses yeux. « Millie n’est\
+    \ pas seulement une garde‑frontière. Elle est l’architecte de la sécurité du réseau.\
+    \ Chaque fois que vous avez vu des caméras désactivées dans les entrepôts de Horizon,\
+    \ c’est elle qui a tiré les ficelles. Elle protège les livraisons, assure que\
+    \ les paiements arrivent sans heurts. En échange, le Maire lui accorde l’immunité\
+    \ – et un petit pourcentage des profits. »\n\nMason se tourna vers la porte, comme\
+    \ s’il s’attendait à voir arriver un homme en costume, une menace en uniforme.\
+    \ La porte resta close, les battements de la pluie continuant leur cadence monotone.\n\
+    \n« Et Clara ? » demanda‑t-il, la voix se faisant plus aiguë. « Comment s’insère‑elle\
+    \ dans tout ça ? »\n\nRose fit glisser une photo de Clara Dubois, le visage pâle,\
+    \ les yeux fuyants, sous le diagramme. « Clara a découvert le compte offshore\
+    \ du Maire, celui qui alimentait les caisses de la police spéciale. Elle a laissé\
+    \ des traces dans ses audits, des anomalies que vous avez déjà repérées. Quand\
+    \ elle a tenté de les exposer, Horizon a ordonné son enlèvement. Le Maire a été\
+    \ informé, mais il n’a pas pu intervenir sans mettre en péril son propre empire. »\n\
+    \nMason sentit la colère monter, un mélange d’indignation et de culpabilité. « Vous\
+    \ avez gardé tout ça pour vous ? »\n\nRose se pencha, ses lèvres se tirant légèrement.\
+    \ « Pas exactement. Je travaille pour le même client qui vous a engagé, mais je\
+    \ ne suis pas du même côté. Mon patron veut que l’on élimine les pièces qui ne\
+    \ servent plus… « Elle fit une pause, scrutant le visage de Mason, cherchant à\
+    \ mesurer son engagement. « Vous pouvez soit pousser le bouchon, soit nous laisser\
+    \ tomber. Si vous exposez le Maire, la police spéciale vous épongera. Si vous\
+    \ arrêtez, vous devenez une pièce de plus sur l’échiquier. »\n\nMason joua nerveusement\
+    \ avec le bord de son verre, sentant le poids du liquide froid contre ses paumes.\
+    \ La tension dans la pièce était palpable, chaque goutte qui s’écrasait sur le\
+    \ verre ressemblait à un compte‑à‑rebours.\n\n« Tu ne penses pas que tu joues\
+    \ à Dieu, Rose ? » murmura‑t-il. « Tu crois pouvoir garder le contrôle ? »\n\n\
+    Rose leva les yeux, son regard perçant traversant le brouillard de nicotine qui\
+    \ flottait autour d’elles. « Je ne joue pas à Dieu. Je joue à la survie. Dans\
+    \ cette ville, les hommes qui commandent les politiciens ne veulent que deux choses :\
+    \ l’argent et le silence. Si vous brisez l’un, l’autre s’effondre. »\n\nUn souffle\
+    \ de vent fit claquer la porte du bar, entraînant avec lui un souffle de pluie\
+    \ qui s’insinua sous la porte, mouillant le sol et projetant des reflets éclatés.\
+    \ Millie, qui était restée immobile près du comptoir, s’avança lentement, sa silhouette\
+    \ massive découpée par la lumière vacillante.\n\n« Mason, » dit‑elle d’une voix\
+    \ rauque, « je ne suis pas ici pour être votre alliée ou votre ennemie. Je suis\
+    \ ici pour protéger ce que je dois protéger. Si vous continuez, vous allez toucher\
+    \ à une partie de la ville que même le Maire préfère ne pas voir. »\n\nRose hocha\
+    \ la tête, comme si cela confirmait ses propos. « C’est exactement ce que je voulais\
+    \ dire. Vous voyez, chaque suspect n’est qu’une facette d’un même mécanisme. Horizon,\
+    \ le Maire, Solaris, Millie… Tous font tourner la même roue. La roue s’arrête\
+    \ seulement quand quelqu’un en prend le contrôle ou la détruise. »\n\nMason sentit\
+    \ les pièces du puzzle s’assembler, mais un vide persistait dans son esprit. « Et\
+    \ si je choisis de détruire la roue ? »\n\nUne légère rire s’échappa de Rose,\
+    \ presque dépourvu d’émotion. « Alors vous serez le premier à connaître le goût\
+    \ du danger, et le dernier à comprendre la vraie nature de la liberté. »\n\nLe\
+    \ juke‑box grésilla une dernière note avant de s’éteindre, laissant le bar dans\
+    \ un silence lourd. Mason se redressa, les épaules crispées, et regarda les visages\
+    \ autour de lui. Il voyait maintenant la ville sous un angle différent : un réseau\
+    \ d’intérêts entremêlés où chaque décision entraînait des répercussions mortelles.\n\
+    \nIl prit le porte‑documents, le sentit contre sa paume, comme un poids que l’on\
+    \ ne pouvait plus laisser de côté. « Très bien, » déclara‑t-il d’une voix plus\
+    \ ferme. « Je sais qui je protège. »\n\nRose hocha la tête, reconnaissant un éclat\
+    \ de détermination dans ses yeux. Millie resta immobile, son bras croisé, prête\
+    \ à intervenir si la situation dégénérait. La pluie continuait de marteler le\
+    \ verre, comme un rappel que la ville ne dormait jamais.\n\nMason se leva, ajusta\
+    \ son manteau trempé et, d’une dernière fois, fixa le diagramme. Il savait que\
+    \ chaque ligne était une porte vers un danger plus grand, mais il avait désormais\
+    \ la clé pour l’ouvrir. Dans le brouillard qui s’épaississait à l’extérieur, il\
+    \ s’engagea sur le chemin qui le mènerait, que ce soit vers la vérité ou vers\
+    \ sa propre perte."
+  chapter_summary: "**Notes de continuité – Chapitre ?**\n\n- **Lieu :** Bar « Black\
+    \ Cat », nuit pluvieuse, atmosphère étouffante.  \n- **Personnages présents :**\
+    \ Mason (enquêteur), Rose (informante), Millie (garde‑frontière), Clara (défunte),\
+    \ mention du Maire, de Horizon Development et de Solaris.  \n\n**Événements clés**\
+    \  \n1. Rose apporte un porte‑documents contenant un diagramme de relations. \
+    \ \n2. Diagramme montre : Horizon → Solaris (filiale) → licence portuaire ; compte\
+    \ bancaire du Maire finance la police spéciale.  \n3. Millie identifiée comme\
+    \ « architecte de la sécurité du réseau », bénéficiaire d’immunité du Maire. \
+    \ \n4. Photo de Clara : elle a découvert le compte offshore du Maire, a laissé\
+    \ des traces dans ses audits, a été enlevée sur ordre d’Horizon.  \n5. Rose révèle\
+    \ son double jeu : travaille pour le même client que Mason mais suit un autre\
+    \ agenda. Elle propose deux options à Mason – exposer le Maire (risque de représailles)\
+    \ ou abandonner (devenir pion).  \n\n**Décisions / changements émotionnels** \
+    \ \n- Mason passe de la confusion à la colère, puis à une détermination nouvelle.\
+    \  \n- Rose reste froide, se justifie par la survie.  \n- Millie intervient, se\
+    \ positionne neutre mais menace de protéger ses intérêts.  \n\n**Informations\
+    \ révélées**  \n- Le Maire finance la police spéciale via un compte géré par son\
+    \ bureau.  \n- Solaris n’est pas juste une façade, elle détient la licence portuaire.\
+    \  \n- Millie reçoit un pourcentage des profits et l’immunité.  \n- Clara était\
+    \ la première à mettre au jour le scandale financier.  \n\n**Tensions non résolues**\
+    \  \n- Le choix de Mason : poursuivre l’enquête au risque d’être éliminé ou reculer.\
+    \  \n- La véritable allégeance de Rose (qui veut « éliminer les pièces… »).  \n\
+    - La réaction probable de la police spéciale et du Maire si Mason expose les faits.\
+    \  \n- Le rôle futur de Millie – alliée ou antagoniste selon les actions de Mason.\
+    \  \n\n**État final du chapitre**  \n- Mason saisit le porte‑documents, accepte\
+    \ tacitement de continuer malgré le danger.  \n- Rose hoche la tête, reconnaît\
+    \ la détermination de Mason.  \n- Millie reste sur le qui-vive, prête à intervenir.\
+    \  \n- La pluie continue de marteler le verre, symbole d’une ville qui ne dort\
+    \ jamais.  \n- Mason quitte le bar, porte‑documents en main, conscient que chaque\
+    \ ligne du diagramme ouvre une nouvelle porte de danger.  \n\n*Ces points servent\
+    \ de base pour le prochain chapitre : développer la décision de Mason, explorer\
+    \ les conséquences auprès du Maire et de la police spéciale, et approfondir les\
+    \ rapports avec Rose et Millie.*"
+- id: 134
+  story_id: 29
+  chapter_number: 5
+  chapter_description: Mason uncovers the truth at great personal cost.
+  chapter_body: "**Chapitre 5 – La vérité en guise de cicatrice**\n\nLa pluie tapait\
+    \ sans relâche contre les vitres du petit appartement de Mason, comme pour effacer\
+    \ les traces d’une nuit trop longue. Les dossiers de Rose, étalés sur la table\
+    \ bancale, formaient un labyrinthe d’encre et de photos jaunies. Au centre, le\
+    \ porte‑documents contenant le diagramme des relations : Horizon Development,\
+    \ Solaris, le compte offshore du Maire, les contrats gonflés, les fichiers de\
+    \ surveillance. \n\nMason fixa la dernière photo : un écran de caméra de sécurité\
+    \ affichant une allée sombre au port, où plusieurs camions portant le logo d’Horizon\
+    \ étaient garés. Au bas de l’image, une silhouette massive – la même silhouette\
+    \ que Millie avait projetée à l’entrée du Black Cat. Une lueur d’espoir se mêla\
+    \ à la fatigue. S’il pouvait récupérer les données du serveur situé sous ce hangar,\
+    \ il aurait enfin les preuves dont il avait besoin.\n\nIl glissa la vieille clé\
+    \ en fer que le policier corrompu lui avait remise dans la poche de son manteau\
+    \ usé, et se dirigea vers le quai. L’obscurité était épaisse, ponctuée par le\
+    \ clignotement des néons rouillés. Le bruit des gouttes résonnait comme un tambour\
+    \ de guerre.\n\n— « C’est ici que tout se joue, » se murmura‑t-il, bien que la\
+    \ voix se perde dans le grondement lointain de la ville.\n\nEn glissant le pied\
+    \ dans le premier camion, il découvrit un escalier de service menant à une salle\
+    \ froide, remplie de rangées de serveurs grésillant. Son cœur battait à tout rompre\
+    \ lorsqu’il connecta la petite clé USB à un port libre. Les écrans s’allumèrent,\
+    \ dévoilant une série de transactions : transfert de plusieurs millions d’euros\
+    \ du compte “Solaris‑01” vers une société écran basée aux îles Caïmans, où les\
+    \ noms du Maire et du chef de la police spéciale figuraient en gras.\n\nMason\
+    \ tapa frénétiquement, copiant les fichiers, quand une alarme stridente perça\
+    \ le silence. Les lumières s’allumèrent d’un éclat blafard. Il sentit la présence\
+    \ d’une silhouette derrière lui. La porte se fit brusquement et, dans l’encadrement,\
+    \ la silhouette massive dont il se souvenait : Millie, les bras croisés, une arme\
+    \ de poing à la main.\n\n— « Je t’ai dit de ne pas fouiner, » gronda‑t-elle, le\
+    \ ton empreint d’une menace qui dépassait la simple violence. « Tu ne sais pas\
+    \ à qui tu joues, Mason. »\n\n« Je ne peux pas laisser ces hommes s’en sortir, »\
+    \ répondit‑il, la voix tremblante mais résolue. « Je veux seulement la vérité. »\n\
+    \n« La vérité ? » Millie ricana, le regard dur comme la pierre du quai. « La vérité\
+    \ a un prix, et tu ne peux pas l’offrir. »\n\nUn instant, leurs yeux se croisèrent,\
+    \ chargé d’un passé que Mason ne connaissait pas. Millie abaissa son arme, mais\
+    \ un coup de feu retentit soudain, éclatant contre le béton. Le bruit venait de\
+    \ l’entrée du hangar : des hommes en uniforme, armés, entraient.\n\nDans la confusion,\
+    \ Millie tira d’une main, poussant Mason hors de la salle. Un projectile ricocha\
+    \ sur la clavicule de Mason, le faisant chanceler. Il sentit le sang couler, chaud,\
+    \ et l’obscurité commencer à l’envahir. Il se releva, tenant fermement la clé\
+    \ USB, la luisant comme une étincelle d’espoir dans la nuit.\n\n— « Je ne te laisserai\
+    \ pas partir, » cria Millie, mais il était déjà trop tard. Il se bouscula contre\
+    \ le mur, fit demi‑tour et courut vers la sortie, les hommes à ses trousses. La\
+    \ pluie l’accueillit comme une douche glacée, lavant le sang qui s’échappait de\
+    \ sa blessure.\n\nEssoufflé, il atteignit les rues sombres du quartier et, d’un\
+    \ geste tremblant, frappa à la porte de Rose. Elle l’accueillit d’un sourire qui\
+    \ ne cachait rien.\n\n— « Tu as ce que je veux, » dit‑elle en prenant la clé USB.\
+    \ « Mais souviens‑toi, Mason, que chaque joueur finit par payer ses dettes. »\n\
+    \nElle referma la porte derrière elle, laissant Mason, à genoux, saignant légèrement,\
+    \ le souffle court. Une sirène de police retentit au loin, se rapprochant. Il\
+    \ comprit alors que la ville l’avait déjà repéré comme un intrus.\n\nLe bruit\
+    \ des pas s’accrut. Un groupe d’officiers, les insignes de la police spéciale\
+    \ brillants, franchit le pas. L’un d’eux, le même qui lui avait remis la clé en\
+    \ fer, s’avança.\n\n— « Mason, vous êtes en état d’arrestation pour intrusion,\
+    \ violation de propriété et mise en danger d’autrui, » déclara l’officier d’une\
+    \ voix clinique.\n\nMason leva les mains, le sang ruisselant sur les doigts. Il\
+    \ jeta un dernier regard vers le ciel noir, où les éclairs de la tempête éclaboussaient\
+    \ la ville comme des coups de tonnerre. Dans sa tête, les images du diagramme,\
+    \ des comptes offshore, du Maire, de Millie, tourbillonnaient. La vérité était\
+    \ désormais à portée de main, mais elle était entre les mains de Rose, et son\
+    \ corps, son identité, sa liberté, étaient compromis.\n\nAlors qu’on le menottait,\
+    \ il murmura à l’oreille de l’officier :\n\n— « Vous pensez m’avoir gagné, mais\
+    \ la vérité a un moyen de sortir ; même du sang, elle se propage. »\n\nUn dernier\
+    \ éclair zébra le ciel, et les gouttes de pluie se mêlèrent au sang sur le sol.\n\
+    \nMason fut conduit dans le fourgon de police, les lumières clignotantes projetant\
+    \ des ombres sur son visage pâle. La ville continuait de pleurer sous la pluie,\
+    \ indifférente, tandis que le prix de la vérité se comptait désormais dans la\
+    \ douleur d’un homme qui aurait tout perdu pour la dévoiler."
+  chapter_summary: "**Notes de continuité – Chapitre 5 (B2 – Français)**  \n\n- **Mason**\
+    \ cherche les preuves dans l’appartement, parcourt les dossiers de Rose ; le diagramme\
+    \ montre les liens entre Horizon Development, Solaris, le compte offshore du Maire\
+    \ et des contrats gonflés.  \n- Une photo de caméras de sécurité révèle des camions\
+    \ Horizon au port et la silhouette massive qui correspond à **Millie**.  \n- Décidé\
+    \ à récupérer les données, Mason prend la vieille clé en fer donnée par le policier\
+    \ corrompu et se rend au hangar du port sous la pluie.  \n- Il trouve un escalier\
+    \ de service, une salle de serveurs et connecte sa clé USB. Les écrans affichent\
+    \ des transferts de plusieurs millions d’euros du compte “Solaris‑01” vers une\
+    \ société écran aux îles Caïmans, avec le Maire et le chef de la police spéciale\
+    \ comme bénéficiaires.  \n- Une alarme se déclenche, les lumières s’allument.\
+    \ **Millie** apparaît, arme au poing, le menace et l’accuse de jouer avec le mauvais\
+    \ camp.  \n- Un coup de feu retentit à l’entrée : des hommes en uniforme de la\
+    \ police spéciale envahissent le hangar.  \n- Dans la confusion, Millie pousse\
+    \ Mason hors de la salle ; il est touché à la clavicule, saigne, mais garde la\
+    \ clé USB.  \n- Mason s’échappe sous la pluie, court jusqu’à la porte de **Rose**,\
+    \ qui l’accueille avec un sourire. Elle prend la clé USB, rappelle que chaque\
+    \ joueur finit par payer ses dettes.  \n- Une sirène de police se rapproche ;\
+    \ une équipe de la police spéciale, dont l’officier qui a remis la clé en fer,\
+    \ arrive.  \n- L’officier arrête Mason (intrusion, violation de propriété, mise\
+    \ en danger), il lève les mains, le sang coule sur ses doigts.  \n- Dernier dialogue\
+    \ de Mason : il promet que la vérité « se propagera », même du sang.  \n- Mason\
+    \ est menotté, mis dans le fourgon de police tandis que la ville continue de pleuvoir.\
+    \  \n\n**Tensions non résolues / Questions pour le prochain chapitre**  \n1. Rose\
+    \ possède la clé USB contenant les preuves ; quels seront ses prochains mouvements ?\
+    \  \n2. Le Maire et la police spéciale sont exposés ; comment réagiront‑ils face\
+    \ à la fuite possible des informations ?  \n3. Millie a laissé Mason s’échapper ;\
+    \ pourquoi ? a‑t‑elle un plan caché ?  \n4. Mason est en détention ; pourra‑t‑il\
+    \ faire sortir la vérité de l’intérieur du système ?  \n5. La pluie et le climat\
+    \ sombre renforcent l’ambiance oppressante ; la ville semble prête à écraser le\
+    \ dissentiment.  \n\n**État final du protagoniste**  \n- Mason est arrêté, blessé,\
+    \ sans liberté, mais il détient la preuve (clé USB) qui est maintenant entre les\
+    \ mains de Rose.  \n- La vérité est en jeu, mais son accès dépendra des actions\
+    \ futures de Rose, Millie et des autorités corrompues."
+- id: 135
+  story_id: 30
+  chapter_number: 0
+  chapter_description: Establish the setting and introduce the characters.
+  chapter_body: 'Der Morgen tauchte das Königreich Eldoria in ein sanftes, goldenes
+    Licht. Die schimmernden Türme der Burg Hohenstein ragten aus den Nebeln der benachbarten
+    Wälder, während unten im Dorf die Marktstände ihre Farben präsentierten. Händler
+    riefen ihre Waren an – duftende Kräuter, glänzende Stoffe und kunstvoll geschnitzte
+    Holzfiguren, die von vergessenen Zaubern zu flüstern schienen. Überall hörte man
+    das leise Rascheln der Blätter, das Flattern von Vögeln und das entfernte Brüllen
+    eines seltenen Waldwächters, einer uralten Kreatur, die nur in den tiefsten Teilen
+    des verzauberten Waldes lebte.
+
+
+    Inmitten dieses lebendigen Treibens stand Jasper, ein junger Mann mit leuchtenden
+    Augen und einem breiten Lächeln. Er war erst neunzehn, aber sein Auftreten wirkte,
+    als hätte er bereits tausend Abenteuer erlebt. Seine schnellen Bewegungen und
+    sein lautes Lachen zogen die Blicke der Dorfbewohner auf sich. „Heute ist ein
+    guter Tag für ein neues Abenteuer“, rief er, während er von Stand zu Stand sprang,
+    immer auf der Suche nach etwas Aufregendem. Er trug eine bunte Jacke, die seiner
+    Persönlichkeit entsprach – mutig, laut und ein wenig ungestüm.
+
+
+    Nur wenige Schritte weiter stand Rose, eine kräftige Frau mit schmalen, durchtrainierten
+    Schultern und Hände, die von vielen Narben gezeichnet waren. Ihr Blick war scharf
+    und konzentriert, als sie die Waren prüfte, die sie für die nächste Mission benötigte.
+    Mit vierundvierzig Jahren trug sie die Spuren von vielen Schlachten – jede Narbe
+    erzählte von einer Herausforderung, die sie gemeistert hatte. Rose trug praktische
+    Kleidung, die ihr Bewegungsfreiheit gab, und ihr Gesicht zeigte kaum Emotionen,
+    doch in ihren Augen glomm ein Funke Ehrgeiz. Sie war bekannt für ihre Disziplin
+    und ihr unerschütterliches Ziel, das Königreich zu beschützen.
+
+
+    Am Stadtrand, nahe den hohen Mauern der Burg, ruhte Violet, eine Frau von fünfundfünfzig
+    Jahren, deren Präsenz allein den Raum füllte. Ihr elegantes Gewand schimmerte
+    dezent im Sonnenlicht, und ihr aufrechter Gang verriet eine innere Stärke. Sie
+    sprach mit ruhiger, autoritärer Stimme, die selbst die lautesten Geräusche übertönte.
+    Violet war die Beraterin des Königs, und ihr scharfer Verstand half ihr, Intrigen
+    zu durchschauen und die Machtbalance im Reich zu wahren. Ihre Augen, kalt wie
+    ein Winterhauch, beobachteten alles aufmerksam, ohne dass jemand ihr wahres Interesse
+    verkennen konnte.
+
+
+    Einige Meter weiter stand Noah, ein großer, ruhiger Mann mit breiten Schultern
+    und einer fast unnahbaren Ausstrahlung. Er war selten laut, doch sein Wort hatte
+    Gewicht. Seine trockene, manchmal sarkastische Art verbarg eine tiefe Beobachtungsgabe.
+    Noah hatte bereits viele Jahre im Dienst der Burg verbracht, immer im Hintergrund,
+    immer wachsam. Die Dorfbewohner wussten, dass er mehr über die alten Legenden
+    wusste, als er zugab – besonders über die Ruinen, die tief im Wald verborgen lagen.
+
+
+    Die vier Gestalten hatten sich zwar noch nicht zusammengefunden, doch das Schicksal
+    schien sie zu einem Zeitpunkt zu verbinden, den niemand voraussehen konnte. Das
+    Reich war von einer stillen Bedrohung umgeben, die tief in den alten Bäumen und
+    vergessenen Steinmauern lauerte. Nur die Zeit würde zeigen, wie ihre Wege sich
+    kreuzen würden.
+
+
+    Als die Sonne höher stieg, sammelte Jasper seine Freunde um einen kleinen Holztisch
+    am Rande des Marktes. „Lasst uns heute etwas Besonderes finden“, sagte er, seine
+    Stimme voller Aufregung. Rose nickte knapp, ihr Blick bereits auf das nächste
+    Ziel gerichtet. Violet lächelte leicht, wissend, dass das Schicksal bereits seine
+    Fäden spann, und Noah beobachtete die Gruppe, bereit, jede Gefahr zu erkennen,
+    die aus den Schatten des Waldes kommen könnte.
+
+
+    Ein leichter Wind trug den Duft von Wildblumen und das ferne Echo von Flüstern
+    durch die Gassen – ein leises Versprechen von Abenteuern, Geheimnissen und vielleicht
+    sogar einer alten, schlafenden Gefahr, die nur darauf wartete, erwacht zu werden.
+    Das Königreich Eldoria atmete, bereit für die Geschichte, die sich gerade erst
+    zu entfalten begann'
+  chapter_summary: "**Kontinuitäts‑Notizen (Deutsch, B1)**  \n\n- Morgens: Das Königreich\
+    \ Eldoria liegt im goldenen Licht. Die Burg Hohenstein ist zu sehen, das Dorf\
+    \ ist voller Marktstände.  \n- Hintergrund: Ein seltener Waldwächter ruft aus\
+    \ dem verzauberten Wald.  \n\n**Charaktere**  \n- **Jasper** (19): fröhlich, abenteuerlustig,\
+    \ trägt bunte Jacke. Er sammelt Freunde am Markt und will ein neues Abenteuer\
+    \ finden.  \n- **Rose** (44): erfahrene Kriegerin, Narben, schaut sich Waren für\
+    \ eine Mission an. Sie ist konzentriert und zielstrebig.  \n- **Violet** (55):\
+    \ Beraterin des Königs, elegant, autoritär, beobachtet alles sehr genau.  \n-\
+    \ **Noah** (groß, ruhig): kennt alte Legenden, besonders über Ruinen im Wald.\
+    \ Er ist wachsam und sarkastisch.  \n\n**Wichtige Ereignisse**  \n1. Alle vier\
+    \ Figuren werden einzeln vorgestellt, aber noch nicht miteinander verbunden. \
+    \ \n2. Jasper ruft seine Freunde zu einem kleinen Holztisch am Rand des Marktes.\
+    \  \n3. Er sagt: „Lasst uns heute etwas Besonderes finden.“  \n4. Rose nickt,\
+    \ schaut bereits auf das nächste Ziel.  \n5. Violet lächelt leicht, fühlt, dass\
+    \ das Schicksal bereits wirkt.  \n6. Noah beobachtet die Gruppe und ist bereit,\
+    \ Gefahren aus dem Wald zu erkennen.  \n\n**Entscheidungen & Gefühle**  \n- Jasper\
+    \ zeigt große Aufregung und Motivation.  \n- Rose bleibt kühl, aber entschlossen.\
+    \  \n- Violet ist ruhig, aber interessiert an den bevorstehenden Ereignissen.\
+    \  \n- Noah bleibt aufmerksam, skeptisch und bereit zu handeln.  \n\n**Enthüllte\
+    \ Informationen**  \n- Das Reich hat eine stille Bedrohung in den alten Bäumen\
+    \ und vergessenen Steinmauern.  \n- Noah weiß mehr über die Ruinen im Wald, als\
+    \ er offen sagt.  \n\n**Offene Spannungen**  \n- Wie werden die vier Wege sich\
+    \ kreuzen?  \n- Welche Gefahr wartet in den Ruinen/Wald?  \n- Was genau soll das\
+    \ „besondere“ gefunden werden?  \n\n**Endzustand des Kapitels**  \n- Die Gruppe\
+    \ steht zusammen am Markt, bereit für ein Abenteuer.  \n- Das Wetter (leichter\
+    \ Wind, Duft von Wildblumen) gibt ein Gefühl von Aufbruch.  \n- Das Königreich\
+    \ ist ruhig, aber ein neues Kapitel der Geschichte beginnt gerade.  "
+- id: 136
+  story_id: 30
+  chapter_number: 1
+  chapter_description: Jasper discovers a strange object connected to Rose's forgotten
+    past.
+  chapter_body: "**Kapitel 1 – Das seltsame Relikt**\n\nDer Morgen war noch warm,\
+    \ als die vier Freunde vom Markttisch zum Rand der Stadt gingen. Jasper ließ die\
+    \ Augen über die Stände wandern und suchte nach etwas Interessantem. „Vielleicht\
+    \ finden wir ja etwas, das wir noch nie gesehen haben“, sagte er fröhlich und\
+    \ zog seine bunte Jacke etwas höher.\n\nPlötzlich blieb er vor einem kleinen Holzstand\
+    \ stehen, auf dem alte, verstaubte Gegenstände lagen. Zwischen zerbrüchigen Tonkrügen\
+    \ und verblassten Stoffen lag ein silberner Anhänger, der im Sonnenlicht flackerte.\
+    \ Er war rund, hatte die Form einer stilisierten Rose und ein leises, kaum hörbares\
+    \ Summen.\n\n\n\n„Schaut euch das an!“, rief Jasper und hielt das Relikt hoch.\
+    \ „Es sieht aus, als wäre es aus einer anderen Zeit.“  \n\nRose trat näher, ihr\
+    \ Blick blieb kurz an dem Anhänger hängen. Ein kurzer Schauer lief ihr über die\
+    \ Haut. Sie dachte an etwas, das sie lange vergessen hatte, doch die Erinnerung\
+    \ war noch verschwommen.\n\n„Das ist…“, begann sie, und ihre Stimme war leiser\
+    \ als sonst. „Ich habe diesen Gegenstand einst in einer alten Ruine gesehen.“\
+    \  \n\nViolet, die am Rand stand, sah interessiert zu. „Eine Ruine, sagst du?\
+    \ In den tiefen Wäldern von Eldoria gibt es viele verlassene Orte.“ Sie nickte\
+    \ langsam, als wolle sie mehr erfahren.\n\nNoah, der die Szene aufmerksam beobachtete,\
+    \ fuhr mit der Hand über den Anhänger. „Das Muster der Rose ist ein altes Symbol\
+    \ der Wächter. Es wurde von einer vergessenen Schutzgruppe getragen.“ Er lächelte\
+    \ sarkastisch. „Vielleicht gehört es jetzt dir, Jasper, als dein erstes Fundstück.“\n\
+    \nJasper grinste breit. „Ich gebe es dir, Rose. Vielleicht hilft es dir, dich\
+    \ an etwas Wichtiges zu erinnern.“ Er reichte ihr den Anhänger vorsichtig.  \n\
+    \nAls Rose das kühle Metall berührte, flammen Erinnerungen in ihrem Kopf auf.\
+    \ Sie sah ein junges Mädchen in einer hellen Halle, das mit einer ähnlichen Rose\
+    \ um den Hals stand. Die Halle war von leuchtenden Kristallen erhellt, und im\
+    \ Hintergrund hörte man ein Flüstern – ein Versprechen, das Land zu schützen.\
+    \  \n\nEin leichter Wind wehte durch den Platz, und die Blätter der Marktstände\
+    \ raschelten. Rose schloss die Augen und atmete tief ein. „Ich… ich habe das Versprechen\
+    \ fast vergessen“, flüsterte sie. „Ich dachte, es sei nur eine Legende.“  \n\n\
+    Violet trat näher und legte eine Hand auf Rosens Schulter. „Manchmal sind Legenden\
+    \ mehr als Geschichten. Vielleicht steckt hinter diesem Symbol der Schlüssel zu\
+    \ einer alten Gefahr, die das Königreich bedroht.“  \n\nNoah sah zu den vier und\
+    \ sagte ruhig: „Wir sollten das Relikt zum alten Weisen im Turm bringen. Er kennt\
+    \ die Geschichte der Wächter.“  \n\nJasper nickte entschlossen. „Dann lass uns\
+    \ keine Zeit verlieren. Das Abenteuer ruft!“  \n\nDie Gruppe machte sich auf den\
+    \ Weg, den Markt hinter sich lassend. Der Anhänger glitzerte in Rosens Hand, während\
+    \ ein Funken von Hoffnung und zugleich eine leise Angst in ihr wuchs. Das Geheimnis\
+    \ ihrer Vergangenheit – und vielleicht die Zukunft des Königreichs – lag jetzt\
+    \ in ihrer Hand."
+  chapter_summary: "**Kapitel‑Zusammenfassung (Deutsch, B1)**  \n\n- Vier Freunde\
+    \ (Jasper, Rose, Violet, Noah) gehen vom Markttisch zum Stadtrand.  \n- Jasper\
+    \ findet an einem Holzstand einen silbernen, runden Anhänger in Form einer stilisierten\
+    \ Rose. Der Anhänger summt leise.  \n- Rose spürt einen kurzen Schauer, erinnert\
+    \ sich vage an einen ähnlichen Gegenstand aus einer alten Ruine.  \n- Violet erwähnt\
+    \ die Ruinen im Wald von Eldoria.  \n- Noah erklärt, dass das Rosen‑Symbol zu\
+    \ einer längst vergessenen Wächter‑Gruppe gehört.  \n- Jasper gibt den Anhänger\
+    \ an Rose, weil er hofft, dass er ihr hilft, sich zu erinnern.  \n- Beim Berühren\
+    \ des Anhängers kommen Rose Erinnerungen zurück: ein junges Mädchen in einer kristallbeleuchteten\
+    \ Halle, ein Versprechen, das Land zu beschützen.  \n- Rose flüstert, dass sie\
+    \ das Versprechen fast vergessen hat und dachte, es sei nur eine Legende.  \n\
+    - Violet legt Rose die Hand auf die Schulter und sagt, dass Legenden echte Gefahr\
+    \ verbergen können.  \n- Noah schlägt vor, das Relikt zum alten Weisen im Turm\
+    \ zu bringen – er kennt die Geschichte der Wächter.  \n- Jasper stimmt zu, sie\
+    \ wollen sofort losgehen.  \n- Gruppe verlässt den Markt, Anhänger glitzert in\
+    \ Roses Hand.  \n- **Offene Spannung:** Was ist das Versprechen, welche Gefahr\
+    \ droht dem Königreich, und welche Rolle spielt das Relikt?  \n- **Endzustand:**\
+    \ Die Freunde sind entschlossen, den Weisen zu finden; Hoffnung und leichte Angst\
+    \ liegen bei Rose.  "
+- id: 137
+  story_id: 30
+  chapter_number: 2
+  chapter_description: Violet warns Jasper that the kingdom is cursed.
+  chapter_body: "Der Himmel über Eldoria war trüb, und ein kühler Wind wehte von den\
+    \ dunklen Bäumen des verzauberten Waldes. Die vier Freunde verließen den Marktplatz\
+    \ und gingen den gepflasterten Weg entlang, der zum alten Turm des Weisen führte.\
+    \ In Roses Hand glitzerte der silberne Anhänger, als wäre er ein kleiner Stern.\n\
+    \nViolet ging dicht hinter ihnen und hielt den Blick auf den Weg gerichtet. Sie\
+    \ sah, wie Jasper immer wieder über die schmalen Steine stolperte, voller Energie\
+    \ und Neugier. Plötzlich blieb sie stehen und drehte sich zu ihm um.\n\n„Jasper“,\
+    \ sagte sie leise, aber bestimmt, „ich muss dir etwas Wichtiges sagen.“  \n\n\
+    Jasper sah sie verwirrt an. „Was ist los, Violet? Warum bist du so ernst?“  \n\
+    \nViolet holte tief Luft. „Unser Königreich ist verflucht.“  \n\nEin Schauer lief\
+    \ Jasper über den Rücken. „Verflucht? Wie meinst du das?“  \n\n„Schon seit vielen\
+    \ Jahrhunderten“, erklärte Violet, „liegt ein alter Fluch über Eldoria. Er wurde\
+    \ von einer bösen Macht ausgesprochen, als die ersten Wächter das Land verließen.\
+    \ Der Fluch erwacht immer wieder, wenn das Versprechen der Wächter vergessen wird.“\
+    \  \n\nSie zeigte auf den Anhänger in Roses Hand. „Dieser Ring ist ein Zeichen\
+    \ der alten Wächter. Er erinnert an das Versprechen, das Land zu beschützen. Wenn\
+    \ das Versprechen nicht gehalten wird, stärkt der Fluch seine Macht.“  \n\nRose\
+    \ sah nervös zu dem silbernen Schmuckstück hinunter und flüsterte: „Ich fühle\
+    \ das Versprechen in meinem Inneren. Vielleicht habe ich es beinahe vergessen.“\
+    \  \n\nViolet nickte. „Genau deshalb ist es wichtig, dass wir jetzt handeln. Wenn\
+    \ wir zu lange warten, breitet sich die Dunkelheit aus. Die Bäume werden verdorren,\
+    \ die Tiere werden aggressiv, und das Königreich wird ins Chaos stürzen.“  \n\n\
+    Noah, der still hinter ihnen ging, hob die Hände leicht. „Ich habe in alten Schriften\
+    \ gelesen, dass nur das Herz der Wächter das Ende des Fluchs brechen kann. Das\
+    \ ist wahrscheinlich das Versprechen, das Rose gehört.“  \n\nJasper schlug seine\
+    \ Hände zusammen, sein übliches Lächeln kehrte zurück, aber diesmal war es gemischt\
+    \ mit Sorge. „Dann müssen wir das Versprechen finden und es erneuern! Wir dürfen\
+    \ nicht zulassen, dass das Königreich leidet.“  \n\nViolet sah Jasper fest an.\
+    \ „Du bist mutig, Jasper, und dein Enthusiasmus gibt uns Kraft. Aber sei vorsichtig.\
+    \ Der Fluch wirkt nicht nur in der Ferne, er kann auch die Herzen der Menschen\
+    \ vergiften. Wer an das Böse glaubt, wird schwächer.“  \n\nEin leises Heulen kam\
+    \ aus dem Wald, als ein Schatten über die Bäume glitt. Das Geräusch ließ alle\
+    \ erstarren. Die Gruppe spürte, wie die Luft kälter wurde.\n\n„Wir müssen zum\
+    \ Weisen im Turm“, sagte Rose entschlossen. „Nur er kennt die genauen Worte des\
+    \ alten Versprechens.“  \n\nViolet legte ihre Hand auf Jasper’s Schulter. „Du\
+    \ wirst uns auf dem Weg führen, Jasper. Dein Mut wird uns schützen, aber du musst\
+    \ auch aufpassen, nicht zu voreilig zu handeln.“  \n\nJasper nickte und fühlte\
+    \ die Verantwortung in seiner Brust. „Ich verspreche, immer wachsam zu sein.“\
+    \  \n\nDie vier setzten ihren Weg fort, nun mit dem Gewicht von Violet’s Warnung\
+    \ im Herzen. Der Weg wurde schmaler, das Laub dichter, und das Flüstern des Waldes\
+    \ schien ein altes Lied zu singen – ein Lied von Verheißungen und Flüchen. Rose\
+    \ hielt den Anhänger fest, als würde er ihr Kraft geben. Noah sah aufmerksam die\
+    \ Umgebung, bereit, jeden Hinweis zu erkennen.\n\nWährend sie tiefer in den Wald\
+    \ eindrangen, spürten sie, wie ein leichter Nebel um sie herum wirbelte. Der Fluch\
+    \ war nicht mehr nur ein Gerücht; er war ein greifbarer Schatten, der über das\
+    \ Land schwebte. Doch mit jedem Schritt wuchs ihr Wille, das Versprechen zu erneuern\
+    \ und Eldoria zu retten.  \n\nSo gingen sie weiter, das Herz des alten Fluchs\
+    \ immer näher, und jedes ihrer Worte trug die Hoffnung, das Königreich von dem\
+    \ dunklen Schicksal zu befreien."
+  chapter_summary: "**Zusammenfassung (Deutsch, B1‑Niveau)**  \n\n- Der Himmel über\
+    \ Eldoria ist trüb, ein kühler Wind weht aus dem verzauberten Wald.  \n- Die vier\
+    \ Freunde (Rose, Violet, Jasper, Noah) verlassen den Marktplatz und gehen zum\
+    \ alten Turm des Weisen.  \n- Rose trägt einen silbernen Anhänger, der wie ein\
+    \ kleiner Stern glänzt.  \n\n**Wichtige Ereignisse & Entscheidungen**  \n- Violet\
+    \ stoppt und spricht ernst mit Jasper: *„Unser Königreich ist verflucht.“*  \n\
+    - Sie erklärt, dass ein alter Fluch seit Jahrhunderten über Eldoria liegt und\
+    \ stärker wird, wenn das Versprechen der Wächter vergessen wird.  \n- Der Anhänger\
+    \ in Roses Hand ist ein Zeichen dieses Versprechens.  \n- Rose fühlt, dass sie\
+    \ das Versprechen fast vergessen hat.  \n- Noah erinnert aus alten Schriften,\
+    \ dass nur das „Herz der Wächter“ (Roses Versprechen) den Fluch brechen kann.\
+    \  \n- Jasper beschließt, das Versprechen zu finden und zu erneuern.  \n- Violet\
+    \ warnt, dass der Fluch die Herzen vergiften kann; Mut muss mit Vorsicht verbunden\
+    \ sein.  \n\n**Emotionale Veränderungen**  \n- Jasper wechselt von neugieriger\
+    \ Energie zu gemischtem Lächeln und Sorge.  \n- Rose wird nervös, dann entschlossen.\
+    \  \n- Die Gruppe spürt Angst, als ein leises Heulen und ein Schatten aus dem\
+    \ Wald kommen.  \n\n**Enthüllte Informationen**  \n- Der Fluch entsteht, wenn\
+    \ das Versprechen der ersten Wächter vergessen wird.  \n- Der Anhänger ist das\
+    \ Symbol dieses Versprechens.  \n- Der Weise im Turm kennt die genauen Worte,\
+    \ um das Versprechen zu erneuern.  \n\n**Offene Spannung**  \n- Der Schatten im\
+    \ Wald und das Heulen zeigen, dass der Fluch bereits aktiv ist.  \n- Unklar, wie\
+    \ die Gruppe das Versprechen beim Weisen finden und erneuern wird.  \n- Gefahr,\
+    \ dass jemand zu voreilig handelt und dem Fluch verfällt.  \n\n**Endzustand des\
+    \ Kapitels**  \n- Die Gruppe setzt ihren Weg zum Turm des Weisen fort, nun schwerer\
+    \ belastet von Violets Warnungen.  \n- Der Wald wird dichter, Nebel legt sich\
+    \ um sie, aber ihr Wille, Eldoria zu retten, wächst.  \n- Sie nähern sich dem\
+    \ „Herzen des alten Fluchs“ und halten die Hoffnung, das Königreich zu befreien.\
+    \  "
+- id: 138
+  story_id: 30
+  chapter_number: 3
+  chapter_description: Jasper and Rose enter the enchanted forest in search of answers.
+  chapter_body: "**Kapitel 3 – Im verzauberten Wald**\n\nDer Nebel lag schwer über\
+    \ dem Weg, den Jasper und Rose genommen hatten. Hinter ihnen hörte man das leise\
+    \ Rascheln der Blätter, das Wiegen der Bäume. Vor ihnen erstreckte sich der verzauberte\
+    \ Wald von Eldoria, ein Ort, den kaum jemand ohne Vorsicht betrat.  \n\nJasper\
+    \ zog die Kapuze seiner Jacke fester um den Kopf. „Es fühlt sich an, als würde\
+    \ der Wald selbst atmen“, flüsterte er.  \n\nRose hielt den silbernen Anhänger\
+    \ fest in ihrer Hand. Das kleine Symbol leuchtete leicht, als würde es das Dunkel\
+    \ durchdringen. „Ich spüre, dass das Versprechen hierher geführt hat“, sagte sie\
+    \ leise.  \n\nSie gingen tiefer in den Wald. Die Bäume waren hoch und knorrig,\
+    \ ihre Äste bildeten ein dichtes Dach aus grünem Blattwerk. Zwischendurch schimmerten\
+    \ winzige Lichter – Glühwürmchen, die wie Sterne im Wald tanzten.  \n\nPlötzlich\
+    \ raschelte es im Unterholz. Beide hielten den Atem an. Aus dem Dickicht trat\
+    \ ein kleines Wesen hervor: ein Waldkobold mit spitzen Ohren und einem Mantel\
+    \ aus Moos. Seine Augen funkelten neugierig.  \n\n„Willkommen, Wanderer“, krächzte\
+    \ das Wesen. „Was führt euch in den Herz des Waldes?“\n\nJasper trat einen Schritt\
+    \ vor. „Wir suchen Antworten. Ein Fluch liegt über dem Königreich, und ich glaube,\
+    \ dass dieser Wald das Herz des Fluchs bewacht.“\n\nDer Kobold nickte langsam.\
+    \ „Der Fluch ist alt, so alt wie die Bäume selbst. Er nährt sich von vergessenen\
+    \ Versprechen.“ Er blickte auf den Anhänger in Roses Hand. „Das ist ein Zeichen\
+    \ der Wächter. Nur wer das Versprechen erneuert, kann das Dunkel vertreiben.“\n\
+    \nRose streckte die Hand aus und ließ den Anhänger in das Licht des Kobolds fallen.\
+    \ Ein sanftes Leuchten umgab das Symbol, und ein leiser Klang – fast ein Flüstern\
+    \ – hallte durch den Wald.  \n\n„Ihr müsst den Kristallsee finden“, sagte der\
+    \ Kobold. „Dort liegt das Herz der Wächter. Dort wird das Versprechen laut ausgesprochen.“\
+    \  \n\nJasper sah Rose an. In ihren Augen war ein Funken Hoffnung zu sehen. „Wie\
+    \ finden wir den See?“, fragte er.\n\nDer Kobold deutete mit einer knochigen Hand\
+    \ nach Norden. „Folgt dem Pfad der silbernen Blumen. Sie wachsen nur dort, wo\
+    \ das Herz schlägt.“  \n\nRose schloss kurz die Augen und spürte das leichte Summen\
+    \ des Anhängers. „Ich fühle, dass wir auf dem richtigen Weg sind“, sagte sie.\
+    \  \n\nSie setzten ihren Weg fort, die silbernen Blumen fanden sie bald – kleine,\
+    \ strahlende Blüten, die im Mondlicht glitzerten. Der Pfad wurde immer breiter,\
+    \ und ein leiser Gesang erfüllte die Luft, als würde der Wald selbst singen. \
+    \ \n\nNach einer Weile öffnete sich die Baumreihe und sie standen an einem stillen\
+    \ See. Das Wasser war klar wie Kristall und spiegelte den Sternenhimmel wider.\
+    \ In der Mitte des Sees erhob sich ein schimmernder Kristall, der das gleiche\
+    \ Leuchten wie Roses Anhänger ausstrahlte.  \n\nRose trat vorsichtig ans Ufer.\
+    \ „Das ist das Herz der Wächter“, flüsterte sie.  \n\nJasper kniete neben ihr,\
+    \ bereit zu helfen. Gemeinsam griffen sie nach dem Kristall. Im Moment, als Rose\
+    \ den Kristall berührte, durchströmte sie eine Welle von Erinnerungen: das Versprechen,\
+    \ das junge Mädchen, die Hallen aus Licht – alles kehrte zurück, stärker als je\
+    \ zuvor.  \n\n„Ich erinnere mich“, sagte Rose mit fester Stimme. „Ich schwöre,\
+    \ Eldoria zu beschützen, bis mein letzter Atemzug endet.“  \n\nDer Kristall leuchtete\
+    \ auf, ein warmes, goldenes Licht breitete sich über den See aus und vertrieb\
+    \ den dunklen Nebel, der den Wald umhüllte.  \n\nDer Kobold, der aus dem Schatten\
+    \ getreten war, verneigte sich tief. „Ihr habt das Versprechen erneuert. Der Fluch\
+    \ verliert seine Kraft.“  \n\nJasper lächelte. „Dann müssen wir schnell zum Turm\
+    \ des Weisen gehen, damit die Worte des Versprechens überall hörbar werden.“ \
+    \ \n\nRose nickte, ihr Blick war entschlossen. „Der Wald gibt uns den ersten Schritt.\
+    \ Jetzt müssen wir den Rest gehen.“  \n\nGemeinsam verließen sie den See, das\
+    \ Licht des Kristalls begleitete sie, und der Wald schloss leise seine Türen hinter\
+    \ ihnen. Die Hoffnung war wieder erwacht, und das Königreich Eldoria versprach,\
+    \ bald wieder in Frieden zu leben."
+  chapter_summary: "**Kapitel 3 – Zusammenfassung (B1‑Deutsch)**  \n\n- Der Nebel\
+    \ liegt schwer, Jasper und Rose betreten den verzauberten Wald von Eldoria.  \n\
+    - Rose hält den silbernen Anhänger, das Symbol der Wächter, in ihrer Hand.  \n\
+    - Ein kleiner Waldkobold erscheint und erklärt, dass der alte Fluch von vergessenen\
+    \ Versprechen lebt.  \n- Der Kobold sagt, das Herz des Fluchs liegt im Kristallsee.\
+    \ Wer das Versprechen erneuert, kann das Dunkel vertreiben.  \n- Er weist sie\
+    \ an, dem Pfad der silbernen Blumen nach Norden zu folgen.  \n- Rose und Jasper\
+    \ finden die Blumen, hören leisen Gesang und erreichen einen klaren See mit einem\
+    \ leuchtenden Kristall in der Mitte.  \n- Rose berührt den Kristall, bekommt viele\
+    \ Erinnerungen zurück und spricht das alte Versprechen laut: „Ich schwöre, Eldoria\
+    \ zu schützen, bis mein letzter Atemzug endet.“  \n- Der Kristall leuchtet stark,\
+    \ vertreibt den dunklen Nebel und schwächt den Fluch.  \n- Der Kobold verneigt\
+    \ sich und bestätigt, dass das Versprechen erneuert ist und der Fluch seine Kraft\
+    \ verliert.  \n- Jasper beschließt, schnell zum Turm des Weisen zu gehen, damit\
+    \ das erneuerte Versprechen im ganzen Königreich hörbar wird.  \n- Rose ist entschlossen,\
+    \ den Rest des Weges zu gehen; beide verlassen den Wald, das Licht des Kristalls\
+    \ begleitet sie.  \n\n**Offene Punkte / Spannung für das nächste Kapitel**  \n\
+    - Wie erreichen sie den Turm des Weisen?  \n- Können sie den Fluch vollständig\
+    \ brechen und Eldoria retten?  \n- Welche weiteren Prüfungen erwarten sie auf\
+    \ dem Weg aus dem Wald?  "
+- id: 139
+  story_id: 30
+  chapter_number: 4
+  chapter_description: Noah reveals the dangerous cost of breaking the curse.
+  chapter_body: "**Kapitel 4 – Die Gefahr des Brechens des Fluchs**  \n\nDer leichte\
+    \ Glanz des Kristalls schwebte über Jasper und Rose, während sie den dichten Wald\
+    \ verließen. Hinter ihnen war das leise Summen des Sees, das jetzt wie ein fernes\
+    \ Lied klang. Vor ihnen lag ein schmaler Pfad, der über moosbedeckte Steine zum\
+    \ alten Turm des Weisen führte.  \n\nViolet ging dicht hinter ihnen, ihr Blick\
+    \ blieb wachsam. Noah schritt ein paar Schritte weiter vorne, seine Hände verkrallten\
+    \ sich um den langen Stab, den er immer bei sich trug. Das Licht des Kristalls\
+    \ spiegelte sich auf dem Metall des Stabs und erzeugte ein flackerndes Muster\
+    \ auf dem Waldgrund.  \n\n„Wir müssen schnell zum Turm“, sagte Jasper, während\
+    \ er das leise Kichern von Vögeln hörte. „Je früher wir den Weisen finden, desto\
+    \ besser.“  \n\nRose nickte. Der Anhänger um ihren Hals glitzerte im Schein des\
+    \ Kristalls. „Ich fühle die Kraft des Versprechens“, flüsterte sie, „aber ich\
+    \ spüre auch, dass etwas fehlt.“  \n\nNoah hielt plötzlich inne. Er schaute zu\
+    \ Rose und Jasper und hob dann den Kopf, um in den Himmel zu sehen, wo die Wolken\
+    \ sich zu dicken, grauen Vorhängen zusammenzogen.  \n\n„Ich muss euch etwas sagen“,\
+    \ begann er mit ruhiger Stimme. „Das Versprechen, das wir gerade erneuert haben,\
+    \ kann den Fluch schwächen, aber es kann ihn nicht vollständig brechen.“  \n\n\
+    Jasper runzelte die Stirn. „Warum nicht? Wir haben doch das Versprechen laut gesprochen.“\
+    \  \n\nNoah trat einen Schritt näher. „Der Fluch ist alt, älter als die ersten\
+    \ Wächter. Er ist an das Land selbst gebunden. Um ihn ganz zu brechen, muss jemand\
+    \ ein großes Opfer bringen.“  \n\nViolet blickte irritiert. „Ein Opfer? Was meinst\
+    \ du damit?“  \n\nNoah holte tief Luft und ließ seine Worte langsam fließen. \
+    \ \n\n„Die Legende sagt, dass das Herz der Wächter – das Versprechen – ein Teil\
+    \ seiner Kraft an das Land abgibt. Wenn wir den Fluch komplett zerstören wollen,\
+    \ muss das Herz seine letzte Funkenkraft aufgeben. Das bedeutet, die Person, die\
+    \ das Versprechen erneuert, verliert… etwas sehr Wichtiges.“  \n\nRose spürte,\
+    \ wie ihr Herz schneller schlug. „Was für etwas Wichtiges?“  \n\n„Es kann das\
+    \ Gedächtnis sein, das Leben, oder sogar die eigene Seele“, sagte Noah, während\
+    \ ein Schatten über sein Gesicht zog. „Einige Wächter haben ihr ganzes Leben geopfert,\
+    \ um das Land zu retten. Sie wurden dann zu stillen Geisteshütern, die nur in\
+    \ den Legenden weiterleben.“  \n\nJasper sah zu Rose hinüber. „Du hast das Versprechen\
+    \ erneuert. Bedeutet das, du könntest…?“  \n\nRose senkte den Blick auf den silbernen\
+    \ Anhänger. Tränen glitzerten in ihren Augen, doch ihr Blick blieb fest. „Wenn\
+    \ ich dafür das Land retten kann, dann…“, begann sie, doch ihre Stimme brach.\
+    \  \n\nNoah legte seine Hand auf ihre Schulter. „Rose, du musst selbst entscheiden,\
+    \ ob du das Risiko eingehst. Die Kosten sind hoch, und nicht jeder ist bereit,\
+    \ alles zu geben.“  \n\nViolet trat näher und sah Rose mit ernstem Blick an. „Wir\
+    \ stehen alle zusammen, Rose. Wenn du dich opferst, werden wir dich nicht vergessen.“\
+    \  \n\nDer Wind fuhr durch die Bäume, ließ das Laub rascheln und erinnerte die\
+    \ Gruppe an die Gefahr, die noch vor ihnen lag.  \n\n„Der Turm des Weisen ist\
+    \ nicht weit“, sagte Noah, „und dort können wir mehr über das wahre Ritual erfahren.\
+    \ Vielleicht gibt es einen Weg, den Preis zu mildern.“  \n\nJasper griff nach\
+    \ Roses Hand. „Wir gehen zusammen, egal was kommt.“  \n\nRose lächelte schwach,\
+    \ doch in ihrem Herzen war ein neuer Mut erwacht. Sie sah den Kristall, der nun\
+    \ hinter ihnen in der Ferne leuchtete, und fühlte, dass das Licht ihr Kraft gab.\
+    \  \n\n„Dann lasst uns weitergehen“, sagte sie, ihre Stimme fest. „Wir erreichen\
+    \ den Turm und finden die Antworten. Und wenn das Opfer notwendig ist, werde ich\
+    \ bereit sein.“  \n\nDie Gruppe setzte ihren Weg fort, das Licht des Kristalls\
+    \ hinter ihnen, das leise Flüstern des Waldes verkündete, dass die Reise noch\
+    \ lange nicht zu Ende war. Die Gefahr des Brechens des Fluchs lag schwer auf ihren\
+    \ Schultern, doch die Hoffnung auf ein freies Eldoria gab ihnen Kraft, weiterzugehen.\
+    \  "
+  chapter_summary: "**Kapitel 4 – Zusammenfassung (Notizen für das nächste Kapitel)**\
+    \  \n\n- Der Kristall leuchtet leicht, die Gruppe verlässt den Wald und geht über\
+    \ einen moosigen Pfad zum Turm des Weisen.  \n- **Figurenposition:**  \n  - Jasper\
+    \ und Rose gehen vorne, Rose trägt den glitzernden Anhänger.  \n  - Violet folgt\
+    \ dicht hinter ihnen, aufmerksam.  \n  - Noah ist ein paar Schritte voraus, hält\
+    \ den langen Stab, blickt zum Himmel.  \n- **Wichtige Aussage von Noah:**  \n\
+    \  - Das erneuerte Versprechen kann den Fluch nur schwächen, nicht vollständig\
+    \ brechen.  \n  - Der Fluch ist sehr alt und an das Land gebunden.  \n  - Ein\
+    \ vollständiges Brechen erfordert ein großes Opfer von der Person, die das Versprechen\
+    \ erneuert.  \n- **Mögliche Opfer:** Verlust von Gedächtnis, Leben oder Seele;\
+    \ frühere Wächter wurden zu stillen Geisteshütern.  \n- **Reaktion von Rose:**\
+    \ Angst, Tränen, aber Entschlossenheit. Sie hat das Versprechen erneuert und könnte\
+    \ das Opfer bringen.  \n- **Unterstützung der Gruppe:**  \n  - Noah ermutigt Rose,\
+    \ selbst zu entscheiden.  \n  - Violet verspricht, Rose nicht zu vergessen, wenn\
+    \ sie sich opfert.  \n  - Jasper hält Roses Hand, verspricht, zusammen zu bleiben.\
+    \  \n- **Ziel:** Zum Turm des Weisen gehen, dort mehr über das Ritual und mögliche\
+    \ Wege zur Milderung des Opfers erfahren.  \n- **Emotionale Lage:** Mischung aus\
+    \ Sorge, Mut, Hoffnung. Rose fühlt neuen Mut, aber auch schwere Verantwortung.\
+    \  \n- **Offene Spannung:**  \n  - Wie kann das Opfer gemildert oder vermieden\
+    \ werden?  \n  - Welches genau ist das “richtige Ritual” im Turm?  \n  - Wird\
+    \ Rose tatsächlich das Opfer bringen?  \n- **Endzustand:** Gruppe setzt Weg fort,\
+    \ Kristall leuchtet in der Ferne, Waldgeräusche verhallen, das Ziel (Turm) ist\
+    \ noch nicht erreicht, Gefahr des Fluchs bleibt bestehen, Hoffnung auf ein freies\
+    \ Eldoria gibt Kraft.  "
+- id: 140
+  story_id: 30
+  chapter_number: 5
+  chapter_description: Betrayal separates the group before the final confrontation.
+  chapter_body: "Der Weg vom Kristallsee zum Turm des Weisen war lang und schmal.\
+    \ Der moosige Pfad schlängelte sich durch dunkle Eichen, und das silbrige Licht\
+    \ des Kristalls lag wie ein kleiner Stern auf Rose’s Hand. Jasper ging dicht neben\
+    \ ihr, sein Herz schlug schnell, weil er die Hoffnung spürte, Eldoria endlich\
+    \ zu retten. \n\nViolet schritt voraus, ihren Blick fest auf den Himmel gerichtet.\
+    \ Sie hielt einen langen Stab, aus dem ein schwaches Leuchten austrat. Noah war\
+    \ etwas weiter hinten, seine Augen glitten über die Bäume, als suchte er etwas\
+    \ Bestimmtes. Die Luft war kalt, und ein leiser Wind flüsterte durch die Blätter.\
+    \  \n\n„Wir müssen schnell zum Turm“, sagte Jasper. „Der Weise wird uns sagen,\
+    \ wie das Versprechen vollendet werden kann.“  \n\nRose nickte, aber ihr Blick\
+    \ wanderte zu dem Kristall. „Ich fühle, dass das Versprechen stark ist, aber der\
+    \ Fluch ist immer noch da“, flüsterte sie.  \n\nViolet hielt plötzlich inne. „Jasper,\
+    \ Rose, ich habe etwas, das wir nicht vergessen dürfen.“ Ihre Stimme war leise,\
+    \ aber entschlossen. Sie zog ein altes Pergament aus ihrer Tasche. Auf dem Pergament\
+    \ war ein Symbol zu sehen, das exakt dem Anhänger ähnelte, den Rose getragen hatte.\
+    \  \n\n„Das ist das wahre Herz der Wächter“, sagte Violet. „Es kann den Fluch\
+    \ zertrümmern, aber nur, wenn es allein genutzt wird.“  \n\nNoah trat näher. „Du\
+    \ willst das allein benutzen, Violet? Das ist gefährlich. Der Fluch frisst das\
+    \ Herz, das zu gierig wird.“  \n\nViolet sah Noah direkt an. „Du verstehst das\
+    \ nicht, Noah. Ich habe viele Jahre im Verborgenen gelebt, um das Königreich zu\
+    \ schützen. Wenn ich das Herz benutze, kann ich den Fluch sofort beenden.“  \n\
+    \nEin plötzliches Krachen durchbrach die Stille. Ein großer Baumstamm fiel und\
+    \ blockierte den Pfad. Der Schatten des Baumes legte sich über die Gruppe. In\
+    \ diesem Moment zog Violet das Pergament aus ihrer Tasche und legte es behutsam\
+    \ auf den Kristall. Das Licht des Kristalls flackerte, wurde dunkler.  \n\n„Was\
+    \ machst du?“, rief Jasper, doch seine Stimme hallte nur schwach.  \n\nViolet\
+    \ hob die Hand, und ein warmer, bläulicher Funken schoss aus dem Kristall in das\
+    \ Pergament. Der Funken berührte Rose’s Anhänger, und sofort spürte Rose einen\
+    \ stechenden Schmerz in ihrer Brust. Sie fiel zu Boden, ihr Griff um den Kristall\
+    \ lockerte sich.  \n\n„Nein!“, schrie sie, Tränen liefen ihr das Gesicht hinunter.\
+    \  \n\nNoah sprang nach vorne, versuchte Rose zu halten, doch Violet schob ihn\
+    \ zurück. „Ihr könnt mich nicht aufhalten“, sagte sie kalt. „Der Fluch muss beendet\
+    \ werden, egal welchen Preis er kostet.“  \n\nIn dem Moment, als das Licht des\
+    \ Kristalls erlosch, hörten sie ein tiefes Grollen aus dem Wald. Der Fluch selbst\
+    \ schien zu erwachen, ein dunkler Nebel stieg aus dem Boden auf und umhüllte die\
+    \ Gruppe.  \n\nJasper griff nach Rose’s Hand, aber das Pergament hatte das Licht\
+    \ bereits verschluckt. Der Kristall lag nun leblos auf dem Boden, und ein eisiger\
+    \ Hauch wehte durch die Äste.  \n\n„Du hast uns verraten“, flüsterte Rose, während\
+    \ sie versuchte, aufzustehen. Ihre Stimme war schwach, aber ihr Blick war fest.\
+    \  \n\nViolet sah ihr in die Augen, dann wandte sie sich ab. „Ich habe das Königreich\
+    \ gerettet, ja, aber ich muss jetzt gehen.“ Sie drehte sich um und verschwand\
+    \ zwischen den Bäumen, das Pergament fest an ihrer Brust.  \n\nNoah blieb stehen,\
+    \ zerrissen zwischen Zorn und Verzweiflung. „Wir müssen das Herz zurückholen,\
+    \ sonst ist Eldoria verloren“, sagte er, doch die Worte klangen hohl, weil er\
+    \ den Blick von Violet bereits verloren hatte.  \n\nJasper sah zu Rose, die immer\
+    \ noch zitterte. „Wir schaffen das zusammen“, sagte er entschlossen. „Wir finden\
+    \ einen Weg, den Fluch zu brechen, ohne das Herz zu benutzen.“  \n\nRose nickte\
+    \ schwach. Sie stand auf, hob den silbernen Anhänger und das Pergament, das jetzt\
+    \ vom Blut getränkt war. Der Nebel um sie herum wurde dichter, doch ein kleiner\
+    \ Schimmer des Kristalls war noch zu sehen – ein Funke, der nicht ganz erloschen\
+    \ war.  \n\n„Wir müssen zum Turm, bevor der Fluch uns ganz einhüllt“, sagte Jasper.\
+    \  \n\nNoah blickte zurück, wo Violet im Wald verschwand war. Tränen liefen über\
+    \ sein Gesicht, doch er sammelte seine Kraft. „Ich folge euch“, flüsterte er,\
+    \ „auch wenn ich nicht weiß, ob ich euch noch trauen kann.“  \n\nDie vier Freunde\
+    \ – jetzt nur noch Jasper, Rose und Noah – setzten ihren Weg fort. Der Wald schien\
+    \ lebendig zu werden, Rufe von unsichtbaren Kreaturen hallten durch die Zweige.\
+    \ Jeder Schritt war schwer, als das Gewicht des Verrats auf ihnen lastete.  \n\
+    \nDoch in ihren Herzen brannte ein Funke Hoffnung. Der Kristall war nicht ganz\
+    \ erloschen, und das Versprechen der Wächter lebte weiter in Rose’s Herzen. Sie\
+    \ schwor sich, das Königreich zu schützen, selbst wenn sie die Hilfe von Violet\
+    \ nicht mehr bekommen würde.  \n\nDer Weg zum Turm war noch lang, und das dunkle\
+    \ Fluch-Gefühl folgte ihnen wie ein Schatten. Aber die Gruppe war jetzt getrennt\
+    \ – nicht nur von Violet, sondern auch durch das Missverständnis, das zwischen\
+    \ ihnen entstanden war.  \n\nJasper sah in die Ferne, wo die Silhouette des Turms\
+    \ wie ein grauer Leuchtturm im Nebel stand. „Egal, was passiert“, sagte er, „wir\
+    \ gehen zusammen bis zum Schluss.“  \n\nRose drückte den Anhänger fester, während\
+    \ Noah den Stab tief in den Boden setzte, um das Gleichgewicht zu halten. Der\
+    \ Wald um sie herum flüsterte weiter, doch das leise Summen des Kristalls wurde\
+    \ wieder etwas stärker. Es war ein Zeichen, dass das Versprechen noch nicht verloren\
+    \ war, auch wenn ein Verräter sie getrennt hatte.  \n\nSie gingen weiter, jeder\
+    \ Schritt ein neues Kapitel des Kampfes, bis sie schließlich den Turm erreichen\
+    \ würden – vielleicht nicht als Ganzes, doch mit der Entschlossenheit, Eldoria\
+    \ zu retten.  "
+  chapter_summary: "**Kapitel‑Zusammenfassung (Deutsch, B1)**  \n\n- Der Weg vom Kristallsee\
+    \ zum Turm des Weisen ist lang, schmal und moosig.  \n- Rose hält den Kristall;\
+    \ Jasper läuft dicht neben ihr und hofft, Eldoria zu retten.  \n- Violet geht\
+    \ vorne, hat einen leuchtenden Stab. Noah ist hinten und sucht etwas im Wald.\
+    \  \n\n**Entscheidungen & Konflikte**  \n- Jasper sagt: „Wir müssen schnell zum\
+    \ Turm.“  \n- Rose spürt, dass das Versprechen stark, aber der Fluch noch aktiv\
+    \ ist.  \n- Violet zeigt ein altes Pergament mit dem gleichen Symbol wie Roses\
+    \ Anhänger.  \n  - Sie behauptet, das sei das „wahre Herz der Wächter“ und kann\
+    \ den Fluch allein brechen.  \n- Noah warnt: Das Herz kann den Nutzer verschlingen,\
+    \ wenn er zu gierig ist.  \n\n**Ereignis**  \n- Ein großer Baumstamm fällt, blockiert\
+    \ den Weg und wirft Schatten.  \n- Violet legt das Pergament auf den Kristall.\
+    \  \n- Ein bläulicher Funken springt vom Kristall zum Pergament und trifft Roses\
+    \ Anhänger.  \n- Rose hat sofort starke Schmerzen, fällt zu Boden, verliert den\
+    \ Griff am Kristall.  \n\n**Emotionen**  \n- Rose schreit: „Nein!“, Tränen.  \n\
+    - Jasper ruft verzweifelt, aber seine Stimme hallt schwach.  \n- Violet schiebt\
+    \ Noah zurück, sagt kalt, dass der Fluch um jeden Preis beendet werden muss. \
+    \ \n\n**Folgen**  \n- Das Licht des Kristalls erlischt, ein dunkler Nebel (der\
+    \ Fluch) steigt auf.  \n- Rose flüstert: „Du hast uns verraten.“  \n- Violet nimmt\
+    \ das Pergament, verlässt die Gruppe und verschwindet im Wald.  \n\n**Offene Spannungen**\
+    \  \n- Noah ist wütend und verzweifelt, will das Herz zurückholen, weiß aber nicht,\
+    \ ob er Violet noch vertrauen kann.  \n- Jasper und Rose entscheiden, den Fluch\
+    \ ohne das Herz zu brechen.  \n- Der Kristall hat noch einen kleinen Funken; das\
+    \ Versprechen der Wächter lebt weiter.  \n\n**Endzustand des Kapitels**  \n- Gruppe\
+    \ besteht jetzt aus Jasper, Rose und Noah.  \n- Sie setzen den Weg zum Turm fort,\
+    \ dichter Nebel und seltsame Geräusche umgeben sie.  \n- Jeder ist entschlossen,\
+    \ Eldoria zu retten, obwohl das Vertrauen beschädigt ist und Violet fehlt.  \n\
+    - Der Turm ist sichtbar im Nebel; das Versprechen ist noch nicht verloren.  "
+- id: 141
+  story_id: 31
+  chapter_number: 0
+  chapter_description: Establish the setting and introduce the characters.
+  chapter_body: 'Staden är gammal och stor. Den är huvudstad i ett land med många
+    klasskillnader. På ena sidan finns lyxiga herrgårdar med gröna trädgårdar. På
+    andra sidan finns trånga gränder med slitna hus. Folk i staden är ofta arga och
+    rädda. Det finns också hemliga sällskap som möts i mörka källare. Atmosfären är
+    tjock och tyst.
+
+
+    Maisie går längs en grusväg. Hon har starka armar och en tränad kropp. Hon har
+    bruna ögon som ser noga på allt. På hennes händer finns ärr. Hon bär enkel kläder
+    – slitna jeans och en gammal tröja. Hon talar med en sarkastisk röst. Maisie litar
+    inte på enkla svar. Hon tror att någon gömmer sanningen.
+
+
+    Vinnie sitter på en sten nära en fontän. Han har ett vitt- och silvergrått skägg.
+    Hans ögon är blå som himlen. Vinnies ansikte är rynkigt av år i solen. Han är
+    lugn och vänlig. Han hjälper gärna människor. Vinnie tror på gott i alla människor.
+    Han ser alltid möjlighet att hjälpa.
+
+
+    Isabelle går med mjuka steg. Hon är ung och har en liten kropp. Hennes ansikte
+    är mjukt och hon ler ofta. Hon har ett skarpt sinne och tänker snabbt. Isabelle
+    vill lyckas och vill ha makt. Hon är ambitiös och räknar alltid sina drag. Hon
+    är också charmig och får folk att känna sig trygga.
+
+
+    Noah står i skuggan av en gammal byggnad. Han är mycket hög och muskulös. Hans
+    röst är djupt och allvarligt. Han tittar tyst på folk och analyserar dem. Noah
+    är skeptisk och tror inte på ytliga svar. Han har ett torrt skämt ibland, men
+    han visar sällan sina känslor. Hans stora kropp är ett skydd mot världen.
+
+
+    Alla fyra personer rör sig i staden på samma dag. De känner varandra men vet inte
+    vad som kommer att hända. Det finns spänning i luften, och någon osynlig kraft
+    drar dem mot en hemlighet. Stadens gator väntar på att deras berättelse ska börja.  '
+  chapter_summary: "**Kapitel‑sammanfattning (Svenska, A1)**  \n\n- Staden är stor\
+    \ och gammal. Det finns fina hus och fattiga gränder. Folk är arga och rädda.\
+    \  \n- Maisie går på en grusväg. Hon har starka armar, bruna ögon och ärr på händerna.\
+    \ Hon har slitna jeans och en gammal tröja. Hon talar sarkastiskt och tror att\
+    \ någon döljer sanningen.  \n- Vinnie sitter på en sten vid en fontän. Han har\
+    \ vitt och silvergrått skägg, blå ögon och rynkor. Han är lugn, vänlig och vill\
+    \ hjälpa folk.  \n- Isabelle går mjukt. Hon är ung, liten och har ett leende.\
+    \ Hon är smart, ambitiös och vill ha makt. Hon får andra att känna sig trygga.\
+    \  \n- Noah står i skuggan av en gammal byggnad. Han är hög, muskulös och har\
+    \ djup röst. Han tittar tyst på folk, tror inte på ytliga svar och visar sällan\
+    \ känslor.  \n- Alla fyra rör sig i staden samma dag. De känner varandra men vet\
+    \ inte vad som kommer att hända. En osynlig kraft drar dem mot en hemlighet. \
+    \ \n- Spänning finns i luften. Kapitel slutar med att gatorna väntar på deras\
+    \ berättelse.  "
+- id: 142
+  story_id: 31
+  chapter_number: 1
+  chapter_description: Maisie begins investigating Vinnie's sudden disappearance.
+  chapter_body: "Maisie vaknade tidigt. Solen var svag. Gatorna i staden var tysta.\
+    \ Hon gick mot fontänen där Vinnie alltid satt. \n\nNär hon kom fram var platsen\
+    \ tom. Stenen var kall. Vinnie var borta. En ensam bänk stod vid sidan. En liten\
+    \ låda låg på bänken. \n\nMaisie öppnade lådan. Inuti fanns en bit papper. På\
+    \ pappret stod “Möt mig i skuggan”. Handen på pappret var blöt. \n\nHon såg runt.\
+    \ En gammal kvinna stod i skuggan. Kvinnan tittade på Maisie. \n\n– Vem är du?\
+    \ frågade Maisie. \n\nKvinnan svarade tyst. Hon pekade mot den mörka gränden.\
+    \ \n\nMaisie följde pekandet. Gången var smal och ful. På väggen hängde en trasig\
+    \ tavla. Tavlan visade en bild av Vinnie vid fontänen. \n\nSamtidigt hörde Maisie\
+    \ en röst bakom sig. Det var Isabelle. \n\n– Vad gör du här? frågade Isabelle.\
+    \ \n\n– Jag letar efter Vinnie, svarade Maisie utan att le. \n\nIsabelle såg på\
+    \ pappret. Hon nickade. \n\n– Vi måste prata med Noah. Han vet mer om vad som\
+    \ händer i staden, sa hon. \n\nMaisie och Isabelle gick till den stora byggnaden\
+    \ där Noah stod i skuggan. Noah såg på dem med sina djupa ögon. \n\n– Vad vill\
+    \ ni? frågade han. \n\n– Vinnie är försvunnen. Vi har ett meddelande, sa Maisie.\
+    \ \n\nNoah tog pappret. Han läste snabbt. \n\n– Det här är farligt, sa han. Men\
+    \ jag kan hjälpa er. \n\nDe tre personer gick tillbaka till fontänen. Maisie kände\
+    \ en kall vind. Hon såg en liten nyckel ligga på marken. \n\nHon plockade upp\
+    \ nyckeln. Den var gammal och rostig. \n\n– Det är början på något, tänkte hon.\
+    \ \n\nMaisie gick hem med nyckeln i sin ficka. Hon bestämde sig för att fortsätta\
+    \ undersöka. Gatorna väntade på svaret. \n\nSlutet på dagen lämnade en mörk känsla\
+    \ i luften. Men Maisie var fast besluten. Hon skulle hitta sanningen om Vinnies\
+    \ försvinnande."
+  chapter_summary: "**Sammanfattning – Kapitel 1 (A1‑nivå, svenska)**  \n\n- Maisie\
+    \ vaknar tidigt. Solen är svag. Gatorna är tysta.  \n- Hon går till fontänen där\
+    \ Vinnie brukar sitta.  \n- Fontänen är tom. En kall sten och en ensam bänk finns.\
+    \ På bänken ligger en liten låda.  \n- Maisie öppnar lådan. I lådan är ett papper\
+    \ med texten “Möt mig i skuggan”. Papperet är blött.  \n- En gammal kvinna står\
+    \ i skuggan och pekar mot en mörk gränd.  \n- I gränden hänger en trasig tavla.\
+    \ På tavlan ser man Vinnie vid fontänen.  \n- Isabelle hör Maisie. Isabelle frågar\
+    \ vad Maisie gör. Maisie säger att hon letar efter Vinnie.  \n- Isabelle ser på\
+    \ pappret, nickar och säger att de måste prata med Noah.  \n- De går till den\
+    \ stora byggnaden. Noah står i skuggan. Noah frågar vad de vill.  \n- Maisie visar\
+    \ pappret. Noah läser det snabbt. Han säger att det är farligt men att han kan\
+    \ hjälpa.  \n- De går tillbaka till fontänen. En kall vind blåser. På marken ligger\
+    \ en liten, rostig nyckel.  \n- Maisie plockar upp nyckeln. Hon tänker: “Det är\
+    \ början på något.”  \n- Maisie går hem med nyckeln i fickan. Hon bestämmer sig\
+    \ för att fortsätta söka svar.  \n- Dagen slutar med en mörk känsla, men Maisie\
+    \ är bestämd. Hon ska hitta sanningen om Vinnies försvinnande.  "
+- id: 143
+  story_id: 31
+  chapter_number: 2
+  chapter_description: Political tensions complicate the investigation.
+  chapter_body: "**Kapitel 2 – Politiska spänningar komplicerar undersökningen**\n\
+    \nMaisie vaknar tidigt igen. Hon har den rostiga nyckeln i fickan. Hon går ut\
+    \ på den grusiga vägen. Gatorna är tysta men fulla av människor.\n\nI en del av\
+    \ staden ser hon stora hus. I de stora husen bor rika män och kvinnor. De har\
+    \ fina kläder och blåa mantlar. I en annan del ser hon smutsiga gränder. Där bor\
+    \ fattiga familjer. De har trasiga rockar och kalla händer.\n\nPå torget hänger\
+    \ två banderoller. En banderoll säger **“Rättvisa för alla”**. Den andra banderollen\
+    \ säger **“Starkare makt”**. Folk ropar och pekar på varandra. Rösterna blir högre.\
+    \ En ung man ropar: *“Vi vill ha mat!”* En äldre dam svarar: *“Vi vill ha fred!”*\
+    \ \n\nMaisie känner spänning i luften. Hon ser Isabelle vid en bänk. Isabelle\
+    \ håller i papperet med meddelandet *“Möt mig i skuggan”*. Isabelle ser orolig\
+    \ ut.\n\n– *“Vad händer?”* frågar Maisie.\n\n– *“Staden är delad,”* svarar Isabelle.\
+    \ *“Rik och fattig slåss. Ingen vill prata om Vinnie.”* \n\nPlötsligt hörs steg.\
+    \ Noah kommer fram. Han har sin långa skugga bakom sig.\n\n– *“Det är farligt\
+    \ att gå runt nu,”* säger Noah. *“När politiken är het kan folk se er som fiender.”*\
+    \ \n\nMaisie nickar. Hon visar nyckeln för Noah.\n\n– *“Jag tror att nyckeln öppnar\
+    \ något viktigt,”* säger hon. *“Men vi måste vara försiktiga.”* \n\nNoah pekar\
+    \ mot stadshuset. Det är en stor byggnad med höga portar. En vakt står vid dörren.\
+    \ Vakten har en röd cape och en stjärnformad medaljong.\n\n– *“Ingen får gå in\
+    \ utan tillstånd,”* säger vakten. *“Staden är i uppror. Alla dörrar är låsta.”*\
+    \ \n\nIsabelle tittar på papperet igen. Hon ser en liten teckning på sidan. På\
+    \ teckningen finns en dold dörr bakom en tavla.\n\n– *“Kanske finns en hemlig\
+    \ ingång,”* säger Isabelle. *“Vi kan leta där.”* \n\nMaisie känner en kall vind\
+    \ i ryggen. Hon tror att en osynlig kraft drar dem mot hemligheten. Hon tar ett\
+    \ djupt andetag.\n\n– *“Vi går tillsammans,”* säger hon bestämt. *“Politiska bråk\
+    \ får inte stoppa sanningen.”* \n\nDe tre går mot stadshusets bakväg. Människor\
+    \ ser på dem med misstänksamma blickar. En grupp soldater marscherar förbi. Deras\
+    \ svärd blänker i morgonljuset.\n\nNär de kommer fram hör de en duns. En gammal\
+    \ tavla faller ner från väggen. Bakom tavlan finns en liten öppning. En kall,\
+    \ mörk tunnel syns.\n\n– *“Det kan vara där nyckeln passar,”* säger Maisie och\
+    \ tar fram den rostiga nyckeln. \n\nDe stannar en stund. Stadens ljud blir tystare.\
+    \ Spänningen är stor. Maisie vet att politiken gör vägen svår, men hon är fast\
+    \ besluten.\n\n– *“Vi fortsätter,”* säger hon. *“Vi måste hitta Vinnie.”* \n\n\
+    Kapitel slutar med att de alla sänker huvudet och går ner i den mörka öppningen.\
+    \ Lüften känns kall, men deras vilja är stark."
+  chapter_summary: "**Sammanfattning – Kapitel 2 (A1‑nivå)**  \n\n- Maisie vaknar\
+    \ tidigt. Hon har en rostig nyckel i fickan.  \n- Hon går på den grusiga vägen.\
+    \ Gatorna är tysta men fulla med folk.  \n- I en del av staden ser hon stora hus.\
+    \ Rika människor har fina kläder och blåa mantlar.  \n- I en annan del ser hon\
+    \ smutsiga gränder. Fattiga familjer har trasiga rockar och kalla händer.  \n\
+    - På torget finns två banderoller: “Rättvisa för alla” och “Starkare makt”. Folk\
+    \ ropar och pekar på varandra.  \n- Maisie ser Isabelle på en bänk. Isabelle har\
+    \ ett papper med texten “Möt mig i skuggan”.  \n- Isabelle säger: “Staden är delad.\
+    \ Rik och fattig slåss. Ingen vill prata om Vinnie.”  \n- Noah kommer. Han säger\
+    \ att det är farligt att gå omkring nu. Politik gör folk arga.  \n- Maisie visar\
+    \ den rostiga nyckeln för Noah. Hon tror att nyckeln öppnar något viktigt.  \n\
+    - Noah pekar på stadshuset. En vakt i röd cape säger: “Ingen får gå in utan tillstånd.\
+    \ Alla dörrar är låsta.”  \n- Isabelle tittar på papperet igen. Hon ser en liten\
+    \ teckning av en dörr bakom en tavla.  \n- Gruppen bestämmer att leta efter en\
+    \ hemlig ingång.  \n- De går bakifrån stadshuset. Människor tittar misstänksamt.\
+    \ Soldater marscherar förbi.  \n- En gammal tavla faller ner. Bakom tavlan finns\
+    \ en liten öppning och en mörk tunnel.  \n- Maisie säger: “Kanske passar nyckeln\
+    \ här.” Hon tar fram den rostiga nyckeln.  \n- Alla är spända. De vet att politiken\
+    \ gör vägen svår, men de är bestämda.  \n- De sänker huvudet och går ner i den\
+    \ mörka öppningen. Luften är kall, men deras vilja är stark.  \n\n**Oupplöst spänning**\
+    \ – Vad finns bakom tunneln? Finns nyckeln rätt? Vem är Vinnie?  \n\n**Slutläge**\
+    \ – Maisie, Isabelle och Noah går in i den hemliga tunneln, redo att fortsätta\
+    \ sökandet.  "
+- id: 144
+  story_id: 31
+  chapter_number: 3
+  chapter_description: Isabelle uncovers hidden documents tied to a secret society.
+  chapter_body: "**Kapitel 3 – Isabelle hittar hemliga papper**\n\nNatten var mörk.\
+    \ Vägen ner i tunneln var kall. Maisie, Isabelle och Noah gick långsamt. De hade\
+    \ den rostiga nyckeln i fickan. Deras hjärtan slog snabbt.\n\nIsabelle hörde ett\
+    \ svagt ljud. Det lät som papper som prasslade. Hon pekade på en gammal vägg.\
+    \ ”Här är något,” sade hon.\n\nDe stannade. Ila‑ljuset från deras ficklampa visade\
+    \ ett litet hål i väggen. Ett litet papper stack ut. Isabelle böjde sig ner. Hon\
+    \ tog försiktigt fram papperet.\n\nDet var en gammal bok. På omslaget stod stora\
+    \ bokstäver: **“Skuggornas råd”.** Boken var dammig. Isabelle öppnade den långsamt.\
+    \ Inuti fanns flera dokument. Det fanns kartor och listor. Det fanns också namn\
+    \ på människor.\n\nIsabelle läste högt: ”*Vi är en hemlig förening. Vi vill styra\
+    \ staden från mörkret.*” Hon såg på Maisie och Noah. Alla såg oroliga ut.\n\n\
+    Noah tog ett dokument. Han tittade på det. ”Det här är farligt,” sa han. ”Det\
+    \ betyder att någon i staden vill dölja sanningen.”\n\nMaisie höjde ögonbrynen.\
+    \ ”Vem är Vinnie?” frågade hon. Isabelle svarade: ”Jag tror att Vinnie såg dessa\
+    \ papper innan han försvann. Han kanske var i kontakt med dem.”\n\nIsabelle plockade\
+    \ ur en annan roll. På den stod datum. Det var i går. Papperet var fortfarande\
+    \ färskt. Det stod: **“Möt mig i skuggan vid fontänen. – V”.** Isabelle pekade\
+    \ på bokstaven V. ”Det kan vara Vinnies signatur,” sa hon.\n\nLjudet av fotsteg\
+    \ hördes ovanför. Det var en vakt. Vakter gick förbi den stora byggnaden. De ropade:\
+    \ ”Ingen får gå in utan tillstånd!” Men Isabelle och hennes vänner var redan i\
+    \ tunneln. De var i säkerhet.\n\nIsabelle bläddrade i boken. Hon hittade en karta\
+    \ över staden. På kartan var en röd prick. Det var en plats bakom stadshuset.\
+    \ ”Det här är deras gömställe,” sa hon. ”Vi måste gå dit.”\n\nNoah rörde på armen.\
+    \ ”Vi har nyckeln. Vi kan öppna dörren.” Alla nickade. De reste sig upp. Det kalla\
+    \ luften i tunneln gjorde dem rysa.\n\nDe gick tillbaka mot ingången. Isabelle\
+    \ höll boken i handen. Hon kände att hon hade hittat en ledtråd. ”Vi är närmare\
+    \ sanningen,” sade hon. ”Vi måste vara försiktiga. Politiska makter ser på oss.”\n\
+    \nMaisie tog nyckeln ur fickan. Hon satte in den i låset som de såg på väggen.\
+    \ Låset klickade. Dörren öppnades sakta. Ett mörkt rum låg bakom. Inuti fanns\
+    \ fler papper och en stor bild av en gammal kappa. På kappan stod en symbol: en\
+    \ krona med en orm.\n\nNoah fläktade upp en gammal bok. ”Det här är en gammal\
+    \ hemlig kod. Den hör till en hemlig sällskap. Kanske *Skuggornas råd*,” sa han.\n\
+    \nIsabelle såg på de andra. ”Vi måste ta med oss pappren. De bevisar att någon\
+    \ döljer sanningen om Vinnie och om staden.” Alla gick med på det.\n\nDe samlade\
+    \ så mycket som de kunde. De la papprena i en väska. När de gick ut hördes återigen\
+    \ ljudet av fyrverkerier från torget. Folk ropade: ”Rättvisa för alla!” och ”Starkare\
+    \ makt!” Det var politiska banderoller överallt.\n\nIsabelle stirrade på stadens\
+    \ ljus genom den öppna dörren. ”Vi är mitt i ett spel,” tänkte hon. ”Men vi har\
+    \ bevis.” Hon såg på Maisie. ”Vi måste vara modiga.” \n\nDe steg ut ur tunneln.\
+    \ Kylan i natten slog mot deras ansikten. Men i deras händer låg pappren som kunde\
+    \ förändra staden. De gick mot ljuset, mot stadens centrum, med en ny plan.\n\n\
+    **Slutet på Kapitel 3.**"
+  chapter_summary: "**Sammanfattning – Kapitel 3 (enkel svenska, A1)**  \n\n- Natten\
+    \ är mörk och tunnel är kall.  \n- Maisie, Isabelle och Noah går långsamt. De\
+    \ har en rostig nyckel i fickan.  \n- Isabelle hör ett svagt prassel. Hon ser\
+    \ ett litet hål i en vägg.  \n- Hon tar försiktigt fram ett gammalt papper. Det\
+    \ är en bok som heter **“Skuggornas råd”**.  \n- I boken finns kartor, listor\
+    \ och namn på personer.  \n- Isabelle läser högt: en hemlig förening vill styra\
+    \ staden från mörkret.  \n- Noah säger att det är farligt. Alla blir oroliga.\
+    \  \n- De pratar om Vinnie. De tror att Vinnie såg pappren innan han försvann.\
+    \  \n- De hittar ett notat: **“Möt mig i skuggan vid fontänen – V”**. Bokstaven\
+    \ V kan vara Vinnies signatur.  \n- En vakt ropar: “Ingen får gå in utan tillstånd!”.\
+    \ Vakten är ovanför, men de är säkra i tunneln.  \n- Isabelle ser på kartan och\
+    \ hittar en röd prick bakom stadshuset. Det är troligen deras gömställe.  \n-\
+    \ De bestämmer sig för att gå dit. Maisie använder den rostiga nyckeln och låset\
+    \ klickar. Dörren öppnas.  \n- I ett mörkt rum finns fler papper och en stor bild\
+    \ på en gammal kappa med en krona och en orm.  \n- Noah säger att det är en hemlig\
+    \ kod för “Skuggornas råd”.  \n- Gruppen tar med sig så många papper de kan och\
+    \ lägger dem i en väska.  \n- Utanför hörs fyrverkerier och folk ropar: “Rättvisa\
+    \ för alla!” och “Starkare makt!”. Det finns många politiska banderoller.  \n\
+    - Isabelle tänker att de är mitt i ett spel, men de har bevis nu. Hon säger att\
+    \ de måste vara modiga.  \n- De går ut ur tunneln. Kylan blåser mot deras ansikten.\
+    \ I deras händer ligger papprena som kan förändra staden.  \n- De går mot stadens\
+    \ centrum med en ny plan.  \n\n**Oavslutad spänning:**  \n- Vem är “Skuggornas\
+    \ råd”?  \n- Vad har Vinnie gjort?  \n- Vad kommer att hända när de visar bevisen?\
+    \  "
+- id: 145
+  story_id: 31
+  chapter_number: 4
+  chapter_description: Noah attempts to silence the investigation permanently.
+  chapter_body: "Maisie, Isabelle och Noah gick ut ur det hemliga rummet. Kylan slog\
+    \ mot deras ansikten. De bar en tung väska med papper. På väskan låg den rostiga\
+    \ nyckeln.  \n\n\"Vi måste visa bevisen,\" sa Maisie. Hon såg på Isabelle.  \n\
+    \nIsabelle nickade. \"Ja, staden måste veta sanningen.\"  \n\nPlötsligt hördes\
+    \ ett steg. En mörk skugga föll över dem. Det var Noah. Han stod i dörren till\
+    \ en gammal källare.  \n\n\"Stanna här,\" ropade han med djup röst.  \n\nMaisie\
+    \ såg på honom. Hon kände hans stora kropp. \"Vad vill du?\" frågade hon.  \n\n\
+    \"Noah\" svarade han. \"Jag kan inte låta er gå vidare. Jag ska stoppa undersökningen\
+    \ för alltid.\"  \n\nHan sträckte ut sin hand. I hans hand var en tung järnbalk.\
+    \  \n\n\"Noah, ge tillbaka väskan,\" sa Isabelle med darrande röst.  \n\nNoah\
+    \ tog väskan. \"Den här informationen är farlig,\" sa han. \"Den får inte komma\
+    \ ut.\"  \n\nHan pressade en stor dörr. Dörren lät som en sten. Den stängdes med\
+    \ ett hårt klick.  \n\n\"Ni är fast,\" sa Noah. \"Ingen kan lämna.\"  \n\nMaisie\
+    \ såg på den rostiga nyckeln i sin ficka. Hon tog fram den snabbt.  \n\n\"Jag\
+    \ öppnar låset,\" sa hon.  \n\nHon tryckte nyckeln i låset. Men Noah hade redan\
+    \ låst låset med ett extra spänst. Nyckeln gick inte att vrida.  \n\nIsabelle\
+    \ såg sig omkring. Det fanns bara väggar och mörker. En kall vind blåste genom\
+    \ källaren.  \n\n\"Noah, släpp oss,\" ropade hon.  \n\nNoah skrattade kort. \"\
+    Det finns ingen väg ut.\"  \n\nPlötsligt hörde de ett svagt ljud ovanför. En röst\
+    \ ropade: \"Kom snabbt tillbaka!\" Det var Vinnies röst, men den var bara en ekon.\
+    \  \n\nMaisie försökte dra sig loss. Hon pressade sin starka arm mot dörren. Men\
+    \ Noahs muskler var starkare.  \n\nHan drack en klunk vatten och sa: \"Det är\
+    \ för sent.\"  \n\nLjuset började bli mörkare. Skuggorna rörde sig i taket.  \n\
+    \nMaisie kände hur hennes hjärta slog snabbt. Hon visste att de måste hitta en\
+    \ annan väg.  \n\nMen Noah stod kvar vid dörren, med järnbalken i handen, och\
+    \ såg på dem utan att säga ett ord.  \n\nKylan, mörkret och tystnaden omgav dem.\
+    \ De var fast i källaren, med ingen idé om hur de skulle ta sig ut.  \n\nDet var\
+    \ en tyst, hotfull stund.  \n\n---  "
+  chapter_summary: "**Sammandrag – kapitel (A1‑svenska)**  \n\n- Maisie, Isabelle\
+    \ och Noah går ut ur det hemliga rummet.  \n- Det är kallt. De har en tung väska\
+    \ med papper och en rostig nyckel.  \n- De vill visa bevisen för staden.  \n\n\
+    - Plötsligt kommer en mörk skugga. Det är en man som heter Noah (andra Noah).\
+    \  \n- Han står i dörren till en gammal källare.  \n- “Stanna här”, ropar han.\
+    \  \n- Han vill stoppa undersökningen.  \n\n- Noah tar väskan. “Den här informationen\
+    \ är farlig”, säger han.  \n- Han stänger en stor dörr. Dörren låser med ett hårt\
+    \ klick.  \n- “Ni är fast”, säger Noah.  \n\n- Maisie tar den rostiga nyckeln\
+    \ och försöker öppna låset.  \n- Noah har redan låst låset med extra spänst. Nyckeln\
+    \ går inte att vrida.  \n\n- Isabelle blir rädd och ropar efter hjälp.  \n- Ett\
+    \ svagt eko hörs ovanför: “Kom snabbt tillbaka!” – det är Vinnies röst.  \n\n\
+    - Maisie trycker sin arm mot dörren, men Noah är starkare.  \n- Noah dricker vatten\
+    \ och säger: “Det är för sent.”  \n- Ljuset blir mörkare, skuggor rör sig i taket.\
+    \  \n\n- Alla har snabbt hjärta och är rädda. De vet inte hur de ska ta sig ut.\
+    \  \n\n- **Slutet:** De sitter fast i källaren, utan någon klar väg ut och med\
+    \ spänning kvar."
+- id: 146
+  story_id: 31
+  chapter_number: 5
+  chapter_description: Maisie exposes the conspiracy before violence erupts across
+    the city.
+  chapter_body: "**Kapitel 5 – Maisie avslöjar konspirationen innan våldet sprider\
+    \ sig**\n\nMorgonen är kall. Maisie, Isabelle och Noah sitter i den mörka källaren.\
+    \ På bordet ligger den tunga väskan med papper. I Maisies ficköppning ligger den\
+    \ rostiga nyckeln.\n\n“Vi måste gå ut”, säger Maisie. Hon tar nyckeln och sätter\
+    \ den i låset. Låset klickar. Dörren öppnas.\n\nDe kliver ut i den kalla natten.\
+    \ Snön faller lätt. Stadens ljus glimmar långt bort.\n\nPå gatan hör de musik,\
+    \ fyrverkerier och rop. På många byggnader hänger banderoller. En banderoll säger\
+    \ “Rättvisa för alla”. En annan säger “Starkare makt”.\n\nIsabelle tar fram den\
+    \ blöta lappen. På lappen står:  \n\n„Möt mig i skuggan vid fontänen. – V”\n\n\
+    Hon visar lappen för Maisie. “Vinnie var här”, viskar Isabelle.\n\nDe går snabbt\
+    \ mot stadshuset. Stora trappor leder upp till den stora salen där folk samlas.\n\
+    \nUtanför salen står en grupp med svärd och röda fanor. De ropar och är arga.\
+    \ En soldat pekar på dem. Alla väntar på vad som händer.\n\nNoah, den stora mannen\
+    \ i mörka kläder, kommer fram. “Stanna”, säger han med låg röst. “Det är farligt”.\n\
+    \nMaisie tar fram en av papperna. På pappret är en bild av en kappa med en krona\
+    \ och en orm. ”Det här är symbolen för Skuggornas råd”, säger hon. ”De styr både\
+    \ de rika och de fattiga i hemlighet.”\n\nHon visar fler papper. På pappren står\
+    \ namn på personer i staden. Det står också hur de planerar att starta våld för\
+    \ att ta makt.\n\nFolk i salen tittar på pappren. En ung man ropar: “Är detta\
+    \ sant?”  \n\nNoah försöker ta pappret, men Maisie håller det hårt. ”Nej”, säger\
+    \ hon. ”Vi måste berätta sanningen.”\n\nLjudet av fyrverkerier blir tystare. Soldaten\
+    \ lägger ner svärdet. Människorna ser varandra i ögonen. De börjar prata lugnt.\n\
+    \nEn äldre man, ledaren för protesten, säger: “Vi vill fred. Vi tror inte längre\
+    \ på lögner.” Han pekar på pappren och säger: “Här är bevis.”\n\nRösterna i gatan\
+    \ blir mjukare. Folket sakta sprider sig och lämnar torget utan att slåss. En\
+    \ lugn känsla fyller luften.\n\nMaisie tar fram den rostiga nyckeln igen. Hon\
+    \ håller den i handen och ser på den. Hon känner sig stark. “Vi har gjort det”,\
+    \ säger hon tyst. “Vinnie skulle vara stolt.”\n\nIsabelle ler svagt. “Vi måste\
+    \ fortsätta”, säger hon. “Men nu är staden trygg för ikväll.”\n\nNoah ser på dem.\
+    \ Hans ögon blir mjukare. “Kanske var jag fel”, säger han. “Jag vill hjälpa till.”\n\
+    \nStaden blir tyst. Ljuset från lamporna blinkar mjukt. Folk går hem, men de pratar\
+    \ om vad de har sett. De vet att sanningen är ute.\n\nMaisie stoppar ner nyckeln\
+    \ i fickan. Hon ser ut över torget. Hon känns lugn men också beredd. Hon vet att\
+    \ fler hemligheter kan komma, men nu har de stoppat våldet.\n\nKapitel fem slutar\
+    \ med att staden vilar i fred. Maisie, Isabelle och Noah går tillsammans bort\
+    \ från torget, med papperna i väskan och ett löfte om att fortsätta kämpa för\
+    \ sanningen."
+  chapter_summary: "**Kapitel 5 – Sammanfattning (A1‑nivå)**  \n\n- Morgon. Kall.\
+    \ Maisie, Isabelle och Noah sitter i mörk källare.  \n- På bordet ligger en tung\
+    \ väska med papper. I fickan finns en rostig nyckel.  \n- Maisie säger: “Vi måste\
+    \ gå ut.” Hon sätter nyckeln i låset. Låset klickar. Dörren öppnas.  \n- De går\
+    \ ut i kall natt. Snön faller. Stadens ljus syns långt bort.  \n- På gatan hör\
+    \ de musik, fyrverkerier och rop. På byggnader hänger banderoller: “Rättvisa för\
+    \ alla”, “Starkare makt”.  \n- Isabelle visar en blöt lapp: “Möt mig i skuggan\
+    \ vid fontänen. – V”. Hon viskar: “Vinnie var här.”  \n- De går snabbt till stadshuset.\
+    \ Stora trappor leder upp till stora salen.  \n- Utanför salen står en grupp med\
+    \ svärd och röda fanor. De ropar och är arga. En soldat pekar på dem. Alla väntar.\
+    \  \n- Noah, den stora mannen i mörka kläder, säger lugnt: “Stanna. Det är farligt.”\
+    \  \n- Maisie tar fram ett papper med bild av kappa, krona och orm. Hon säger:\
+    \ “Det här är symbolen för Skuggornas råd. De styr i hemlighet.”  \n- Hon visar\
+    \ fler papper. På pappren står namn på personer i staden och planerna för våld.\
+    \  \n- Folk i salen ser på pappren. En ung man ropar: “Är detta sant?”  \n- Noah\
+    \ försöker ta pappren, men Maisie håller dem hårt. Hon säger: “Nej, vi måste berätta\
+    \ sanningen.”  \n- Fyrverkerier blir tystare. Soldaten lägger ner svärdet. Människorna\
+    \ tittar på varandra. De börjar prata lugnt.  \n- En äldre man, protestledaren,\
+    \ säger: “Vi vill fred. Vi tror inte på lögner.” Han pekar på pappren: “Här är\
+    \ bevis.”  \n- Rösterna på gatan blir mjukare. Folket lämnar torget utan att slåss.\
+    \ En lugn känsla fyller luften.  \n- Maisie håller den rostiga nyckeln i handen.\
+    \ Hon känner sig stark. Hon säger tyst: “Vi har gjort det. Vinnie skulle vara\
+    \ stolt.”  \n- Isabelle ler lite. Hon säger: “Vi måste fortsätta, men nu är staden\
+    \ trygg för ikväll.”  \n- Noah ser på dem. Hans ögon blir mjukare. Han säger:\
+    \ “Kanske var jag fel. Jag vill hjälpa till.”  \n- Stadens lampor blinkar mjukt.\
+    \ Folk går hem och pratar om vad de har sett. De vet att sanningen är ute.  \n\
+    - Maisie stoppar nyckeln i fickan. Hon ser ut över torget. Hon är lugn men beredd.\
+    \ Hon vet att fler hemligheter kan komma.  \n- Kapitel fem slutar med att staden\
+    \ vilar i fred. Maisie, Isabelle och Noah går bort från torget med pappren i väskan\
+    \ och ett löfte att fortsätta kämpa för sanningen.  \n\n**Öppna frågor för nästa\
+    \ kapitel**  \n- Vilka nya hemligheter finns i pappren?  \n- Hur kommer Skuggornas\
+    \ råd att svara?  \n- Vad ska Maisie, Isabelle och Noah göra nästa gång?  "
+- id: 147
+  story_id: 32
+  chapter_number: 0
+  chapter_description: Establish the setting and introduce the characters.
+  chapter_body: "Şehirde bir sabah. Güneş hafifçe parlıyor. Kavşakta bir kafe var.\
+    \ Kafenin penceresinden hafif bir müzik çalıyor. Çalışanlar ve öğrenciler masalarda\
+    \ oturuyor. İçeride kahve kokusu ve hafif bir gürültü var.\n\nMason kafenin köşesinde\
+    \ oturmuş. İnce bir vücudu, soluk teni var. İnce çerçeveli gözlük takıyor. Kitap\
+    \ okuyor, gözleri bazen aşağıya, bazen yukarıya bakıyor. Ellerini sık sık çırpıyor,\
+    \ biraz gergin gibi. Yine de konuşurken sesinde sıcak bir çekicilik var.\n\nİris\
+    \ içeri giriyor. Uzun, ince ve zarif. Saçları hafif dalgalı, gözleri sakin ve\
+    \ mavi. Sessiz ama kendinden emin yürüyüşü var. Elinde basit bir gümüş yüzük.\
+    \ Masaya otururken bakışları etrafı izliyor, ama bir şeyleri tartıyor gibi duruyor.\
+    \ Sessiz bir gücü var.\n\nMaisie de kafenin kapısını açıyor. Atletik bir vücudu,\
+    \ güçlü bir duruşu var. Ellerinde hafif yara izleri, kahverengi gözleri dikkatli\
+    \ bakıyor. Yüzünde hafif bir alay ifadesi, sesi ise biraz keskin. Masaya otururken\
+    \ etrafı inceliyor, sanki bir şeyleri anlamaya çalışıyor. \n\nÜçü de aynı şehirde,\
+    \ aynı kafede bulunuyor. Şehrin hızlı temposu, kafede bir anlık duraklama gibi.\
+    \ Her biri kendi düşünceleriyle, geçmişin izleriyle ve geleceğin planlarıyla dolu.\
+    \ Bu sabah, onların yolları bir kez daha kesişiyor."
+  chapter_summary: "**Bölüm Özeti (A1 – Türkçe)**  \n\n- Sabah. Güneş parlıyor.  \n\
+    - Bir kavşakta kafe var. İçeride müzik çalıyor, kahve kokuyor.  \n- Mason köşede\
+    \ oturuyor. İnce, soluk tenli. Gözlüğü var, kitap okuyor. Ellerini çırpıyor, biraz\
+    \ gergin ama sesi sıcak.  \n- İris içeri giriyor. Uzun, ince, zarif. Saçları dalgalı,\
+    \ gözleri mavi. Elinde gümüş bir yüzük. Masaya oturur, etrafına bakar, bir şeyler\
+    \ düşünüyor.  \n- Maisie de kapıyı açar. Atletik, güçlü. Ellerinde yara izleri,\
+    \ kahverengi gözleri dikkatli. Alaycı bir yüz ifadesi var, sesi keskin. Masada\
+    \ oturur, etrafı inceler.  \n- Üç karakter aynı şehirde, aynı kafede. Her biri\
+    \ geçmişi ve geleceği düşünür.  \n- Bu sabah yolları tekrar kesişir.  \n\n**Karakter\
+    \ kararları ve duygular**  \n- Mason kitap okumaya devam eder, gergin ama konuşmak\
+    \ ister.  \n- İris sessiz ama kendinden emin, yüzükünü tutar.  \n- Maisie dikkatli\
+    \ ve alaycı, çevresini anlamaya çalışır.  \n\n**Açığa çıkan bilgiler**  \n- Mason’un\
+    \ gerginliği, İris’in gümüş yüzüğü, Maisie’nin yara izleri.  \n\n**Çözülmemiş\
+    \ gerilim**  \n- Üçünün aynı anda kafede olması, birbirlerine ne söyleyecekleri\
+    \ belli değil.  \n\n**Bölüm sonunda durum**  \n- Mason, İris ve Maisie masada\
+    \ oturur, birbirlerine bakar, sessiz bir an vardır.  \n- Hikaye burada durur,\
+    \ sonraki olaylar beklenir."
+- id: 148
+  story_id: 32
+  chapter_number: 1
+  chapter_description: Mason and Iris meet during a tense professional disagreement.
+  chapter_body: "**Bölüm 1 – Profesyonel Anlaşmazlık**  \n\nKafe hâlâ aynı sabah gürültüsüyle\
+    \ doluydu. Masalar sıkı ama rahat. Masanın köşesinde Mason hâlâ kitabını okuyor,\
+    \ ara ara kahve fincanına bakıyordu. Iris, aynı masada, gümüş yüzüğünü parmakları\
+    \ arasında tutuyordu. Maisie, kapının yan tarafında oturmuş, çayını içiyordu.\
+    \  \n\nBir anda masanın ortasında bir dosya belirdi. Dosya, “Şehir Festivali Projesi”\
+    \ başlığına sahipti. Mason dosyayı açtı ve yüksek sesle söyledi:\n\n- “Biz, sahne\
+    \ yerini bu köşeye koymalıyız. Böylece daha çok insan görebilir.”\n\nIris dosyayı\
+    \ inceledi. Gözleri bir an düşündü, sonra yumuşak bir sesle yanıtladı:\n\n- “Ben,\
+    \ sahneyi anı köşesine koymak istiyorum. Orası daha sessiz ve güzel bir manzara\
+    \ verir.”\n\nMason’ın kaşıları çattı. Elini masanın kenarına bastırdı ve biraz\
+    \ titreşti.\n\n- “Ama o köşe çok karanlık. İnsanlar sahneyi göremez. Bu projenin\
+    \ başarısı için ışık gerekir.”\n\nIris sakin bir şekilde yüzüğünü sıkmadı. Yavaşça\
+    \ konuştu:\n\n- “Işık problemi var ama we, doğal ışığı kullanabiliriz. Güneş doğarken\
+    \ sahne orada olur. Bu, ziyaretçiler için bir sürpriz olur.”\n\nMason bir an durdu.\
+    \ Nefesini çekti ve gözlüğünün kenarına dokundu.\n\n- “Senin fikrin güzel, ama\
+    \ ben daha güvenli bir yer istiyorum. İnsanların güvenliği bizim önceliğimiz.”\n\
+    \nMasadaki sessizlik, kahve kokusuyla karıştı. Maisie gözlerini masaya çevirdi,\
+    \ ama bir şey söylemedi. O sadece izliyordu.\n\nIris bir adım öne çıktı. Elini\
+    \ masanın üzerine koydu.\n\n- “Mason, birlikte çalışabiliriz. Sen ışık ve güvenlik\
+    \ konularını düşün, ben de manzarayı planlarım. Böyle bir denge buluruz.”\n\n\
+    Mason gözlüğünün altına bakarak biraz rahatladi. Gülümsemesi zayıftı ama sesinde\
+    \ bir sıcaklık vardı.\n\n- “Tamam, Iris. Seninle çalışmaya hazırım. Ama bir şey\
+    \ daha var. Projenin bütçesi çok az. Bu planı nasıl yapacağız?”\n\nIris hafifçe\
+    \ başını salladı.\n\n- “Bütçeyi kontrol edebiliriz. Gereksiz harcamaları azaltırız.\
+    \ Ben de sponsorluk bulmaya çalışırım.”\n\nMason bir kez daha dosyayı açtı ve\
+    \ üzerine notlar almaya başladı. \n\n- “Bu iyi bir başlangıç. Yarın bir toplantı\
+    \ yapalım. Daha detaylı konuşuruz.”\n\nIris gülümseyerek başını eğdi.\n\n- “Evet,\
+    \ yarın görüşürüz.”\n\nMasada bir kez daha sessizlik hâkim oldu, ama bu sefer\
+    \ farklı bir sessizlikti. Artık bir anlaşmazlık değil, bir iş birliği havası vardı.\
+    \ Maisie, bir yudum çayını aldı ve düşünceli bir bakış attı.  \n\nKafe hâlâ sabah\
+    \ ışıklarıyla parlıyordu. Mason kalemiyle yazdı, Iris dosyayı kapattı ve yüzüğünü\
+    \ hafifçe parlatmaya baktı. İkisi de yeni bir başlangıç için umutlu gözlerle dışarı\
+    \ baktılar.  \n\n**Bölüm Sonu**"
+  chapter_summary: "**Bölüm 1 – Profesyonel Anlaşmazlık (özet notları)**  \n\n- Kafe\
+    \ sabah olur. Masada Mason, Iris, Maisie oturur.  \n- Masanın ortasında “Şehir\
+    \ Festivali Projesi” dosyası belirir.  \n- Mason: sahneyi köşeye koymak ister.\
+    \  \n- Iris: sahneyi başka köşeye koymak ister.  \n- İki kişi sahne yeri hakkında\
+    \ tartışır.  \n- Iris, doğal ışık ve güzel manzara söyler.  \n- Mason, güvenlik\
+    \ ve ışık sorununu söyler.  \n- Maisie sessiz izler.  \n- Iris: “Birlikte çalışalım.”\
+    \ der.  \n- Mason: “Tamam, ama bütçe az.” der.  \n- Iris: bütçeyi kontrol eder,\
+    \ sponsorluk arar.  \n- İkisi: yarın toplantı yapacak.  \n- Duygular: önce tartışma,\
+    \ sonra anlaşma, umut.  \n- Yeni bilgi: bütçe az, sponsorluk gerek.  \n- Çözülmemiş:\
+    \ bütçeyi nasıl tam dolduracağız.  \n- Son durum: Mason ve Iris iş birliği yapıyor,\
+    \ umutlu, Maisie düşünceli.  "
+- id: 149
+  story_id: 32
+  chapter_number: 2
+  chapter_description: Maisie encourages Iris to give Mason another chance.
+  chapter_body: '**Bölüm 2 – Maisie, Iris’e Mason’a bir şans vermesini söyler**
+
+
+    Kafe hâlâ sessizdi. Güneş pencerenin üzerinden içeri giriyordu. Masanın üzerinde
+    “Şehir Festivali Projesi” dosyası duruyordu. Mason ve Iris hâlâ oturmuş, dosyayı
+    inceliyordu.
+
+
+    Maisie masaya yaklaştı. Elindeki kahve fincanını hafifçe bıraktı. Gözleri iki
+    genç insanı izliyordu. Iris, yüzükünü parmakta tutuyordu. Mason ise gözlüklerini
+    bir kez daha düzeltti.
+
+
+    — Iris, bir şey söylemek istiyorum — dedi Maisie, sesini yumuşatarak.
+
+
+    Iris başını kaldırdı. Gözleri masaya bakıyordu. Hafif bir gülümseme vardı ama
+    gözlerinde hâlâ bir kararsızlık.
+
+
+    — Ne demek istiyorsun? — diye sordu Iris.
+
+
+    — Mason çok çalışıyor. Biliyorsun, bütçeyi bulmak zor. Ama o da senin gibi projeye
+    çok önem veriyor — dedi Maisie. — O, sahneyi köşeye koymak istediğinde, güvenliği
+    düşündü. Sen de ışığı düşündün. İkiniz aynı şeyi istiyorsunuz.
+
+
+    Iris hafifçe başını salladı. Yüzük parmağından kaymadı.
+
+
+    — Ama... o çok çabuk karar veriyor. Bazen acele ediyor — diye ekledi Iris.
+
+
+    — Evet, belki — cevapladı Maisie. — Ama kimse mükemmel değil. Biz de herkes gibi
+    bir şeyler öğreniriz. Tekrar denemek, ona bir şans vermek, anlamına gelmez ki
+    her şey mükemmel olur. Sadece bir adım atmak demektir.
+
+
+    Maisie bir elini Iris’in omzuna koydu. Iris’in omzu hafifçe titredi.
+
+
+    — Bak, sen de bir şans verdin ona önce. Sen, sahneyi farklı bir yere koymak istediğinde
+    ona dinlemeyi teklif ettin — dedi Maisie. — Şimdi ona dinleme zamanı.
+
+
+    Iris derin bir nefes aldı. Gözleri masadaki dosyaya baktı. Sayfalar, renkli planlar,
+    notlar... Hepsi bir geleceği gösteriyordu.
+
+
+    — Tamam — dedi Iris yumuşak bir sesle. — Bir şans daha verebilirim. Yarınki toplantıyı
+    bekleyelim.
+
+
+    Mason hafifçe gülümsedi. Gözleri umutla parladı. Masanın üzerindeki dosyayı kapattı
+    ve elini Iris’in eline dokundurdu. Ellerini nazikçe sıkıştırdı.
+
+
+    — Teşekkür ederim, Iris — dedi Mason. — Seni hayal kırıklığına uğratmamak için
+    elimden geleni yapacağım.
+
+
+    Maisie başını salladı. Gülümsemesi baştan çıkarmış gibiydi.
+
+
+    — İyi ki yaptınız — dedi. — Birlikte çalışırsanız, festival çok güzel olur.
+
+
+    Kafe içinde hafif bir melodi çalmaya başladı. Kahve kokusu hala tazeydi. Üç kişi
+    aynı masada oturdu, ama artık birbirlerine daha az mesafeyle bakıyorlardı.
+
+
+    Iris yüzükünü bir kez daha tuttu. Bu sefer elleri daha az titriyordu. Mason’ın
+    çekingen gülümsemesi, bir umut ışığı gibiydi. Maisie ise sessizce izliyordu; içi
+    hâlâ dikkatliydi ama artık bir parça rahatlamıştı.
+
+
+    Gün batmaya doğru, kafe yavaşça kapanıyordu. Üç kişi, yarınki toplantı için planlarını
+    düşündü. Iris, Mason’a bir şans vermeye karar vermişti. Bu karar, küçük bir adım
+    olacaktı ama büyük bir umut taşıyordu.'
+  chapter_summary: "**Bölüm 2 – Özet Notları (A1 – Türkçe)**  \n\n- Kafe sessiz, güneş\
+    \ pencereden giriyor.  \n- Masada “Şehir Festivali Projesi” dosyası var.  \n-\
+    \ Mason ve Iris dosyayı inceliyor.  \n- Maisie masaya geliyor, kahve fincanını\
+    \ bırakıyor.  \n- Maisie, “Iris, bir şey söylemek istiyorum” der.  \n- Iris başını\
+    \ kaldırır, biraz gülümser ama karar veremez.  \n- Maisie, Mason’un çok çalıştığını\
+    \ ve bütçeyi bulmakta zorlandığını söyler.  \n- Iris, Mason’un hızlı karar verdiğini\
+    \ ve acele ettiğini söyler.  \n- Maisie, kimsenin mükemmel olmadığını, bir şans\
+    \ vermenin önemli olduğunu anlatır.  \n- Maisie, Iris’in daha önce Mason’a bir\
+    \ şans verdiğini hatırlatır ve “Şimdi ona dinleme zamanı” der.  \n- Iris derin\
+    \ nefes alır, dosyaya bakar ve “Tamam, bir şans daha verebilirim. Yarınki toplantıyı\
+    \ bekleyelim” der.  \n- Mason hafifçe gülümser, umutla parlar ve Iris’in elini\
+    \ tutar, nazikçe sıkıştırır.  \n- Mason, “Seni hayal kırıklığına uğratmamak için\
+    \ elimden geleni yapacağım” diye söyler.  \n- Maisie başını sallar, “İyi ki yaptınız,\
+    \ birlikte çalışırsanız festival güzel olur” der.  \n- Kafede hafif bir melodi\
+    \ çalar, kahve kokusu hâlâ tazedir.  \n- Üç kişi masada oturur, birbirine daha\
+    \ az mesafeyle bakar.  \n- Iris yüzüğünü tutar, elleri daha az titrer.  \n- Mason\
+    \ çekingen bir gülümseme gösterir, umut ışığı vardır.  \n- Maisie sessizce izler,\
+    \ artık biraz rahatlamıştır.  \n- Gün batmaya doğru kafe kapanır, üç kişi yarınki\
+    \ toplantıyı düşünür.  \n- **Karar:** Iris, Mason’a bir şans vermeye karar verir.\
+    \  \n- **Duygular:** Iris biraz daha sakin, Mason umutlu, Maisie rahat.  \n- **Gerginlik:**\
+    \ Yarınki toplantı ve projenin bütçesi hâlâ belirsiz.  \n- **Son durum:** Üçü\
+    \ birlikte çalışmaya karar verir, küçük bir adım ama büyük umut taşırlar."
+- id: 150
+  story_id: 32
+  chapter_number: 3
+  chapter_description: Shared experiences slowly build emotional trust.
+  chapter_body: "Bölüm 3 – Ortak Anılar Güveni Yaratır  \n\nKafe kapandıktan sonra,\
+    \ üç kişi bir sonraki gün için plan yaptı. Masada kalan dosyalar, iki kahve fincanı\
+    \ ve bir not vardı.  \n\nSabah erken saatlerde, Iris ve Mason aynı otobüste oturdu.\
+    \ Otobüs hafif sallanıyordu. Iris elindeki dosyayı açtı. Mason da notlarını çıkardı.\
+    \  \n\n“Bugün sahneyi nasıl kuracağız?” dedi Iris.  \n\nMason biraz titredi. “Işıkları\
+    \ kontrol edeceğim,” dedi.  \n\nİkisinin sesleri otobüsün gürültüsüyle karıştı.\
+    \ Ama ikisi de konuşmaya devam etti.  \n\nOtobüs durağa geldiğinde, dışarıda hafif\
+    \ bir yağmur vardı. İkisi de şemsiyeyi paylaşarak yürüdü. Şemsiye çok küçüktü,\
+    \ ama birbirlerine yaklaştılar.  \n\nYağmur damlaları yüzlerine çarpıyordu. Iris\
+    \ gülümseyerek, “Bu yağmur güzel,” dedi.  \n\nMason hafifçe gülümseyerek, “Ben\
+    \ de aynı fikirdeyim,” dedi.  \n\nYürürken, bir parkta oturdular. Mason çantasından\
+    \ bir ekmek ve peynir çıkardı. “Bir şeyler atıştıralım,” dedi.  \n\nİris ekmeği\
+    \ aldı ve teşekkür etti. “Teşekkür ederim,” dedi.  \n\nMasada otururken, Mason\
+    \ bir tarih sorusu sordu. “Bu şehirde en eski köprü nerede?”  \n\nİris bir an\
+    \ düşündü. “Bence eski köprü şehir merkezinde,” dedi.  \n\nMason gülerek, “Doğru,”\
+    \ dedi. “Sen çok iyisin.”  \n\nİkisinin gözleri buluştu. Bir anda sessiz bir an\
+    \ oldu.  \nBu an, ikisinin de birbirine bir şeyler anlatmak istediğini hissettirdi.\
+    \  \n\nÖğle yemeği zamanında, Maisie de onlara katıldı. Maisie bir sandviç getirdi.\
+    \  \n\n“Bugün siz ikiniz iyi çalışıyorsunuz,” dedi Maisie, hafif bir gülümsemeyle.\
+    \  \n\nİris elini Mason’a uzattı. “Beraber çalışalım,” dedi.  \n\nMason elini\
+    \ sıkıca tuttu. “Tamam,” dedi.  \n\nÜç kişi bir masa etrafında oturdu. Birlikte\
+    \ dosyaları inceledi. Her bir satırı birlikte okudular.  \n\nMason bir sayfayı\
+    \ işaret etti. “Bu bölümde ışıkları değiştirebiliriz,” dedi.  \n\nİris başını\
+    \ salladı. “Ben de sahne düzenini yaparım,” dedi.  \n\nMaisie gözlerini kapattı\
+    \ ve derin bir nefes aldı. “Bu iyi bir başlangıç,” dedi.  \n\nGün boyunca, üç\
+    \ kişi birbirine yardım etti. Birbirlerinin fikirlerine saygı gösterdi.  \n\n\
+    Akşamüstü, kafe kapandı. Dışarıda güneş batmaya başladı.  \n\nMason, Iris’e baktı.\
+    \ “Bugün çok şey öğrendim,” dedi.  \n\nİris hafifçe gülümsedi. “Ben de,” dedi.\
+    \  \n\nMaisie onlara baktı ve gözleri parladı. “Bu proje güzel olacak,” dedi.\
+    \  \n\nÜçü de aynı anda kahve fincanını uzattı. Kahve sıcak ve tatlıydı.  \n\n\
+    Bu gün, küçük bir adım oldu.  \nBirbirlerine güvenmeye başladılar.  \nGelecek\
+    \ günlerde daha fazla çalışacaklardı.  \nKalplerinde bir umut vardı.  \nİris,\
+    \ Mason ve Maisie artık yalnız değillerdi.  \nOrtak anılar, aralarındaki duvarları\
+    \ yavaşça kırdı.  \nBölüm burada bitti, ama yeni bir yol başladı."
+  chapter_summary: "**Bölüm 3 – Özet (A1 seviyesinde Türkçe)**  \n\n- Kafe kapandıktan\
+    \ sonra Iris, Mason ve Maisie yarın için plan yaptılar.  \n- Sabah otobüste Iris\
+    \ ve Mason dosya ve notlarını açtı.  \n- Iris “Sahneyi nasıl kuracağız?” dedi.\
+    \  \n- Mason “Işıkları kontrol edeceğim” dedi, hafif titredi.  \n- Otobüs durdu,\
+    \ dışarıda hafif yağmur vardı. İkisi küçük şemsiyeyi paylaştı ve yaklaştı.  \n\
+    - Yağmurda yürürken Iris gülümsedi, “Bu yağmur güzel”, dedi. Mason da gülümsedi.\
+    \  \n- Parkta oturup ekmek ve peynir yediler.  \n- Mason tarih sorusu sordu: “En\
+    \ eski köprü nerede?” Iris “Şehir merkezinde” dedi, Mason “Doğru” dedi.  \n- Sessiz\
+    \ bir an oldu, ikisi de birbirine bir şey söylemek istedi.  \n- Öğle yemeğinde\
+    \ Maisie sandviç getirdi, “İkiniz iyi çalışıyorsunuz” dedi.  \n- Iris, Mason’un\
+    \ elini uzattı, “Beraber çalışalım”. Mason elini sıkı tuttu.  \n- Üçü masada oturdu,\
+    \ dosyaları okudu. Mason ışıkları değiştirebileceklerini söyledi. Iris sahne düzenini\
+    \ yapacağını söyledi. Maisie “Bu iyi bir başlangıç” diye rahatladı.  \n- Gün boyunca\
+    \ birbirine yardım ettiler, fikirlerine saygı gösterdiler.  \n- Akşam kafe kapandı,\
+    \ güneş batıyordu. Mason “Bugün çok şey öğrendim”, dedi. Iris “Ben de” dedi. Maisie\
+    \ “Bu proje güzel olacak” dedi.  \n- Üçü aynı anda kahve fincanı uzattı, kahve\
+    \ sıcak ve tatlıydı.  \n- Artık birbirine güveniyorlar, kalplerinde umut var.\
+    \  \n- Ortak anılar duvarları yavaşça kırdı. Bölüm bitti, yeni bir yol başladı.\
+    \  "
+- id: 151
+  story_id: 32
+  chapter_number: 4
+  chapter_description: A hidden secret damages the relationship between Mason and
+    Iris.
+  chapter_body: "Kafe sabah ışıkları hâlâ yanıyordu. Masada Maya, Iris ve Mason dosyalarla\
+    \ çalışıyordu. Herkes sessizdi. \n\nMason bir telefon çaldı. O, telefonu alıp\
+    \ sessizce konuştu. “Evet, ben buradayım. Sözleşmeyi imzaladım,” dedi. Sonra telefonu\
+    \ kapattı ve yüzü gri göründü.  \n\nIris masanın kenarında bir kâğıt gördü. Kâğıt\
+    \ Mason’un adıyla başlamıştı: “Mason – Yeni Sponsor ABC”. Altında “Özel ışık ve\
+    \ sahne tasarımı” yazıyordu. Iris kağıdı okudu.  \n\n“Iris:” “Mason, bu nedir?\
+    \ Neden bana söylemedin?” dedi.  \n\nMason ellerini çırptı. “Ben sadece proje\
+    \ için bir şey yaptım,” dedi. “Seninle konuşmayı unuttum.”  \n\nMaisie odaya baktı.\
+    \ “Bu çok önemli,” dedi. “Açıkça konuşmalıyız.”  \n\nMason derin bir nefes aldı.\
+    \ “Sponsor ABC çok büyük bir firma,” dedi. “Onlar sahneyi kendi istediği gibi\
+    \ değiştirmek istiyor. Bu yüzden bir anlaşma yaptım.”  \n\nIris gözleri doldu.\
+    \ “Ben sana güvenmiştim. Sen bana sakladın,” dedi sessizce.  \n\nMasadaki sessizlik\
+    \ ağır oldu. Maisie ellerini masaya koydu, “Şimdi ne yapacağız?” diye sordu. \
+    \ \n\nMason başını eğdi. “İçimden çok üzgün,” dedi. “Sana yalan söyledim.”  \n\
+    \nIris oturduğu yerden kalktı. “Ben daha fazla çalışamam,” dedi ve kapıya doğru\
+    \ yürüdü.  \n\nMaisie Mason’a baktı. “İki taraf da üzüldü,” dedi. “Bu güveni yeniden\
+    \ kurmak zor.”  \n\nMason yalnız kaldı. Kâğıt hâlâ masada duruyordu. Gözleri yere\
+    \ baktı.  \n\nBöylece gizli sır ortaya çıktı ve Mason ile Iris arasındaki bağ\
+    \ kırıldı. İkisi de hâlâ proje hakkında düşünüyordu ama kalplerinde bir soğukluk\
+    \ vardı.  \n\nBölüm burada bitti.  "
+  chapter_summary: "**Bölüm Özeti (A1 – Türkçe)**  \n\n- Kafe sabah ışıkları yanıyor.\
+    \  \n- Maya, Iris ve Mason masada dosyalarla çalışıyor.  \n- Mason’un telefonu\
+    \ çalıyor. Telefonu alıp “Sözleşmeyi imzaladım” diyor, sonra sessiz kalıyor. \
+    \ \n- Iris bir kağıt buluyor. Kağıtta “Mason – Yeni Sponsor ABC, Özel ışık ve\
+    \ sahne tasarımı” yazıyor.  \n- Iris, “Bu nedir? Neden bana söylemedin?” diyor.\
+    \  \n- Mason ellerini çırpıyor, “Sadece proje için yaptım, unutmuşum” diyor. \
+    \ \n- Maisie odada “Bu çok önemli, açıkça konuşmalıyız” diyor.  \n- Mason, “Sponsor\
+    \ ABC büyük bir firma, sahneyi kendi istediği gibi değiştirmek istiyor. Bu yüzden\
+    \ anlaşma yaptım” açıklıyor.  \n- Iris gözleri doluyor, “Sana güvenmiştim, sakladın”\
+    \ diyor.  \n- Masada sessizlik oluyor.  \n- Maisie, “Şimdi ne yapacağız?” soruyor.\
+    \  \n- Mason başını eğiyor, “Üzgünüm, yalan söyledim” diyor.  \n- Iris oturduğu\
+    \ yerden kalkıyor, “Daha fazla çalışamam” diyip kapıya yürüyüyor.  \n- Maisie,\
+    \ “İki taraf da üzüldü, güveni tekrar kurmak zor” diyor.  \n- Mason yalnız kalıyor,\
+    \ kağıt hâlâ masada. Gözleri yere bakıyor.  \n- Gizli sır ortaya çıktı, Mason\
+    \ ve Iris’in bağları kırıldı. İkisi de proje hakkında düşünüyor ama kalplerinde\
+    \ soğukluk var.  \n\n**Kalan Sorun:**  \n- Proje nasıl devam edecek?  \n- Mason\
+    \ ve Iris güveni yeniden kurabilir mi?  \n- Yeni sponsor ABC’nin istekleri ne\
+    \ kadar büyük?  \n\n**Bölüm Sonu Durumu:** Mason yalnız, Iris odadan çıktı, Maisie\
+    \ sorularla kalmış. Kağıt hâlâ masada."
+- id: 152
+  story_id: 32
+  chapter_number: 5
+  chapter_description: Mason and Iris decide whether the relationship can survive.
+  chapter_body: "**Bölüm 5 – İlişkiyi Kurtarabilir miyiz?**\n\nKafe sabah ışıklarıyla\
+    \ aydınlanıyordu. Mason masada oturmuş, elindeki kağıda bakıyordu. Ellerini titretmişti.\
+    \ Masanın yanında Maisie oturmuş, sıcak bir çay içiyordu.  \n\nİris kapıdan içeri\
+    \ girdi. Gözleri hafif kırmızıydı. “Merhaba,” dedi sessizce.  \n\nMason ayağa\
+    \ kalktı. “İris, özür dilerim,” dedi hızlıca. “Sana yalan söyledim. Sponsor ABC\
+    \ istedi, ama ben sana söylemedim.”  \n\nİris derin bir nefes aldı. “Bana güvenmiştim,”\
+    \ dedi düşük bir sesle. “Şimdi çok üzgünüm.”  \n\nMaisie ellerini birleştirdi.\
+    \ “İkiniz aynı projeyi istiyorsunuz,” dedi nazikçe. “Belki bir şans daha verebiliriz.”\
+    \  \n\nMason başını salladı. “Söz veriyorum,” dedi. “Sözleşmeyi değiştirebilirim.\
+    \ Senin fikirlerin önemli.”  \n\nİris kağıtları inceledi. “Bu, sahneyi tamamen\
+    \ değiştirir,” dedi. “Ama belki birlikte çalışırsak daha iyi olur.”  \n\nMason\
+    \ çiğneyerek “Biraz zaman lazım,” dedi. “Güveni tekrar inşa etmeliyiz.”  \n\n\
+    İris gözlerini Kapıya doğru baktı. “Ben de zaman istiyorum,” diye ekledi. “Ama\
+    \ vazgeçmek istemiyorum.”  \n\nMaisie hafifçe gülümsedi. “O zaman yarın bir toplantı\
+    \ yapalım,” dedi. “İkiniz de planı paylaşın. Sonra karar verin.”  \n\nMason ve\
+    \ İris birbirlerine göz attı. İkisi de hafifçe gülümsedi. “Tamam,” dediler birlikte.\
+    \ “Yarın konuşalım.”  \n\nKafe kapandı. Üç kişi dışarı çıktı. Yağmur hafifçe çiseledi.\
+    \  \n\n**Sonuç:**  \n- Mason özür diledi ve değişiklik yapacağını söyledi.  \n\
+    - İris hâlâ üzüldü ama bir şans daha vermeye karar verdi.  \n- Maisie iki arkadaşını\
+    \ bir arada tutmaya çalıştı.  \n\nGün sonunda herkes bir karar vermek için hazırdı:\
+    \ İlişkiyi kurtarmak için bir şans daha.  \n\n---  "
+  chapter_summary: "**Bölüm 5 – Notlar**\n\n- Kafe sabah ışıklarıyla açıktı.  \n-\
+    \ Mason masada oturdu, kağıtına bakıyordu. Ellerini titretti.  \n- Maisie masada\
+    \ oturdu, çay içiyordu.  \n- İris içeri girdi. Gözleri kırmızıydı. “Merhaba” dedi.\
+    \  \n- Mason ayağa kalktı. “Üzgünüm, yalan söyledim. Sponsor ABC istedi ama söylemedim.”\
+    \  \n- İris derin nefes aldı. “Bana güvenmiştim. Şimdi çok üzgünüm.”  \n- Maisie\
+    \ konuştu: “İkiniz aynı projeyi istiyorsunuz. Belki başka bir şans veririz.” \
+    \ \n- Mason “Söz veriyorum, sözleşmeyi değiştireceğim. Fikirlerin önemli.” dedi.\
+    \  \n- İris kağıtları okudu. “Bu değişir. Birlikte çalışırsak daha iyi olur.”\
+    \  \n- Mason “Güveni yeniden kurmalıyız. Zaman lazım.” dedi.  \n- İris “Ben de\
+    \ zaman istiyorum ama vazgeçmek istemiyorum.” dedi.  \n- Maisie “Yarın toplantı\
+    \ yapalım. Planı paylaşın, sonra karar verin.” dedi.  \n- Mason ve İris göz göze\
+    \ baktı, gülümsedi. “Tamam, yarın konuşalım.” dedi ikisi birlikte.  \n- Kafe kapandı,\
+    \ dışarı çıktı. Hafif yağmur yağıyordu.  \n\n**Kararlar ve Duygular**  \n- Mason\
+    \ özür diledi, değişiklik yapacağını söyledi.  \n- İris hâlâ üzgün ama bir şans\
+    \ daha vermeyi kabul etti.  \n- Maisie iki arkadaşını bir arada tutmaya çalıştı.\
+    \  \n\n**Kalan Sorun**  \n- Güven yeniden kurulmalı.  \n- Yarınki toplantı nasıl\
+    \ olacak?  \n\n**Son durum**  \n- Her üçü de ilişkiyi kurtarmak için bir şans\
+    \ daha vermeye hazır."

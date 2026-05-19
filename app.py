@@ -9,6 +9,7 @@ from database import (
     run_migrations,
     seed_common_names,
 )
+from database.load_seed import seed_database_from_load_folder
 from services.auth_service import current_user_is_administrator, require_login
 from services.observability_service import EVENT_APP_START, record_event
 from services.vector_store import get_vector_provider_status
@@ -57,6 +58,7 @@ try:
     run_migrations()
     create_tables()
     seed_common_names()
+    seed_database_from_load_folder()
 except Exception as error:
     logger.exception("Database startup failed.")
     st.error(

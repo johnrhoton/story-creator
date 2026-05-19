@@ -1,0 +1,319 @@
+exported_at: '2026-05-19T06:08:53'
+profiles:
+- id: 28
+  profile_name: gentle_appearance
+  gender: female
+  physical_traits: soft features, warm smile, small frame, careful movements, kind
+    eyes
+  personality_traits: ''
+  notes: Gives an approachable and calming impression.
+- id: 7
+  profile_name: rugged_survivalist
+  gender: male
+  physical_traits: bearded, lean muscles, outdoor-worn appearance, sharp eyesight,
+    quiet footsteps
+  personality_traits: ''
+  notes: Adapted to harsh environments.
+- id: 21
+  profile_name: weary_warrior
+  gender: male
+  physical_traits: scarred, hardened appearance, muscular build
+  personality_traits: disciplined, protective, emotionally distant, resilient
+  notes: Hardened by hardship but still driven by duty.
+- id: 15
+  profile_name: ambitious_operator
+  gender: male
+  physical_traits: ''
+  personality_traits: strategic, competitive, persuasive, calculating, impatient
+  notes: Focused on advancement and influence.
+- id: 10
+  profile_name: exhausted_office_worker
+  gender: male
+  physical_traits: average height, tired posture, untidy hair, weak physique, ink-stained
+    fingers
+  personality_traits: ''
+  notes: Physically worn down by routine and stress.
+- id: 6
+  profile_name: awkward_scholar
+  gender: male
+  physical_traits: thin frame, glasses, hunched posture, pale complexion, nervous
+    gestures
+  personality_traits: ''
+  notes: More comfortable with books than physical activity.
+- id: 14
+  profile_name: cynical_investigator
+  gender: male
+  physical_traits: ''
+  personality_traits: sceptical, sarcastic, persistent, guarded, perceptive
+  notes: Distrusts appearances and questions motives.
+- id: 8
+  profile_name: youthful_charm
+  gender: male
+  physical_traits: bright smile, expressive face, youthful appearance, energetic movements,
+    fashionable style
+  personality_traits: ''
+  notes: Gives a naturally approachable impression.
+- id: 11
+  profile_name: disciplined_leader
+  gender: male
+  physical_traits: ''
+  personality_traits: dependable, patient, organised, protective, emotionally reserved
+  notes: Naturally assumes responsibility in difficult situations.
+- id: 19
+  profile_name: manipulative_charmer
+  gender: male
+  physical_traits: ''
+  personality_traits: charismatic, dishonest, adaptable, opportunistic, sociable
+  notes: Skilled at influencing emotions and situations.
+- id: 9
+  profile_name: imposing_guardian
+  gender: male
+  physical_traits: very tall, massive build, deep voice, slow movements, calm stare
+  personality_traits: ''
+  notes: Intimidating appearance hides restraint.
+- id: 5
+  profile_name: scarred_veteran
+  gender: male
+  physical_traits: scarred face, muscular frame, stiff movements, tired eyes, intimidating
+    presence
+  personality_traits: ''
+  notes: Physical signs of past conflict remain visible.
+- id: 16
+  profile_name: loyal_companion
+  gender: male
+  physical_traits: ''
+  personality_traits: loyal, funny, eager, dependable, insecure
+  notes: Deeply values friendship and belonging.
+- id: 13
+  profile_name: analytical_introvert
+  gender: male
+  physical_traits: ''
+  personality_traits: intelligent, observant, shy, meticulous, conflict-averse
+  notes: Notices details others often overlook.
+- id: 24
+  profile_name: exhausted_detective
+  gender: male
+  physical_traits: tired eyes, worn clothing, unshaven appearance
+  personality_traits: sceptical, persistent, sarcastic, intelligent
+  notes: Constantly driven by unfinished questions.
+- id: 18
+  profile_name: idealistic_teacher
+  gender: male
+  physical_traits: ''
+  personality_traits: compassionate, optimistic, patient, encouraging, naïve
+  notes: Believes people can improve.
+- id: 2
+  profile_name: rugged_laborer
+  gender: male
+  physical_traits: muscular, weathered skin, rough hands, strong endurance, heavy
+    build
+  personality_traits: ''
+  notes: Built through years of physical work.
+- id: 27
+  profile_name: hardened_fighter
+  gender: female
+  physical_traits: athletic build, scarred hands, intense gaze, strong stance, practical
+    clothing
+  personality_traits: ''
+  notes: Clearly shaped by physical struggle.
+- id: 25
+  profile_name: restless_dreamer
+  gender: male
+  physical_traits: slim, energetic posture, expressive face
+  personality_traits: imaginative, ambitious, distracted, optimistic
+  notes: Always searching for a bigger purpose.
+- id: 3
+  profile_name: lean_runner
+  gender: male
+  physical_traits: slim, agile, wiry strength, quick movements, restless energy
+  personality_traits: ''
+  notes: Appears lighter and faster than stronger opponents.
+- id: 20
+  profile_name: obsessive_creator
+  gender: male
+  physical_traits: ''
+  personality_traits: inventive, obsessive, absent-minded, enthusiastic, unconventional
+  notes: Becomes consumed by ideas and projects.
+- id: 30
+  profile_name: practical_worker
+  gender: female
+  physical_traits: muscular arms, weathered skin, sturdy posture, practical clothing,
+    steady movements
+  personality_traits: ''
+  notes: Built through physical labour and endurance.
+- id: 1
+  profile_name: towering_athletic
+  gender: male
+  physical_traits: tall, athletic, broad-shouldered, fast reflexes, confident posture
+  personality_traits: ''
+  notes: Naturally imposing and physically capable.
+- id: 26
+  profile_name: graceful_presence
+  gender: female
+  physical_traits: elegant posture, refined style, calm eyes, slender build, poised
+    movements
+  personality_traits: ''
+  notes: Carries herself with effortless composure.
+- id: 22
+  profile_name: charming_scoundrel
+  gender: male
+  physical_traits: handsome, stylish, confident smile
+  personality_traits: witty, impulsive, manipulative, adventurous
+  notes: Difficult to trust despite undeniable charm.
+- id: 12
+  profile_name: reckless_risk_taker
+  gender: male
+  physical_traits: ''
+  personality_traits: impulsive, thrill-seeking, witty, overconfident, adventurous
+  notes: Often acts before thinking through consequences.
+- id: 17
+  profile_name: isolated_survivor
+  gender: male
+  physical_traits: ''
+  personality_traits: independent, suspicious, resourceful, stoic, stubborn
+  notes: Trusts instincts more than people.
+- id: 29
+  profile_name: polished_socialite
+  gender: female
+  physical_traits: fashionable, attractive, graceful posture, immaculate grooming,
+    confident smile
+  personality_traits: ''
+  notes: Maintains an image of sophistication.
+- id: 23
+  profile_name: gentle_giant
+  gender: male
+  physical_traits: massive build, towering height, deep voice
+  personality_traits: shy, dependable, humble, protective
+  notes: Intimidating appearance contrasts with kind behaviour.
+- id: 4
+  profile_name: polished_gentleman
+  gender: male
+  physical_traits: handsome, elegant clothing, neat grooming, refined posture, calm
+    expression
+  personality_traits: ''
+  notes: Maintains a carefully polished appearance.
+- id: 44
+  profile_name: suspicious_investigator
+  gender: female
+  physical_traits: ''
+  personality_traits: sceptical, persistent, independent, sarcastic, observant
+  notes: Rarely accepts simple explanations.
+- id: 45
+  profile_name: image_driven_performer
+  gender: female
+  physical_traits: ''
+  personality_traits: charismatic, dramatic, deceptive, adaptable, attention-seeking
+  notes: Constantly shapes how others perceive her.
+- id: 41
+  profile_name: introspective_artist
+  gender: female
+  physical_traits: ''
+  personality_traits: emotional, creative, melancholic, sensitive, introspective
+  notes: Experiences emotions intensely and privately.
+- id: 38
+  profile_name: empathetic_healer
+  gender: female
+  physical_traits: ''
+  personality_traits: compassionate, patient, timid, self-sacrificing, empathetic
+  notes: Prioritises others even at personal cost.
+- id: 43
+  profile_name: nurturing_community_builder
+  gender: female
+  physical_traits: ''
+  personality_traits: friendly, dependable, talkative, nurturing, nosy
+  notes: Builds strong social connections wherever she goes.
+- id: 46
+  profile_name: battle_hardened_commander
+  gender: female
+  physical_traits: athletic, stern expression, commanding posture
+  personality_traits: authoritative, disciplined, ruthless, fearless
+  notes: Leads through strength and control.
+- id: 48
+  profile_name: daring_pilot
+  gender: female
+  physical_traits: athletic, alert eyes, confident movements
+  personality_traits: confident, impulsive, resourceful, adventurous
+  notes: Thrives in dangerous situations.
+- id: 42
+  profile_name: perfectionist_professional
+  gender: female
+  physical_traits: ''
+  personality_traits: disciplined, critical, intelligent, ambitious, emotionally distant
+  notes: Holds herself and others to extremely high standards.
+- id: 37
+  profile_name: fearless_defender
+  gender: female
+  physical_traits: ''
+  personality_traits: protective, stubborn, fearless, loyal, impatient
+  notes: Fiercely committed to people she values.
+- id: 34
+  profile_name: weary_ruler
+  gender: female
+  physical_traits: regal posture, ageing beauty, tired eyes, elegant clothing, controlled
+    gestures
+  personality_traits: ''
+  notes: Appears burdened by responsibility.
+- id: 36
+  profile_name: diplomatic_mediator
+  gender: female
+  physical_traits: ''
+  personality_traits: intelligent, composed, persuasive, diplomatic, emotionally restrained
+  notes: Skilled at balancing competing interests.
+- id: 33
+  profile_name: energetic_explorer
+  gender: female
+  physical_traits: athletic, sun-tanned skin, bright eyes, confident stride, practical
+    gear
+  personality_traits: ''
+  notes: Looks prepared for movement and discovery.
+- id: 49
+  profile_name: calculating_matriarch
+  gender: female
+  physical_traits: elegant clothing, composed posture, sharp gaze
+  personality_traits: controlling, intelligent, patient, manipulative
+  notes: Maintains influence through subtle pressure.
+- id: 31
+  profile_name: distracted_researcher
+  gender: female
+  physical_traits: untidy hair, thin frame, hurried movements, tired expression, practical
+    clothing
+  personality_traits: ''
+  notes: Often appears lost in thought.
+- id: 35
+  profile_name: nervous_assistant
+  gender: female
+  physical_traits: small frame, cautious posture, nervous gestures, neat clothing,
+    tired smile
+  personality_traits: ''
+  notes: Frequently appears anxious or uncertain.
+- id: 32
+  profile_name: mysterious_oracle
+  gender: female
+  physical_traits: unusual eyes, flowing clothing, calm gestures, pale complexion,
+    serene posture
+  personality_traits: ''
+  notes: Leaves a memorable and unsettling impression.
+- id: 47
+  profile_name: lonely_poet
+  gender: female
+  physical_traits: delicate build, thoughtful eyes, pale complexion
+  personality_traits: emotional, creative, melancholic, sensitive
+  notes: Feels disconnected from ordinary society.
+- id: 50
+  profile_name: thoughtful_storyteller
+  gender: female
+  physical_traits: warm eyes, relaxed posture, expressive hands
+  personality_traits: imaginative, observant, patient, sentimental
+  notes: Understands people through stories and memory.
+- id: 40
+  profile_name: rebellious_innovator
+  gender: female
+  physical_traits: ''
+  personality_traits: independent, sarcastic, inventive, impulsive, resilient
+  notes: Challenges authority and convention.
+- id: 39
+  profile_name: ambitious_social_climber
+  gender: female
+  physical_traits: ''
+  personality_traits: ambitious, charming, competitive, strategic, vain
+  notes: Constantly focused on status and influence.

@@ -34,6 +34,10 @@ data/chroma_db/
 
 # Exports
 *.json
+!load/
+!load/*.json
+!load/*.yaml
+!load/*.yml
 
 *.sqlite
 *.sqlite3

@@ -1,0 +1,322 @@
+exported_at: '2026-05-19T06:08:33'
+story_templates:
+- id: 23
+  created_at: '2026-05-15T21:30:00'
+  template_name: cyberpunk_thriller
+  overview: F1 and M1 uncover a corporate conspiracy involving artificial intelligence,
+    surveillance, and memory manipulation.
+  setting_background: A sprawling neon megacity controlled by rival technology corporations
+    and underground resistance groups.
+  tone_style: Fast-paced, tense, futuristic
+  male_character_roles: '["corporate investigator", "underground hacker"]'
+  female_character_roles: '["cybernetic journalist", "resistance leader"]'
+- id: 24
+  created_at: '2026-05-15T21:30:00'
+  template_name: detective_noir
+  overview: M1 investigates a murder connected to corruption, organised crime, and
+    the disappearance of F1.
+  setting_background: Rain-soaked city streets, smoky bars, corrupt institutions,
+    and dangerous criminal networks.
+  tone_style: Cynical, tense, morally ambiguous
+  male_character_roles: '["private detective", "crime boss"]'
+  female_character_roles: '["missing nightclub singer", "police informant"]'
+- id: 25
+  created_at: '2026-05-15T21:30:00'
+  template_name: enchanted_fairy_tale
+  overview: M1 discovers that F1 is connected to an ancient magical curse threatening
+    the kingdom.
+  setting_background: A medieval kingdom of enchanted forests, hidden ruins, magical
+    creatures, and isolated castles.
+  tone_style: Wonder-filled, adventurous, emotional
+  male_character_roles: '["wandering prince", "royal advisor"]'
+  female_character_roles: '["cursed healer", "forest witch"]'
+- id: 26
+  created_at: '2026-05-15T21:30:00'
+  template_name: gothic_horror
+  overview: F1 inherits an isolated estate where M1 uncovers horrifying secrets tied
+    to the family's past.
+  setting_background: Fog-covered moors, decaying mansions, hidden passageways, and
+    isolated villages.
+  tone_style: Dark, psychological, haunting
+  male_character_roles: '["family historian", "groundskeeper"]'
+  female_character_roles: '["estate heiress", "mysterious governess"]'
+- id: 27
+  created_at: '2026-05-15T21:30:00'
+  template_name: historical_mystery
+  overview: F1 investigates a political conspiracy after M1 disappears under suspicious
+    circumstances.
+  setting_background: A politically divided historical capital filled with class tensions,
+    noble estates, and secret societies.
+  tone_style: Atmospheric, suspenseful, intelligent
+  male_character_roles: '["missing diplomat", "royal investigator"]'
+  female_character_roles: '["journalist", "aristocratic witness"]'
+- id: 28
+  created_at: '2026-05-15T21:30:00'
+  template_name: moral_fable
+  overview: M1 and F1 face temptation and conflict that reveal the consequences of
+    pride, greed, or dishonesty.
+  setting_background: A symbolic countryside of forests, villages, farms, and talking
+    animals.
+  tone_style: Symbolic, reflective, moral
+  male_character_roles: '["ambitious merchant"]'
+  female_character_roles: '["trusted friend"]'
+- id: 29
+  created_at: '2026-05-15T21:30:00'
+  template_name: post_apocalyptic_survival
+  overview: M1 and F1 attempt to rebuild trust and community after civilisation collapses
+    following a global catastrophe.
+  setting_background: Ruined cities, abandoned infrastructure, dangerous wastelands,
+    and isolated survivor settlements.
+  tone_style: Harsh, emotional, survival-focused
+  male_character_roles: '["former engineer", "scavenger leader"]'
+  female_character_roles: '["medic", "community organiser"]'
+- id: 30
+  created_at: '2026-05-15T21:30:00'
+  template_name: romantic_drama
+  overview: M1 and F1 form an unexpected emotional connection while struggling with
+    past wounds and conflicting ambitions.
+  setting_background: Modern urban life shaped by careers, family expectations, cafés,
+    apartments, and social gatherings.
+  tone_style: Emotional, character-driven, realistic
+  male_character_roles: '["architect"]'
+  female_character_roles: '["classical musician", "former partner"]'
+- id: 33
+  created_at: '2026-05-15T19:12:27'
+  template_name: short template
+  overview: M1 and F1 live together happily.
+  setting_background: In M1's house in a forest near the river.
+  tone_style: ' fast-paced, high-tension '
+  male_character_roles: '["man of the house"]'
+  female_character_roles: '["woman of the house"]'
+- id: 31
+  created_at: '2026-05-15T21:30:00'
+  template_name: space_exploration_epic
+  overview: F1 leads a crew including M1 and M2 beyond known space after discovering
+    signals from an unknown civilisation.
+  setting_background: Interstellar colonies, advanced spacecraft, abandoned alien
+    ruins, and unexplored galaxies.
+  tone_style: Expansive, adventurous, philosophical
+  male_character_roles: '["starship navigator", "xenobiologist"]'
+  female_character_roles: '["mission commander", "communications officer"]'
+- id: 32
+  created_at: '2026-05-15T21:30:00'
+  template_name: swashbuckling_adventure
+  overview: F1 and M1 pursue a legendary treasure while rival crews and corrupt nobles
+    attempt to stop them.
+  setting_background: Pirate ships, coastal cities, hidden islands, tropical seas,
+    and royal ports.
+  tone_style: Energetic, humorous, adventurous
+  male_character_roles: '["treasure hunter", "disgraced naval officer"]'
+  female_character_roles: '["pirate captain", "noblewoman spy"]'
+story_template_chapters:
+- id: 109
+  template_id: 23
+  chapter_number: 1
+  chapter_description: F1 steals encrypted data linked to a hidden surveillance programme.
+- id: 110
+  template_id: 23
+  chapter_number: 2
+  chapter_description: M1 discovers that memories are being manipulated by corporate
+    systems.
+- id: 111
+  template_id: 23
+  chapter_number: 3
+  chapter_description: F2 introduces the group to an underground resistance movement.
+- id: 112
+  template_id: 23
+  chapter_number: 4
+  chapter_description: M2 betrays the team during an infiltration mission.
+- id: 113
+  template_id: 23
+  chapter_number: 5
+  chapter_description: F1 risks everything to expose the conspiracy.
+- id: 124
+  template_id: 24
+  chapter_number: 1
+  chapter_description: M1 is hired to investigate the disappearance of F1.
+- id: 125
+  template_id: 24
+  chapter_number: 2
+  chapter_description: Evidence connects the case to organised crime and political
+    corruption.
+- id: 126
+  template_id: 24
+  chapter_number: 3
+  chapter_description: M2 warns M1 to abandon the investigation.
+- id: 127
+  template_id: 24
+  chapter_number: 4
+  chapter_description: F2 reveals a hidden connection between the suspects.
+- id: 128
+  template_id: 24
+  chapter_number: 5
+  chapter_description: M1 uncovers the truth at great personal cost.
+- id: 104
+  template_id: 25
+  chapter_number: 1
+  chapter_description: M1 discovers a strange object connected to F1's forgotten past.
+- id: 105
+  template_id: 25
+  chapter_number: 2
+  chapter_description: F2 warns M1 that the kingdom is cursed.
+- id: 106
+  template_id: 25
+  chapter_number: 3
+  chapter_description: M1 and F1 enter the enchanted forest in search of answers.
+- id: 107
+  template_id: 25
+  chapter_number: 4
+  chapter_description: M2 reveals the dangerous cost of breaking the curse.
+- id: 108
+  template_id: 25
+  chapter_number: 5
+  chapter_description: Betrayal separates the group before the final confrontation.
+- id: 119
+  template_id: 26
+  chapter_number: 1
+  chapter_description: F1 arrives at the isolated estate inherited from a distant
+    relative.
+- id: 120
+  template_id: 26
+  chapter_number: 2
+  chapter_description: M1 discovers disturbing records hidden within the mansion.
+- id: 121
+  template_id: 26
+  chapter_number: 3
+  chapter_description: Strange events convince F2 that supernatural forces are present.
+- id: 122
+  template_id: 26
+  chapter_number: 4
+  chapter_description: M2 reveals the horrifying truth about the family's history.
+- id: 123
+  template_id: 26
+  chapter_number: 5
+  chapter_description: F1 must decide whether to confront or escape the darkness.
+- id: 144
+  template_id: 27
+  chapter_number: 1
+  chapter_description: F1 begins investigating M1's sudden disappearance.
+- id: 145
+  template_id: 27
+  chapter_number: 2
+  chapter_description: Political tensions complicate the investigation.
+- id: 146
+  template_id: 27
+  chapter_number: 3
+  chapter_description: F2 uncovers hidden documents tied to a secret society.
+- id: 147
+  template_id: 27
+  chapter_number: 4
+  chapter_description: M2 attempts to silence the investigation permanently.
+- id: 148
+  template_id: 27
+  chapter_number: 5
+  chapter_description: F1 exposes the conspiracy before violence erupts across the
+    city.
+- id: 149
+  template_id: 28
+  chapter_number: 1
+  chapter_description: M1 and F1 argue over a tempting opportunity promising wealth
+    and status.
+- id: 150
+  template_id: 28
+  chapter_number: 2
+  chapter_description: Pride and greed begin damaging friendships and trust.
+- id: 151
+  template_id: 28
+  chapter_number: 3
+  chapter_description: A wiser figure warns M1 and F1 about the consequences of selfishness.
+- id: 152
+  template_id: 28
+  chapter_number: 4
+  chapter_description: The characters suffer the consequences of their choices.
+- id: 153
+  template_id: 28
+  chapter_number: 5
+  chapter_description: M1 and F1 learn an important moral lesson.
+- id: 134
+  template_id: 29
+  chapter_number: 1
+  chapter_description: M1 and F1 struggle to survive after the collapse of civilisation.
+- id: 135
+  template_id: 29
+  chapter_number: 2
+  chapter_description: F2 and M2 disagree about how to protect the survivor group.
+- id: 136
+  template_id: 29
+  chapter_number: 3
+  chapter_description: Scarcity forces difficult moral decisions.
+- id: 137
+  template_id: 29
+  chapter_number: 4
+  chapter_description: A violent faction threatens the settlement.
+- id: 138
+  template_id: 29
+  chapter_number: 5
+  chapter_description: The survivors attempt to build a new community together.
+- id: 114
+  template_id: 30
+  chapter_number: 1
+  chapter_description: M1 and F1 meet during a tense professional disagreement.
+- id: 115
+  template_id: 30
+  chapter_number: 2
+  chapter_description: F2 encourages F1 to give M1 another chance.
+- id: 116
+  template_id: 30
+  chapter_number: 3
+  chapter_description: Shared experiences slowly build emotional trust.
+- id: 117
+  template_id: 30
+  chapter_number: 4
+  chapter_description: A hidden secret damages the relationship between M1 and F1.
+- id: 118
+  template_id: 30
+  chapter_number: 5
+  chapter_description: M1 and F1 decide whether the relationship can survive.
+- id: 129
+  template_id: 31
+  chapter_number: 1
+  chapter_description: F1 leads the crew beyond mapped space in response to mysterious
+    signals.
+- id: 130
+  template_id: 31
+  chapter_number: 2
+  chapter_description: M1 discovers abandoned alien ruins on a distant world.
+- id: 131
+  template_id: 31
+  chapter_number: 3
+  chapter_description: Tensions emerge between M2 and F2 over the mission's risks.
+- id: 132
+  template_id: 31
+  chapter_number: 4
+  chapter_description: The crew encounters evidence of an unknown intelligence.
+- id: 133
+  template_id: 31
+  chapter_number: 5
+  chapter_description: F1 must choose between returning home or pursuing the truth
+    further.
+- id: 139
+  template_id: 32
+  chapter_number: 1
+  chapter_description: F1 acquires a map leading to a legendary treasure.
+- id: 140
+  template_id: 32
+  chapter_number: 2
+  chapter_description: M1 assembles a crew before rival hunters can intervene.
+- id: 141
+  template_id: 32
+  chapter_number: 3
+  chapter_description: Dangerous storms and betrayals threaten the expedition.
+- id: 142
+  template_id: 32
+  chapter_number: 4
+  chapter_description: F2 discovers the treasure may carry a terrible curse.
+- id: 143
+  template_id: 32
+  chapter_number: 5
+  chapter_description: M2 attempts to seize the treasure for personal gain.
+- id: 103
+  template_id: 33
+  chapter_number: 1
+  chapter_description: M1 and F1 decide to make a change.
