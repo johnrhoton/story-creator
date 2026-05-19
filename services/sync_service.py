@@ -2,15 +2,13 @@
 
 import hashlib
 import json
-import os
 from datetime import datetime, timezone
 
-from dotenv import load_dotenv
 from pymongo import MongoClient
 
 from config import (
-    get_config_value,
-    MONGODB_DEFAULT_DATABASE,
+    get_backup_mongo_database,
+    get_backup_mongo_uri,
     MONGODB_LEGACY_SYNC_DOCUMENT_ID,
     MONGODB_SYNC_COLLECTION,
     MONGODB_SYNC_DOCUMENT_ID,
@@ -56,27 +54,12 @@ def parse_timestamp(value):
 
 
 def get_mongo_collection():
-    load_dotenv()
-
-    uri = (
-        get_config_value("MONGO_URI")
-        or get_config_value("MONGODB_URI")
-    )
-
-    database_name = get_config_value(
-        "MONGO_DATABASE",
-        get_config_value(
-            "MONGODB_DATABASE",
-            None
-        )
-    ) or os.getenv(
-        "MONGODB_DATABASE",
-        MONGODB_DEFAULT_DATABASE
-    )
+    uri = get_backup_mongo_uri()
+    database_name = get_backup_mongo_database()
 
     if not uri:
         raise RuntimeError(
-            "MONGO_URI not configured."
+            "BACKUP_MONGO_URI not configured."
         )
 
     client = MongoClient(uri)

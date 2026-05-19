@@ -1,9 +1,8 @@
-import os
-
 import requests
-from dotenv import load_dotenv
 from google import genai
 from groq import Groq
+
+from config import get_config_value
 
 
 SUPPORTED_PROVIDERS = ["Gemini", "Groq", "OpenRouter"]
@@ -83,13 +82,11 @@ def generate_with_openrouter(model, prompt):
 
 
 def get_api_key(environment_variable):
-    load_dotenv()
-
-    api_key = os.getenv(environment_variable)
+    api_key = get_config_value(environment_variable)
 
     if not api_key:
         raise RuntimeError(
-            f"{environment_variable} not found. Check your .env file."
+            f"{environment_variable} not found. Check Streamlit secrets."
         )
 
     return api_key

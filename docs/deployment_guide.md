@@ -36,12 +36,14 @@
    ```
 
 ### Configuration
-- Set environment variables in `.env` file:
-  ```
-  GOOGLE_API_KEY=your_gemini_key
-  GROQ_API_KEY=your_groq_key
-  OPENROUTER_API_KEY=your_openrouter_key
-  MONGODB_URI=your_mongodb_uri  # Optional
+- Set root-level values in `.streamlit/secrets.toml`. Use the same keys in
+  Streamlit Community Cloud's Secrets UI:
+  ```toml
+  GEMINI_API_KEY="your_gemini_key"
+  GROQ_API_KEY="your_groq_key"
+  OPENROUTER_API_KEY="your_openrouter_key"
+  APP_MONGO_URI="your_primary_mongodb_uri"  # Optional
+  BACKUP_MONGO_URI="your_backup_mongodb_uri"  # Optional
   ```
 
 ## Production Deployment
@@ -99,15 +101,18 @@ Planned for local, offline-capable deployment:
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GOOGLE_API_KEY` | Google Gemini API key | No* |
+| `GEMINI_API_KEY` | Google Gemini API key | No* |
 | `GROQ_API_KEY` | Groq API key | No* |
 | `OPENROUTER_API_KEY` | OpenRouter API key | No* |
 | `DEFAULT_LLM_PROVIDER` | Default provider selected in the sidebar | No |
 | `DEFAULT_LLM_MODEL` | Default model selected in the sidebar | No |
 | `DB_PROVIDER` | Active persistence provider: `sqlite` or `mongodb` | No |
-| `MONGO_URI` | MongoDB Atlas connection URI for the `mongodb` provider | Required for MongoDB |
-| `MONGO_DATABASE` | MongoDB database name; defaults to `story_builder` | No |
-| `MONGODB_URI` | Legacy MongoDB sync URI; also accepted as a fallback for `MONGO_URI` | No |
+| `APP_MONGO_URI` | Primary MongoDB Atlas URI for `DB_PROVIDER=mongodb` | Required for MongoDB |
+| `APP_MONGO_DATABASE` | Primary MongoDB database name; defaults to `story_builder` | No |
+| `BACKUP_MONGO_URI` | MongoDB URI for push/pull backup snapshots | Required for MongoDB sync |
+| `BACKUP_MONGO_DATABASE` | MongoDB backup database name; defaults to `story_builder` | No |
+| `MONGO_URI` / `MONGO_DATABASE` | Legacy fallback names for app and backup MongoDB settings | No |
+| `MONGODB_URI` / `MONGODB_DATABASE` | Legacy fallback names, mainly from older backup sync setup | No |
 | `VECTOR_PROVIDER` | Story Memory vector provider: `none`, `chroma`, or `mongodb_vector` | No |
 | `VECTOR_COLLECTION_NAME` | Vector collection name; defaults to `story_memory` | No |
 | `VECTOR_INDEX_NAME` | MongoDB Atlas Vector Search index name | Required for `mongodb_vector` |
@@ -118,15 +123,15 @@ Planned for local, offline-capable deployment:
 ### Database Management
 
 - **Provider**: `sqlite` by default locally; set `DB_PROVIDER=mongodb` for MongoDB Atlas
-- **Streamlit Cloud**: Configure `DB_PROVIDER="mongodb"` and `MONGO_URI` in secrets
+- **Streamlit Cloud**: Configure `DB_PROVIDER="mongodb"` and `APP_MONGO_URI` in secrets
 - **Migrations**: SQLite migrations run automatically; MongoDB startup creates indexes and seed records
 - **Backup**: Use Export/Import feature for data backup
 - **Encryption**: Optional field-level encryption
-- **MongoDB Sync**: Optional cloud backup synchronization
+- **MongoDB Sync**: Optional cloud backup synchronization using `BACKUP_MONGO_URI`; this may point at a separate cluster/database from the primary app database
 - **Vector Provider**: `chroma` by default locally; use `mongodb_vector` on Streamlit Cloud or `none` to disable RAG
 - **Chroma Story Memory Index**: Stored under `data/chroma_db`; rebuildable from the active database provider via the Story Memory tab
 - **MongoDB Atlas Vector Search**: Stores text, metadata, and embeddings in the configured vector collection; create the Atlas vector index named by `VECTOR_INDEX_NAME`
-- **LLM Defaults**: Sidebar model changes update `.env`; keep deployment `.env` files local and uncommitted
+- **LLM Defaults**: Sidebar model changes update local `.streamlit/secrets.toml`; set the same root-level keys in Streamlit Community Cloud secrets
 
 ### Monitoring and Maintenance
 

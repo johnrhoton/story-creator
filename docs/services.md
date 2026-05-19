@@ -165,7 +165,7 @@ See `docs/language_aids.md` for the end-to-end reading comprehension workflow.
 - Gemini, Groq, OpenRouter integration
 - Model capability descriptions
 - Default model selection
-- Sidebar default persistence to `.env` through `llm_defaults_service.py`
+- Sidebar default persistence to `.streamlit/secrets.toml` through `llm_defaults_service.py`
 
 ### `auth_service.py` and `admin_service.py`
 **Purpose**: Google OIDC authentication and SQLite-backed authorization.

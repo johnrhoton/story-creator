@@ -49,7 +49,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `__init__.py`: Provider selection layer exporting the active repository functions
   - `schema.py`: SQLite table definitions
   - `connection.py`: Database connection management
-  - `mongodb_connection.py`: MongoDB Atlas connection and ID counters
+  - `mongodb_connection.py`: Primary MongoDB Atlas connection and ID counters
   - `mongodb_repositories.py`: MongoDB-backed repositories matching the SQLite function surface
   - `characters.py`, `profiles.py`, `stories.py`, etc.: Table-specific operations
   - `import_export.py`: Data serialization/deserialization
@@ -59,7 +59,7 @@ Story Builder is built as a Streamlit desktop-style web application. The archite
   - `object_history.py`: CRUD history records for user-visible objects
   - `story_beats.py`: Persisted story-memory beats extracted from chapters
   - `authorized_users.py`: Authorized Google user whitelist and roles
-- **Technology**: Configurable provider: SQLite locally by default, or MongoDB Atlas with `DB_PROVIDER=mongodb`
+- **Technology**: Configurable provider: SQLite locally by default, or MongoDB Atlas with `DB_PROVIDER=mongodb` and `APP_MONGO_URI`
 
 ### 4. LLM Integration
 - **Purpose**: External AI service integration

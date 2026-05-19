@@ -1,7 +1,8 @@
 # Command-Line Utilities
 
 These scripts are manual maintenance tools. Run them from the project root so
-they use the same `.env`, database path, and imports as the Streamlit app.
+they use the same Streamlit secrets, database path, and imports as the
+Streamlit app.
 
 ```bash
 ./venv/bin/python scripts/migrate.py

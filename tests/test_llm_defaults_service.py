@@ -13,15 +13,15 @@ from services.llm_defaults_service import (
 
 
 class LLMDefaultsServiceTests(unittest.TestCase):
-    def test_save_llm_defaults_writes_dotenv_and_process_environment(self):
+    def test_save_llm_defaults_writes_streamlit_secrets_and_process_environment(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            env_path = Path(temp_dir) / ".env"
+            secrets_path = Path(temp_dir) / ".streamlit" / "secrets.toml"
 
             with patch.dict(os.environ, {}, clear=True):
                 saved = save_llm_defaults(
                     "Gemini",
                     "gemini-2.5-flash",
-                    env_path
+                    secrets_path
                 )
 
                 self.assertTrue(saved)
@@ -31,33 +31,43 @@ class LLMDefaultsServiceTests(unittest.TestCase):
                     "gemini-2.5-flash"
                 )
                 self.assertEqual(
-                    get_saved_llm_defaults(env_path),
+                    get_saved_llm_defaults(secrets_path),
                     ("Gemini", "gemini-2.5-flash")
                 )
 
-    def test_save_llm_defaults_preserves_existing_dotenv_values(self):
+    def test_save_llm_defaults_preserves_existing_streamlit_secrets(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            env_path = Path(temp_dir) / ".env"
-            env_path.write_text("GROQ_API_KEY=secret\n", encoding="utf-8")
+            secrets_path = Path(temp_dir) / ".streamlit" / "secrets.toml"
+            secrets_path.parent.mkdir(parents=True)
+            secrets_path.write_text(
+                'GROQ_API_KEY="secret"\n\n[auth]\n'
+                'redirect_uri="http://localhost:8501/oauth2callback"\n',
+                encoding="utf-8"
+            )
 
             with patch.dict(os.environ, {}, clear=True):
-                save_llm_defaults("Groq", "llama-3.3-70b-versatile", env_path)
+                save_llm_defaults(
+                    "Groq",
+                    "llama-3.3-70b-versatile",
+                    secrets_path
+                )
 
-            contents = env_path.read_text(encoding="utf-8")
+            contents = secrets_path.read_text(encoding="utf-8")
 
-            self.assertIn("GROQ_API_KEY=secret", contents)
-            self.assertIn("DEFAULT_LLM_PROVIDER='Groq'", contents)
+            self.assertIn('GROQ_API_KEY="secret"', contents)
+            self.assertIn('DEFAULT_LLM_PROVIDER="Groq"', contents)
             self.assertIn(
-                "DEFAULT_LLM_MODEL='llama-3.3-70b-versatile'",
+                'DEFAULT_LLM_MODEL="llama-3.3-70b-versatile"',
                 contents
             )
+            self.assertIn("[auth]", contents)
 
     def test_save_llm_defaults_rejects_blank_values(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            env_path = Path(temp_dir) / ".env"
+            secrets_path = Path(temp_dir) / ".streamlit" / "secrets.toml"
 
-            self.assertFalse(save_llm_defaults("Groq", "", env_path))
-            self.assertFalse(env_path.exists())
+            self.assertFalse(save_llm_defaults("Groq", "", secrets_path))
+            self.assertFalse(secrets_path.exists())
 
 
 if __name__ == "__main__":

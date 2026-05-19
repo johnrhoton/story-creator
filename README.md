@@ -53,19 +53,22 @@ seeded with:
 The Models tab lets you add, remove, export, import, and choose default models
 for each provider.
 
-## Environment Variables
+## Streamlit Secrets
 
-Common `.env` values:
+Local configuration lives in `.streamlit/secrets.toml`, matching the root-level
+keys used in Streamlit Community Cloud secrets:
 
 ```text
 GEMINI_API_KEY=
 GROQ_API_KEY=
 OPENROUTER_API_KEY=
-MONGODB_URI=
-MONGODB_DATABASE=story_builder
+APP_MONGO_URI=
+APP_MONGO_DATABASE=story_builder
+BACKUP_MONGO_URI=
+BACKUP_MONGO_DATABASE=story_builder
 ```
 
-`MONGODB_DATABASE` is optional. If omitted, the app uses `story_builder`.
+Mongo database names are optional. If omitted, the app uses `story_builder`.
 Existing legacy MongoDB backups using the `story_creator_main` document ID are
 still checked as a fallback.
 

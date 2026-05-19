@@ -17,12 +17,6 @@ MONGODB_LEGACY_SYNC_DOCUMENT_ID = "story_creator_main"
 
 GENDER_OPTIONS = ["female", "male"]
 
-DEFAULT_LLM_PROVIDER = os.getenv("DEFAULT_LLM_PROVIDER", "Groq")
-DEFAULT_LLM_MODEL = os.getenv(
-    "DEFAULT_LLM_MODEL",
-    "llama-3.3-70b-versatile"
-)
-
 
 def get_config_value(name, default=None):
     value = os.getenv(name)
@@ -40,6 +34,54 @@ def get_config_value(name, default=None):
         pass
 
     return default
+
+
+DEFAULT_LLM_PROVIDER = get_config_value("DEFAULT_LLM_PROVIDER", "Groq")
+DEFAULT_LLM_MODEL = get_config_value(
+    "DEFAULT_LLM_MODEL",
+    "llama-3.3-70b-versatile"
+)
+
+
+def get_first_config_value(names, default=None):
+    for name in names:
+        value = get_config_value(name)
+        if value not in (None, ""):
+            return value
+
+    return default
+
+
+def get_app_mongo_uri():
+    return get_first_config_value([
+        "APP_MONGO_URI",
+        "MONGO_URI",
+        "MONGODB_URI",
+    ])
+
+
+def get_app_mongo_database():
+    return get_first_config_value([
+        "APP_MONGO_DATABASE",
+        "MONGO_DATABASE",
+        "MONGODB_DATABASE",
+    ], MONGODB_DEFAULT_DATABASE)
+
+
+def get_backup_mongo_uri():
+    return get_first_config_value([
+        "BACKUP_MONGO_URI",
+        "MONGO_URI",
+        "MONGODB_URI",
+    ])
+
+
+def get_backup_mongo_database():
+    return get_first_config_value([
+        "BACKUP_MONGO_DATABASE",
+        "MONGO_DATABASE",
+        "MONGODB_DATABASE",
+    ], MONGODB_DEFAULT_DATABASE)
 
 
 def get_db_provider():

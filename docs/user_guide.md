@@ -105,7 +105,7 @@ The app uses a tab-based interface with the following sections:
 ### Sidebar Settings
 - **Provider Selection**: Choose between Gemini, Groq, OpenRouter
 - **Model Selection**: Pick from available models
-- **Saved Defaults**: The last selected provider/model is saved to `.env` as `DEFAULT_LLM_PROVIDER` and `DEFAULT_LLM_MODEL`
+- **Saved Defaults**: The last selected provider/model is saved to `.streamlit/secrets.toml` as `DEFAULT_LLM_PROVIDER` and `DEFAULT_LLM_MODEL`
 - **Throttle Interval**: Optional delay between calls for the selected provider/model
 
 ### Database Encryption

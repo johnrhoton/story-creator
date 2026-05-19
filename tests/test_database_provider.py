@@ -5,7 +5,14 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from config import get_db_provider, get_vector_provider
+from config import (
+    get_app_mongo_database,
+    get_app_mongo_uri,
+    get_backup_mongo_database,
+    get_backup_mongo_uri,
+    get_db_provider,
+    get_vector_provider,
+)
 from database.mongodb_connection import get_mongo_database_name, get_mongo_uri
 
 
@@ -65,13 +72,56 @@ class DatabaseProviderTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("VECTOR_PROVIDER must be one of", result.stderr)
 
-    def test_mongo_uri_supports_mongo_uri_env_name(self):
+    def test_app_mongo_uri_supports_legacy_mongo_uri_env_name(self):
         with patch.dict(os.environ, {"MONGO_URI": "mongodb+srv://example"}, clear=True):
             self.assertEqual(get_mongo_uri(), "mongodb+srv://example")
 
-    def test_mongo_database_name_defaults_to_story_builder(self):
-        with patch.dict(os.environ, {}, clear=True):
+    def test_app_mongo_database_name_defaults_to_story_builder(self):
+        with patch.dict(os.environ, {}, clear=True), patch(
+            "config.get_config_value",
+            side_effect=lambda _name, default=None: default,
+        ):
             self.assertEqual(get_mongo_database_name(), "story_builder")
+
+    def test_app_mongo_settings_prefer_explicit_names(self):
+        with patch.dict(
+            os.environ,
+            {
+                "APP_MONGO_URI": "mongodb+srv://app",
+                "APP_MONGO_DATABASE": "app_db",
+                "MONGO_URI": "mongodb+srv://legacy",
+                "MONGO_DATABASE": "legacy_db",
+            },
+            clear=True,
+        ):
+            self.assertEqual(get_app_mongo_uri(), "mongodb+srv://app")
+            self.assertEqual(get_app_mongo_database(), "app_db")
+
+    def test_backup_mongo_settings_prefer_explicit_names(self):
+        with patch.dict(
+            os.environ,
+            {
+                "BACKUP_MONGO_URI": "mongodb+srv://backup",
+                "BACKUP_MONGO_DATABASE": "backup_db",
+                "MONGO_URI": "mongodb+srv://legacy",
+                "MONGO_DATABASE": "legacy_db",
+            },
+            clear=True,
+        ):
+            self.assertEqual(get_backup_mongo_uri(), "mongodb+srv://backup")
+            self.assertEqual(get_backup_mongo_database(), "backup_db")
+
+    def test_backup_mongo_settings_fall_back_to_legacy_names(self):
+        with patch.dict(
+            os.environ,
+            {
+                "MONGODB_URI": "mongodb+srv://legacy-backup",
+                "MONGODB_DATABASE": "legacy_backup_db",
+            },
+            clear=True,
+        ):
+            self.assertEqual(get_backup_mongo_uri(), "mongodb+srv://legacy-backup")
+            self.assertEqual(get_backup_mongo_database(), "legacy_backup_db")
 
     def test_database_package_exports_mongo_provider_functions(self):
         result = subprocess.run(

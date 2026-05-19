@@ -10,10 +10,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from dotenv import load_dotenv
 from google import genai
 
-from config import DB_NAME
+from config import DB_NAME, get_config_value
 from database.common_names import seed_common_names, get_common_names
 from prompts import build_prompt, build_character_summary_prompt
 
@@ -31,13 +30,10 @@ def backup_database():
 
 
 def get_client():
-    import os
-
-    load_dotenv()
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = get_config_value("GEMINI_API_KEY")
 
     if not api_key:
-        raise RuntimeError("GEMINI_API_KEY not found in .env")
+        raise RuntimeError("GEMINI_API_KEY not found in Streamlit secrets")
 
     return genai.Client(api_key=api_key)
 

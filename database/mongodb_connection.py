@@ -1,27 +1,24 @@
 from pymongo import MongoClient, ReturnDocument
 
-from config import MONGODB_DEFAULT_DATABASE, get_config_value
+from config import get_app_mongo_database, get_app_mongo_uri
 
 
 _client = None
 
 
 def get_mongo_uri():
-    uri = (
-        get_config_value("MONGO_URI")
-        or get_config_value("MONGODB_URI")
-    )
+    uri = get_app_mongo_uri()
 
     if not uri:
         raise RuntimeError(
-            "MongoDB provider is active but MONGO_URI is not configured."
+            "MongoDB provider is active but APP_MONGO_URI is not configured."
         )
 
     return uri
 
 
 def get_mongo_database_name():
-    return get_config_value("MONGO_DATABASE", MONGODB_DEFAULT_DATABASE)
+    return get_app_mongo_database()
 
 
 def get_mongo_client():

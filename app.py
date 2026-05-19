@@ -1,8 +1,3 @@
-from dotenv import load_dotenv
-
-
-load_dotenv()
-
 import streamlit as st
 
 from database import (
