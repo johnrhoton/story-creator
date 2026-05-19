@@ -23,11 +23,19 @@ def require_login():
 
         if st.button("Log in with Google"):
             try:
-                st.login()
+                provider = get_login_provider(st.secrets.get("auth", {}))
+                if provider:
+                    st.login(provider)
+                else:
+                    st.login()
             except StreamlitAuthError as error:
                 if "Authlib" not in str(error):
                     logger.exception("Streamlit authentication failed.")
-                    st.error("Streamlit authentication is not configured.")
+                    st.error(
+                        "Streamlit authentication is not configured. "
+                        "Configure Google credentials under `[auth.google]` "
+                        "or provide default `[auth]` credentials."
+                    )
                 else:
                     logger.exception("Authlib is missing for Streamlit authentication.")
                     st.error(
