@@ -110,6 +110,8 @@ Important config behavior:
   config helper and saved locally by `services/llm_defaults_service.py`.
 - Full prompt/response storage in LLM history is disabled by default. Use
   `llm.enable_content_logging=true` only for intentional local debugging.
+- OAuth troubleshooting can be enabled temporarily with `auth.debug=true`; it
+  must not print client secrets or cookie secrets.
 - `.streamlit/secrets.toml`, `.env`, database files, WAL/SHM files, exports,
   logs, and virtualenv folders are local-only and should not be committed.
 

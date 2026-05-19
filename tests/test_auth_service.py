@@ -3,7 +3,12 @@ from unittest.mock import patch
 
 from streamlit.runtime.scriptrunner import StopException
 
-from services.auth_service import get_login_provider, require_login
+from services.auth_service import (
+    build_auth_debug_summary,
+    get_auth_debug_enabled,
+    get_login_provider,
+    require_login,
+)
 
 
 class AuthServiceTests(unittest.TestCase):
@@ -75,6 +80,35 @@ class AuthServiceTests(unittest.TestCase):
                 require_login()
 
         self.assertEqual(FakeStreamlit.login_calls, ["google"])
+
+    def test_auth_debug_summary_redacts_sensitive_values(self):
+        class User:
+            is_logged_in = False
+
+        summary = build_auth_debug_summary(
+            {
+                "debug": True,
+                "redirect_uri": "https://example.streamlit.app/~/+/oauth2callback",
+                "cookie_secret": "cookie-secret",
+                "google": {
+                    "client_id": "client-id",
+                    "client_secret": "client-secret",
+                    "server_metadata_url": "metadata-url",
+                },
+            },
+            User(),
+        )
+
+        self.assertTrue(summary["auth_debug_enabled"])
+        self.assertTrue(summary["cookie_secret_configured"])
+        self.assertTrue(summary["google_provider_configured"])
+        self.assertEqual(summary["login_provider"], "google")
+        self.assertNotIn("client-secret", str(summary))
+        self.assertNotIn("cookie-secret", str(summary))
+
+    def test_auth_debug_can_be_enabled_from_auth_config(self):
+        self.assertTrue(get_auth_debug_enabled({"debug": "true"}))
+        self.assertFalse(get_auth_debug_enabled({"debug": "false"}))
 
 
 if __name__ == "__main__":

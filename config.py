@@ -18,6 +18,9 @@ MONGODB_LEGACY_SYNC_DOCUMENT_ID = "story_creator_main"
 GENDER_OPTIONS = ["female", "male"]
 
 CONFIG_ALIASES = {
+    "AUTH_DEBUG": [
+        ("auth", "debug"),
+    ],
     "APP_MONGO_DATABASE": [
         ("database", "database"),
     ],

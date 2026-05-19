@@ -66,6 +66,15 @@
   server_metadata_url="https://accounts.google.com/.well-known/openid-configuration"
   ```
 
+  To troubleshoot OAuth setup, temporarily add:
+  ```toml
+  [auth]
+  debug=true
+  ```
+  This shows and logs safe auth metadata such as provider shape, redirect URI,
+  and which required keys are present. It does not print client secrets or the
+  cookie secret.
+
 ## Production Deployment
 
 ### Basic Streamlit Deployment
