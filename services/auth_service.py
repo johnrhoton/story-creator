@@ -15,41 +15,51 @@ logger = logging.getLogger(__name__)
 
 
 def require_login():
-    if not st.user.is_logged_in:
+    user = getattr(st, "user", None)
+
+    if not getattr(user, "is_logged_in", False):
         st.title("Story Builder")
         st.info("Sign in with Google to continue.")
 
-        if st.button("Sign in with Google"):
+        if st.button("Log in with Google"):
             try:
-                provider = get_login_provider(st.secrets.get("auth", {}))
-                if provider:
-                    st.login(provider)
-                else:
-                    st.login()
+                st.login()
             except StreamlitAuthError as error:
                 if "Authlib" not in str(error):
                     logger.exception("Streamlit authentication failed.")
-                    raise
-
-                logger.exception("Authlib is missing for Streamlit authentication.")
-                st.error(
-                    "Authentication requires Authlib. Install dependencies "
-                    "with `venv/bin/pip install -r requirements.txt`, then "
-                    "restart Streamlit."
-                )
+                    st.error("Streamlit authentication is not configured.")
+                else:
+                    logger.exception("Authlib is missing for Streamlit authentication.")
+                    st.error(
+                        "Authentication requires Authlib. Install dependencies "
+                        "with `venv/bin/pip install -r requirements.txt`, then "
+                        "restart Streamlit."
+                    )
+            except Exception as error:
+                logger.exception("Streamlit login failed.")
+                st.error(f"Could not start Google login: {error}")
 
         st.stop()
 
-    st.session_state["google_user_id"] = st.user.sub
+    login_google_sub = getattr(user, "sub", "")
+    email = getattr(user, "email", "")
+
+    if not login_google_sub or not email:
+        st.error("Streamlit authentication did not provide user details.")
+        if st.button("Log out"):
+            st.logout()
+        st.stop()
+
+    st.session_state["google_user_id"] = login_google_sub
 
     authorized_user = get_authorized_user_by_identity(
-        google_sub=st.user.sub,
-        email=st.user.email,
+        google_sub=login_google_sub,
+        email=email,
     )
 
     if not authorized_user:
         st.error("Not authorised")
-        st.write(f"Signed in as: {st.user.email}")
+        st.write(f"Signed in as: {email}")
 
         if st.button("Log out"):
             st.logout()
@@ -65,7 +75,7 @@ def require_login():
     ) = authorized_user
 
     if not google_sub:
-        bind_authorized_user_google_sub(user_id, st.user.sub)
+        bind_authorized_user_google_sub(user_id, login_google_sub)
 
     st.session_state["authorized_user_id"] = user_id
     st.session_state["authorized_user_email"] = email
@@ -74,10 +84,15 @@ def require_login():
 
 def render_auth_sidebar():
     with st.sidebar:
-        email = st.session_state.get("authorized_user_email", st.user.email)
+        user = getattr(st, "user", None)
+        email = st.session_state.get(
+            "authorized_user_email",
+            getattr(user, "email", "")
+        )
         role = st.session_state.get("authorized_user_role", "")
 
-        st.caption(f"Signed in as {email}")
+        if email:
+            st.caption(f"Signed in as {email}")
 
         if role:
             st.caption(f"Role: {role}")
