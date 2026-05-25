@@ -9,6 +9,11 @@ from database.db_encryption import (
     encrypt_database_field,
 )
 from database.metadata import mark_local_data_modified
+from services.observability_service import (
+    EVENT_DATABASE_SAVE_COMPLETED,
+    EVENT_DATABASE_SAVE_FAILED,
+    timed_operation,
+)
 
 
 def replace_character_placeholders(
@@ -734,41 +739,52 @@ def add_story_chapter(
     chapter_body,
     chapter_summary
 ):
-    conn = get_connection()
-    cursor = conn.cursor()
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        story_id=story_id,
+        metadata={
+            "table": "story_chapters",
+            "action": "insert",
+            "chapter_number": chapter_number,
+        },
+    ):
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO story_chapters
-        (
+        cursor.execute("""
+            INSERT INTO story_chapters
+            (
+                story_id,
+                chapter_number,
+                chapter_description,
+                chapter_body,
+                chapter_summary
+            )
+            VALUES (?, ?, ?, ?, ?)
+        """, (
             story_id,
             chapter_number,
-            chapter_description,
-            chapter_body,
-            chapter_summary
-        )
-        VALUES (?, ?, ?, ?, ?)
-    """, (
-        story_id,
-        chapter_number,
-        encrypt_database_field(
-            "story_chapters",
-            "chapter_description",
-            chapter_description
-        ),
-        encrypt_database_field("story_chapters", "chapter_body", chapter_body),
-        encrypt_database_field(
-            "story_chapters",
-            "chapter_summary",
-            chapter_summary
-        )
-    ))
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_description",
+                chapter_description
+            ),
+            encrypt_database_field("story_chapters", "chapter_body", chapter_body),
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_summary",
+                chapter_summary
+            )
+        ))
 
-    chapter_id = cursor.lastrowid
+        chapter_id = cursor.lastrowid
 
-    mark_local_data_modified(cursor)
+        mark_local_data_modified(cursor)
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
 
     return chapter_id
 
@@ -780,38 +796,49 @@ def update_story_chapter(
     chapter_body,
     chapter_summary
 ):
-    conn = get_connection()
-    cursor = conn.cursor()
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        chapter_id=chapter_id,
+        metadata={
+            "table": "story_chapters",
+            "action": "update",
+            "chapter_number": chapter_number,
+        },
+    ):
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    cursor.execute("""
-        UPDATE story_chapters
-        SET
-            chapter_number = ?,
-            chapter_description = ?,
-            chapter_body = ?,
-            chapter_summary = ?
-        WHERE id = ?
-    """, (
-        chapter_number,
-        encrypt_database_field(
-            "story_chapters",
-            "chapter_description",
-            chapter_description
-        ),
-        encrypt_database_field("story_chapters", "chapter_body", chapter_body),
-        encrypt_database_field(
-            "story_chapters",
-            "chapter_summary",
-            chapter_summary
-        ),
-        chapter_id
-    ))
+        cursor.execute("""
+            UPDATE story_chapters
+            SET
+                chapter_number = ?,
+                chapter_description = ?,
+                chapter_body = ?,
+                chapter_summary = ?
+            WHERE id = ?
+        """, (
+            chapter_number,
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_description",
+                chapter_description
+            ),
+            encrypt_database_field("story_chapters", "chapter_body", chapter_body),
+            encrypt_database_field(
+                "story_chapters",
+                "chapter_summary",
+                chapter_summary
+            ),
+            chapter_id
+        ))
 
-    if cursor.rowcount:
-        mark_local_data_modified(cursor)
+        if cursor.rowcount:
+            mark_local_data_modified(cursor)
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
 
 
 def get_story_chapter(chapter_id):

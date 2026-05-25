@@ -2,10 +2,12 @@ import json
 import logging
 import sqlite3
 import time
+from collections import Counter
 from contextlib import contextmanager
 
 
 logger = logging.getLogger(__name__)
+metrics_counters = Counter()
 
 
 EVENT_APP_START = "app_start"
@@ -23,6 +25,61 @@ EVENT_EXPORT_CREATED = "export_created"
 EVENT_LLM_CALL_STARTED = "llm_call_started"
 EVENT_LLM_CALL_COMPLETED = "llm_call_completed"
 EVENT_LLM_CALL_FAILED = "llm_call_failed"
+EVENT_DATABASE_SAVE_COMPLETED = "database_save_completed"
+EVENT_DATABASE_SAVE_FAILED = "database_save_failed"
+
+
+def log_event(event_type, status="", metadata=None, level=logging.INFO, **fields):
+    operation = fields.pop("operation", None)
+    metric_name = ".".join(
+        part for part in ("events", event_type, status) if part
+    )
+    metrics_counters[metric_name] += 1
+
+    duration_ms = fields.get("duration_ms")
+    message_parts = [
+        f"event={event_type}",
+        f"status={status or 'recorded'}",
+    ]
+
+    if duration_ms is not None:
+        message_parts.append(f"duration_ms={duration_ms}")
+
+    for key in (
+        "story_id",
+        "chapter_id",
+        "template_id",
+        "character_id",
+        "provider",
+        "model",
+        "token_estimate",
+        "error_type",
+    ):
+        value = fields.get(key)
+        if value not in (None, ""):
+            message_parts.append(f"{key}={value}")
+
+    if operation:
+        message_parts.append(f"operation={operation}")
+
+    if metadata:
+        message_parts.append(f"metadata={serialize_metadata(metadata)}")
+
+    logger.log(level, " ".join(message_parts))
+
+    event_metadata = metadata
+    if operation:
+        event_metadata = {
+            **(metadata or {}),
+            "operation": operation,
+        }
+
+    return record_event(
+        event_type=event_type,
+        status=status,
+        metadata=event_metadata,
+        **fields,
+    )
 
 
 def record_event(event_type, status="", metadata=None, **fields):
@@ -47,6 +104,58 @@ def record_event(event_type, status="", metadata=None, **fields):
 
 
 @contextmanager
+def timed_operation(
+    operation,
+    completed_event_type=None,
+    failed_event_type=None,
+    started_event_type=None,
+    completed_status="completed",
+    failed_status="failed",
+    metadata=None,
+    **fields,
+):
+    start_time = time.perf_counter()
+    completed_event_type = completed_event_type or operation
+    failed_event_type = failed_event_type or completed_event_type
+
+    if started_event_type:
+        log_event(
+            started_event_type,
+            status="started",
+            metadata=metadata,
+            operation=operation,
+            **fields,
+        )
+
+    try:
+        yield
+    except Exception as error:
+        duration_ms = elapsed_ms(start_time)
+        log_event(
+            failed_event_type,
+            status=failed_status,
+            duration_ms=duration_ms,
+            error_type=type(error).__name__,
+            error_message=str(error),
+            metadata=metadata,
+            operation=operation,
+            level=logging.ERROR,
+            **fields,
+        )
+        raise
+
+    duration_ms = elapsed_ms(start_time)
+    log_event(
+        completed_event_type,
+        status=completed_status,
+        duration_ms=duration_ms,
+        metadata=metadata,
+        operation=operation,
+        **fields,
+    )
+
+
+@contextmanager
 def timed_event(
     event_type,
     status="completed",
@@ -54,31 +163,16 @@ def timed_event(
     metadata=None,
     **fields,
 ):
-    start_time = time.perf_counter()
-
-    try:
-        yield
-    except Exception as error:
-        duration_ms = elapsed_ms(start_time)
-        record_event(
-            event_type,
-            status=failure_status,
-            duration_ms=duration_ms,
-            error_type=type(error).__name__,
-            error_message=str(error),
-            metadata=metadata,
-            **fields,
-        )
-        raise
-
-    duration_ms = elapsed_ms(start_time)
-    record_event(
+    with timed_operation(
         event_type,
-        status=status,
-        duration_ms=duration_ms,
+        completed_event_type=event_type,
+        failed_event_type=event_type,
+        completed_status=status,
+        failed_status=failure_status,
         metadata=metadata,
         **fields,
-    )
+    ):
+        yield
 
 
 @contextmanager
@@ -89,37 +183,15 @@ def operation_events(
     metadata=None,
     **fields,
 ):
-    start_time = time.perf_counter()
-    record_event(
-        started_event_type,
-        status="started",
-        metadata=metadata,
-        **fields,
-    )
-
-    try:
-        yield
-    except Exception as error:
-        duration_ms = elapsed_ms(start_time)
-        record_event(
-            failed_event_type,
-            status="failed",
-            duration_ms=duration_ms,
-            error_type=type(error).__name__,
-            error_message=str(error),
-            metadata=metadata,
-            **fields,
-        )
-        raise
-
-    duration_ms = elapsed_ms(start_time)
-    record_event(
+    with timed_operation(
         completed_event_type,
-        status="completed",
-        duration_ms=duration_ms,
+        completed_event_type=completed_event_type,
+        failed_event_type=failed_event_type,
+        started_event_type=started_event_type,
         metadata=metadata,
         **fields,
-    )
+    ):
+        yield
 
 
 def elapsed_ms(start_time):
@@ -145,6 +217,10 @@ def serialize_metadata(metadata):
             ensure_ascii=False,
             sort_keys=True,
         )
+
+
+def get_metrics_counters():
+    return dict(metrics_counters)
 
 
 def build_event_dict(row):

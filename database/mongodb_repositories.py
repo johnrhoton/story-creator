@@ -13,6 +13,11 @@ from database.authorized_users import (
 from database.common_names import FEMALE_NAMES, MALE_NAMES
 from database.export_crypto import decrypt_export_values, encrypt_export_values
 from database.mongodb_connection import get_collection, get_mongo_database, get_next_id
+from services.observability_service import (
+    EVENT_DATABASE_SAVE_COMPLETED,
+    EVENT_DATABASE_SAVE_FAILED,
+    timed_operation,
+)
 
 
 TABLE_COLLECTIONS = {
@@ -685,32 +690,54 @@ def create_story_from_template(template_id, story_name, male_characters, female_
 
 
 def add_story_chapter(story_id, chapter_number, chapter_description, chapter_body, chapter_summary):
-    chapter_id = get_next_id("story_chapters")
-    get_collection("story_chapters").insert_one({
-        "_id": chapter_id,
-        "id": chapter_id,
-        "story_id": story_id,
-        "chapter_number": chapter_number,
-        "chapter_description": chapter_description,
-        "chapter_body": chapter_body,
-        "chapter_summary": chapter_summary,
-    })
-    mark_local_data_modified()
-    return chapter_id
-
-
-def update_story_chapter(chapter_id, chapter_number, chapter_description, chapter_body, chapter_summary):
-    result = get_collection("story_chapters").update_one(
-        {"id": chapter_id},
-        {"$set": {
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        story_id=story_id,
+        metadata={
+            "table": "story_chapters",
+            "action": "insert",
+            "chapter_number": chapter_number,
+        },
+    ):
+        chapter_id = get_next_id("story_chapters")
+        get_collection("story_chapters").insert_one({
+            "_id": chapter_id,
+            "id": chapter_id,
+            "story_id": story_id,
             "chapter_number": chapter_number,
             "chapter_description": chapter_description,
             "chapter_body": chapter_body,
             "chapter_summary": chapter_summary,
-        }},
-    )
-    if result.modified_count:
+        })
         mark_local_data_modified()
+    return chapter_id
+
+
+def update_story_chapter(chapter_id, chapter_number, chapter_description, chapter_body, chapter_summary):
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        chapter_id=chapter_id,
+        metadata={
+            "table": "story_chapters",
+            "action": "update",
+            "chapter_number": chapter_number,
+        },
+    ):
+        result = get_collection("story_chapters").update_one(
+            {"id": chapter_id},
+            {"$set": {
+                "chapter_number": chapter_number,
+                "chapter_description": chapter_description,
+                "chapter_body": chapter_body,
+                "chapter_summary": chapter_summary,
+            }},
+        )
+        if result.modified_count:
+            mark_local_data_modified()
 
 
 def get_story_chapter(chapter_id):
@@ -871,35 +898,51 @@ def get_app_events(limit=100):
 
 
 def save_llm_call(provider, model, prompt, response):
-    call_id = get_next_id("llm_calls")
-    get_collection("llm_calls").insert_one({
-        "_id": call_id,
-        "id": call_id,
-        "created_at": now(),
-        "provider": provider,
-        "model": model,
-        "prompt": prompt,
-        "response": response,
-    })
-    mark_local_data_modified()
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        provider=provider,
+        model=model,
+        metadata={"table": "llm_calls", "action": "insert"},
+    ):
+        call_id = get_next_id("llm_calls")
+        get_collection("llm_calls").insert_one({
+            "_id": call_id,
+            "id": call_id,
+            "created_at": now(),
+            "provider": provider,
+            "model": model,
+            "prompt": prompt,
+            "response": response,
+        })
+        mark_local_data_modified()
 
 
 def save_failed_llm_call(provider, model, prompt, response, error_type, error_codes, error_message, error_details):
-    call_id = get_next_id("failed_llm_calls")
-    get_collection("failed_llm_calls").insert_one({
-        "_id": call_id,
-        "id": call_id,
-        "created_at": now(),
-        "provider": provider,
-        "model": model,
-        "prompt": prompt,
-        "response": response,
-        "error_type": error_type,
-        "error_codes": error_codes,
-        "error_message": error_message,
-        "error_details": error_details,
-    })
-    mark_local_data_modified()
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        provider=provider,
+        model=model,
+        metadata={"table": "failed_llm_calls", "action": "insert"},
+    ):
+        call_id = get_next_id("failed_llm_calls")
+        get_collection("failed_llm_calls").insert_one({
+            "_id": call_id,
+            "id": call_id,
+            "created_at": now(),
+            "provider": provider,
+            "model": model,
+            "prompt": prompt,
+            "response": response,
+            "error_type": error_type,
+            "error_codes": error_codes,
+            "error_message": error_message,
+            "error_details": error_details,
+        })
+        mark_local_data_modified()
 
 
 def get_llm_calls():

@@ -18,7 +18,7 @@ from services.observability_service import (
     EVENT_LLM_CALL_STARTED,
     elapsed_ms,
     estimate_tokens,
-    record_event,
+    log_event,
 )
 
 
@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 def generate_text(provider, model, prompt):
+    start_time = None
     event_fields = {
         "provider": provider,
         "model": model,
@@ -50,7 +51,7 @@ def generate_text(provider, model, prompt):
             return None
 
         start_time = time.perf_counter()
-        record_event(
+        log_event(
             EVENT_LLM_CALL_STARTED,
             status="started",
             **event_fields,
@@ -62,10 +63,11 @@ def generate_text(provider, model, prompt):
 
         if response is None:
             log_no_response(provider, model, prompt)
-            record_event(
+            log_event(
                 EVENT_LLM_CALL_FAILED,
                 status="failed",
                 duration_ms=elapsed_ms(start_time),
+                level=logging.WARNING,
                 error_type="NoResponse",
                 error_message=f"{provider} did not return a response.",
                 **event_fields,
@@ -73,7 +75,7 @@ def generate_text(provider, model, prompt):
             return None
 
         log_llm_call(provider, model, prompt, response)
-        record_event(
+        log_event(
             EVENT_LLM_CALL_COMPLETED,
             status="completed",
             duration_ms=elapsed_ms(start_time),
@@ -128,10 +130,11 @@ def generate_text(provider, model, prompt):
 def record_llm_exception_event(error, event_fields, start_time=None):
     duration_ms = elapsed_ms(start_time) if start_time is not None else None
 
-    record_event(
+    log_event(
         EVENT_LLM_CALL_FAILED,
         status="failed",
         duration_ms=duration_ms,
+        level=logging.ERROR,
         error_type=type(error).__name__,
         error_message=str(error),
         **event_fields,
@@ -139,9 +142,10 @@ def record_llm_exception_event(error, event_fields, start_time=None):
 
 
 def record_unsupported_provider_event(provider, model, prompt):
-    record_event(
+    log_event(
         EVENT_LLM_CALL_FAILED,
         status="failed",
+        level=logging.ERROR,
         provider=provider,
         model=model,
         token_estimate=estimate_tokens(prompt),

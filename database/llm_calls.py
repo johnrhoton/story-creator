@@ -3,34 +3,47 @@ from datetime import datetime
 from database.connection import get_connection
 from database.db_encryption import decrypt_database_rows, encrypt_database_field
 from database.metadata import mark_local_data_modified
+from services.observability_service import (
+    EVENT_DATABASE_SAVE_COMPLETED,
+    EVENT_DATABASE_SAVE_FAILED,
+    timed_operation,
+)
 
 
 def save_llm_call(provider, model, prompt, response):
-    conn = get_connection()
-    cursor = conn.cursor()
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        provider=provider,
+        model=model,
+        metadata={"table": "llm_calls", "action": "insert"},
+    ):
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO llm_calls
-        (
-            created_at,
+        cursor.execute("""
+            INSERT INTO llm_calls
+            (
+                created_at,
+                provider,
+                model,
+                prompt,
+                response
+            )
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            datetime.now().isoformat(timespec="seconds"),
             provider,
             model,
-            prompt,
-            response
-        )
-        VALUES (?, ?, ?, ?, ?)
-    """, (
-        datetime.now().isoformat(timespec="seconds"),
-        provider,
-        model,
-        encrypt_database_field("llm_calls", "prompt", prompt),
-        encrypt_database_field("llm_calls", "response", response)
-    ))
+            encrypt_database_field("llm_calls", "prompt", prompt),
+            encrypt_database_field("llm_calls", "response", response)
+        ))
 
-    mark_local_data_modified(cursor)
+        mark_local_data_modified(cursor)
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
 
 
 def save_failed_llm_call(
@@ -43,47 +56,55 @@ def save_failed_llm_call(
     error_message,
     error_details
 ):
-    conn = get_connection()
-    cursor = conn.cursor()
+    with timed_operation(
+        "database_save",
+        completed_event_type=EVENT_DATABASE_SAVE_COMPLETED,
+        failed_event_type=EVENT_DATABASE_SAVE_FAILED,
+        provider=provider,
+        model=model,
+        metadata={"table": "failed_llm_calls", "action": "insert"},
+    ):
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO failed_llm_calls
-        (
-            created_at,
+        cursor.execute("""
+            INSERT INTO failed_llm_calls
+            (
+                created_at,
+                provider,
+                model,
+                prompt,
+                response,
+                error_type,
+                error_codes,
+                error_message,
+                error_details
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            datetime.now().isoformat(timespec="seconds"),
             provider,
             model,
-            prompt,
-            response,
+            encrypt_database_field("failed_llm_calls", "prompt", prompt),
+            encrypt_database_field("failed_llm_calls", "response", response),
             error_type,
             error_codes,
-            error_message,
-            error_details
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        datetime.now().isoformat(timespec="seconds"),
-        provider,
-        model,
-        encrypt_database_field("failed_llm_calls", "prompt", prompt),
-        encrypt_database_field("failed_llm_calls", "response", response),
-        error_type,
-        error_codes,
-        encrypt_database_field(
-            "failed_llm_calls",
-            "error_message",
-            error_message
-        ),
-        encrypt_database_field(
-            "failed_llm_calls",
-            "error_details",
-            error_details
-        )
-    ))
+            encrypt_database_field(
+                "failed_llm_calls",
+                "error_message",
+                error_message
+            ),
+            encrypt_database_field(
+                "failed_llm_calls",
+                "error_details",
+                error_details
+            )
+        ))
 
-    mark_local_data_modified(cursor)
+        mark_local_data_modified(cursor)
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
 
 
 def get_llm_calls():
