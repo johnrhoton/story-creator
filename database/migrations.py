@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from config import DB_NAME
-from database.connection import get_connection
+from database.connection import get_connection, get_database_path
 
 
 def run_migrations():
@@ -402,11 +401,12 @@ def migrate_20260513100000_remove_template_characters(cursor):
 # broader story-builder name before opening the SQLite connection.
 def migrate_20260513110000_database_file_name():
     old_path = Path("character_generations_v3.db")
-    new_path = Path(DB_NAME)
+    new_path = get_database_path()
 
     if new_path.exists() or not old_path.exists():
         return
 
+    new_path.parent.mkdir(parents=True, exist_ok=True)
     old_path.rename(new_path)
 
 

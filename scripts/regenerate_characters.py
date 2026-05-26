@@ -12,8 +12,9 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from google import genai
 
-from config import DB_NAME, get_config_value
+from config import get_config_value
 from database.common_names import seed_common_names, get_common_names
+from database.connection import get_database_path
 from prompts import build_prompt, build_character_summary_prompt
 
 
@@ -21,7 +22,7 @@ DEFAULT_MODEL = "gemini-2.5-flash"
 
 
 def backup_database():
-    db_path = Path(DB_NAME)
+    db_path = get_database_path()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_path = db_path.with_name(f"{db_path.stem}_backup_{timestamp}{db_path.suffix}")
 
@@ -93,7 +94,7 @@ def find_available_name(age, gender, used_names):
 
 
 def get_characters():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(get_database_path())
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -117,7 +118,7 @@ def get_characters():
 
 
 def update_character(record_id, new_name, prompt, response, summary):
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(get_database_path())
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -252,8 +253,10 @@ def main():
 
     args = parser.parse_args()
 
-    if not Path(DB_NAME).exists():
-        raise FileNotFoundError(f"Database not found: {DB_NAME}")
+    db_path = get_database_path()
+
+    if not db_path.exists():
+        raise FileNotFoundError(f"Database not found: {db_path}")
 
     if not args.dry_run:
         backup_database()

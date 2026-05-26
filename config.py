@@ -4,7 +4,7 @@ import os
 ALLOWED_DB_PROVIDERS = {"sqlite", "mongodb"}
 ALLOWED_VECTOR_PROVIDERS = {"none", "chroma", "mongodb_vector"}
 
-DB_NAME = "story_builder.db"
+DEFAULT_SQLITE_DB_PATH = "data/sqlite/story_builder.db"
 
 DATABASE_ENCRYPTION_KDF_ITERATIONS = 100000
 
@@ -59,6 +59,9 @@ CONFIG_ALIASES = {
     ],
     "OPENROUTER_API_KEY": [
         ("llm", "openrouter", "api_key"),
+    ],
+    "STORY_DB_PATH": [
+        ("database", "path"),
     ],
     "VECTOR_COLLECTION_NAME": [
         ("rag", "collection_name"),
@@ -125,6 +128,15 @@ def get_config_bool(name, default=False):
         "yes",
         "on",
     }
+
+
+def get_sqlite_db_path():
+    return get_config_value("STORY_DB_PATH", DEFAULT_SQLITE_DB_PATH)
+
+
+# Backwards-compatible alias for older scripts and tests. New database access
+# should use get_sqlite_db_path() through database.connection.
+DB_NAME = get_sqlite_db_path()
 
 
 DEFAULT_LLM_PROVIDER = get_config_value("DEFAULT_LLM_PROVIDER", "Groq")

@@ -10,7 +10,7 @@ Streamlit Cloud by setting `database.provider="mongodb"` and `database.uri`.
 ## Database Engine
 
 - **Technology**: SQLite 3 or MongoDB Atlas
-- **File**: `story_builder.db` (created in project root)
+- **File**: `data/sqlite/story_builder.db` by default, configurable with `STORY_DB_PATH`
 - **Connection**: Single-writer, multi-reader concurrent access
 - **Migrations**: Automatic schema updates on application startup
 

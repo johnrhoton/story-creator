@@ -1,14 +1,13 @@
 from datetime import datetime
-from pathlib import Path
 
-from config import DB_NAME
+from database.connection import get_database_path
 from database.migrations import run_migrations
 from database.schema import create_tables
 from database.load_seed import seed_database_from_load_folder
 
 
 def reinitialize_database():
-    db_path = Path(DB_NAME)
+    db_path = get_database_path()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     archived_path = None
 

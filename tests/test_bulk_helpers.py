@@ -96,16 +96,17 @@ class BulkHelperTests(unittest.TestCase):
         )
 
     def test_build_export_data_does_not_reencrypt_yaml_payload(self):
-        export_yaml = build_export_data(
-            {
-                "characters": [
-                    {
-                        "name": "Alice"
-                    }
-                ]
-            },
-            include_database_encryption_metadata=True
-        )
+        with isolated_database_directory():
+            export_yaml = build_export_data(
+                {
+                    "characters": [
+                        {
+                            "name": "Alice"
+                        }
+                    ]
+                },
+                include_database_encryption_metadata=True
+            )
 
         export_data = yaml.safe_load(export_yaml)
 

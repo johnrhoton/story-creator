@@ -2,7 +2,9 @@ import io
 import os
 import subprocess
 import sys
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from config import (
@@ -12,9 +14,11 @@ from config import (
     get_backup_mongo_database,
     get_backup_mongo_uri,
     get_db_provider,
+    get_sqlite_db_path,
     get_vector_provider,
 )
 from database.mongodb_connection import get_mongo_database_name, get_mongo_uri
+from database.connection import get_connection
 
 
 class DatabaseProviderTests(unittest.TestCase):
@@ -25,6 +29,41 @@ class DatabaseProviderTests(unittest.TestCase):
     def test_get_db_provider_accepts_mongodb(self):
         with patch.dict(os.environ, {"DB_PROVIDER": "mongodb"}, clear=True):
             self.assertEqual(get_db_provider(), "mongodb")
+
+    def test_sqlite_db_path_defaults_to_data_directory(self):
+        with patch.dict(os.environ, {}, clear=True), patch(
+            "config.get_config_value",
+            side_effect=lambda _name, default=None: default,
+        ):
+            self.assertEqual(
+                get_sqlite_db_path(),
+                "data/sqlite/story_builder.db",
+            )
+
+    def test_sqlite_db_path_can_be_configured_with_env(self):
+        with patch.dict(
+            os.environ,
+            {"STORY_DB_PATH": "/tmp/custom_story_builder.db"},
+            clear=True,
+        ):
+            self.assertEqual(
+                get_sqlite_db_path(),
+                "/tmp/custom_story_builder.db",
+            )
+
+    def test_sqlite_connection_uses_configured_path(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            db_path = Path(temp_dir) / "nested" / "custom.db"
+
+            with patch.dict(
+                os.environ,
+                {"STORY_DB_PATH": str(db_path)},
+                clear=True,
+            ):
+                conn = get_connection()
+                conn.close()
+
+            self.assertTrue(db_path.exists())
 
     def test_invalid_db_provider_fails_fast(self):
         result = subprocess.run(

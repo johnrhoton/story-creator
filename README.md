@@ -32,8 +32,10 @@ local URL manually if your terminal does not open a browser.
 The local SQLite database is:
 
 ```text
-story_builder.db
+data/sqlite/story_builder.db
 ```
+
+Set `STORY_DB_PATH` to use a different local SQLite file.
 
 The app runs migrations at startup. You can also run them manually:
 
