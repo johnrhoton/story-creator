@@ -1,0 +1,55 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Git / IDE
+.git/
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+.streamlit/secrets.toml
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Runtime data
+data/
+
+# Chroma / embeddings
+chroma/
+chromadb/
+
+# Logs
+logs/
+*.log
+
+# Tests / temporary
+tests/
+tmp/
+temp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Deployment artefacts
+k8s/
+docs/
+
+# Build artefacts
+dist/
+build/
+
+# Misc
+runtime.txt

@@ -1,10 +1,12 @@
 from collections.abc import Mapping
 import logging
+import os
+from pathlib import Path
 
 import streamlit as st
 from streamlit.errors import StreamlitAuthError
 
-from config import get_config_bool
+from config import get_config, get_config_bool
 from database import (
     ADMINISTRATOR_ROLE,
     bind_authorized_user_google_sub,
@@ -14,10 +16,16 @@ from database import (
 
 logger = logging.getLogger(__name__)
 
+GOOGLE_SERVER_METADATA_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
+
 
 def require_login():
+    auth_config = build_auth_config()
+    if auth_config_is_complete(auth_config):
+        ensure_streamlit_auth_secrets_from_env(auth_config)
     user = getattr(st, "user", None)
-    auth_config = st.secrets.get("auth", {})
     auth_debug = get_auth_debug_enabled(auth_config)
 
     if not getattr(user, "is_logged_in", False):
@@ -25,7 +33,14 @@ def require_login():
         st.info("Sign in with Google to continue.")
         render_auth_debug_panel(auth_config, user, auth_debug)
 
-        if st.button("Log in with Google"):
+        if not auth_config_is_complete(auth_config):
+            warn_auth_config_missing_once()
+            st.warning(
+                "Authentication is not configured. Set AUTH_COOKIE_SECRET, "
+                "AUTH_REDIRECT_URI, GOOGLE_CLIENT_ID, and "
+                "GOOGLE_CLIENT_SECRET to enable Google login."
+            )
+        elif st.button("Log in with Google"):
             try:
                 provider = get_login_provider(auth_config)
                 log_auth_debug(
@@ -170,6 +185,58 @@ def current_user_is_administrator():
     return st.session_state.get("authorized_user_role") == ADMINISTRATOR_ROLE
 
 
+def build_auth_config():
+    google_config = {
+        "client_id": get_config("GOOGLE_CLIENT_ID", ""),
+        "client_secret": get_config("GOOGLE_CLIENT_SECRET", ""),
+        "server_metadata_url": get_config(
+            "GOOGLE_SERVER_METADATA_URL",
+            GOOGLE_SERVER_METADATA_URL,
+        ),
+    }
+
+    auth_config = {
+        "redirect_uri": get_config("AUTH_REDIRECT_URI", ""),
+        "cookie_secret": get_config("AUTH_COOKIE_SECRET", ""),
+        "debug": get_config_bool("AUTH_DEBUG", False),
+        "google": google_config,
+    }
+
+    return prune_empty_auth_config(auth_config)
+
+
+def prune_empty_auth_config(auth_config):
+    pruned = {}
+
+    for key, value in auth_config.items():
+        if isinstance(value, Mapping):
+            nested = {
+                nested_key: nested_value
+                for nested_key, nested_value in value.items()
+                if nested_value not in (None, "")
+            }
+            if nested:
+                pruned[key] = nested
+        elif value not in (None, ""):
+            pruned[key] = value
+
+    return pruned
+
+
+def auth_config_is_complete(auth_config):
+    if not isinstance(auth_config, Mapping):
+        return False
+
+    google_config = auth_config.get("google", {})
+    google_config = google_config if isinstance(google_config, Mapping) else {}
+
+    return (
+        bool(auth_config.get("redirect_uri"))
+        and bool(auth_config.get("cookie_secret"))
+        and required_auth_keys_present(google_config)
+    )
+
+
 def get_login_provider(auth_config):
     if (
         isinstance(auth_config, Mapping)
@@ -178,6 +245,72 @@ def get_login_provider(auth_config):
         return "google"
 
     return None
+
+
+def warn_auth_config_missing_once():
+    if st.session_state.get("auth_config_missing_warned"):
+        return
+
+    logger.warning(
+        "Authentication is not configured. Set AUTH_COOKIE_SECRET, "
+        "AUTH_REDIRECT_URI, GOOGLE_CLIENT_ID, and GOOGLE_CLIENT_SECRET, "
+        "or provide equivalent Streamlit secrets."
+    )
+    st.session_state["auth_config_missing_warned"] = True
+
+
+def ensure_streamlit_auth_secrets_from_env(auth_config):
+    if not env_auth_config_present():
+        return None
+
+    secrets_path = Path(".streamlit") / "secrets.toml"
+
+    if secrets_path.exists():
+        return secrets_path
+
+    secrets_path.parent.mkdir(parents=True, exist_ok=True)
+    secrets_path.write_text(
+        render_streamlit_auth_secrets(auth_config),
+        encoding="utf-8",
+    )
+    logger.info("Created runtime Streamlit auth secrets from environment.")
+
+    return secrets_path
+
+
+def env_auth_config_present():
+    return all(
+        os.getenv(name)
+        for name in [
+            "AUTH_COOKIE_SECRET",
+            "AUTH_REDIRECT_URI",
+            "GOOGLE_CLIENT_ID",
+            "GOOGLE_CLIENT_SECRET",
+        ]
+    )
+
+
+def render_streamlit_auth_secrets(auth_config):
+    google_config = auth_config.get("google", {})
+
+    return "\n".join([
+        "[auth]",
+        f"redirect_uri={toml_string(auth_config.get('redirect_uri', ''))}",
+        f"cookie_secret={toml_string(auth_config.get('cookie_secret', ''))}",
+        "",
+        "[auth.google]",
+        f"client_id={toml_string(google_config.get('client_id', ''))}",
+        f"client_secret={toml_string(google_config.get('client_secret', ''))}",
+        (
+            "server_metadata_url="
+            f"{toml_string(google_config.get('server_metadata_url', ''))}"
+        ),
+        "",
+    ])
+
+
+def toml_string(value):
+    return '"' + str(value).replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
 def get_auth_debug_enabled(auth_config):

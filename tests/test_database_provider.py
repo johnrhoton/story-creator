@@ -14,6 +14,7 @@ from config import (
     get_backup_mongo_database,
     get_backup_mongo_uri,
     get_db_provider,
+    get_chroma_db_path,
     get_sqlite_db_path,
     get_vector_provider,
 )
@@ -64,6 +65,14 @@ class DatabaseProviderTests(unittest.TestCase):
                 conn.close()
 
             self.assertTrue(db_path.exists())
+
+    def test_chroma_db_path_can_be_configured_with_env(self):
+        with patch.dict(
+            os.environ,
+            {"CHROMA_DB_PATH": "/tmp/custom_chroma"},
+            clear=True,
+        ):
+            self.assertEqual(get_chroma_db_path(), "/tmp/custom_chroma")
 
     def test_invalid_db_provider_fails_fast(self):
         result = subprocess.run(

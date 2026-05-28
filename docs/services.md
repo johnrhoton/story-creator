@@ -165,7 +165,8 @@ See `docs/language_aids.md` for the end-to-end reading comprehension workflow.
 - Gemini, Groq, OpenRouter integration
 - Model capability descriptions
 - Default model selection
-- Sidebar default persistence to `.streamlit/secrets.toml` through `llm_defaults_service.py`
+- Sidebar default persistence to `.streamlit/secrets.toml` through `llm_defaults_service.py` for local and Streamlit Cloud use
+- Container defaults can be supplied with `DEFAULT_LLM_PROVIDER` and `DEFAULT_LLM_MODEL`
 
 ### `auth_service.py` and `admin_service.py`
 **Purpose**: Google OIDC authentication and SQLite-backed authorization.
@@ -176,6 +177,24 @@ See `docs/language_aids.md` for the end-to-end reading comprehension workflow.
 - `list_authorized_users()`: Lists the whitelist for administrators
 - `create_authorized_user(...)`, `edit_authorized_user(...)`, `delete_existing_authorized_user(...)`: Manage users and roles
 
+**Configuration**:
+- Auth reads environment variables first: `AUTH_COOKIE_SECRET`, `AUTH_REDIRECT_URI`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and optional `GOOGLE_SERVER_METADATA_URL`
+- Streamlit secrets remain the fallback for local and Streamlit Community Cloud deployments
+- Missing auth config logs a warning instead of crashing startup, which keeps container health checks and unauthenticated local runs debuggable
+- Container startup can load `/app/.env` and create a runtime-only `.streamlit/secrets.toml` for Streamlit's login API
+
+### `observability_service.py`
+**Purpose**: Lightweight logging, timing, and structured app events.
+
+**Key Functions**:
+- `log_event(...)`: Writes structured app events through the active database provider when available
+- `timed_operation(...)`: Context manager for duration logs around story generation, RAG retrieval, LLM calls, and database saves
+- Optional in-process counters are enabled only when compatible metrics dependencies are present
+
+**Design Notes**:
+- Uses standard Python logging across services
+- Does not introduce Prometheus, Grafana, Loki, Tempo, or OpenTelemetry infrastructure
+- Keeps local, Streamlit Cloud, Docker, and K3s deployment paths lightweight
 
 ### `sync_service.py`
 **Purpose**: MongoDB synchronization (optional)

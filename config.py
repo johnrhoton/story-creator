@@ -1,10 +1,12 @@
 import os
+from pathlib import Path
 
 
 ALLOWED_DB_PROVIDERS = {"sqlite", "mongodb"}
 ALLOWED_VECTOR_PROVIDERS = {"none", "chroma", "mongodb_vector"}
 
 DEFAULT_SQLITE_DB_PATH = "data/sqlite/story_builder.db"
+DEFAULT_CHROMA_DB_PATH = "data/chroma_db"
 
 DATABASE_ENCRYPTION_KDF_ITERATIONS = 100000
 
@@ -20,6 +22,12 @@ GENDER_OPTIONS = ["female", "male"]
 CONFIG_ALIASES = {
     "AUTH_DEBUG": [
         ("auth", "debug"),
+    ],
+    "AUTH_COOKIE_SECRET": [
+        ("auth", "cookie_secret"),
+    ],
+    "AUTH_REDIRECT_URI": [
+        ("auth", "redirect_uri"),
     ],
     "APP_MONGO_DATABASE": [
         ("database", "database"),
@@ -54,6 +62,15 @@ CONFIG_ALIASES = {
     "GROQ_API_KEY": [
         ("llm", "groq", "api_key"),
     ],
+    "GOOGLE_CLIENT_ID": [
+        ("auth", "google", "client_id"),
+    ],
+    "GOOGLE_CLIENT_SECRET": [
+        ("auth", "google", "client_secret"),
+    ],
+    "GOOGLE_SERVER_METADATA_URL": [
+        ("auth", "google", "server_metadata_url"),
+    ],
     "HF_TOKEN": [
         ("huggingface", "token"),
     ],
@@ -62,6 +79,9 @@ CONFIG_ALIASES = {
     ],
     "STORY_DB_PATH": [
         ("database", "path"),
+    ],
+    "CHROMA_DB_PATH": [
+        ("rag", "chroma_path"),
     ],
     "VECTOR_COLLECTION_NAME": [
         ("rag", "collection_name"),
@@ -73,6 +93,45 @@ CONFIG_ALIASES = {
         ("rag", "provider"),
     ],
 }
+
+
+def load_dotenv_file(path=".env"):
+    env_path = Path(path)
+    if not env_path.exists():
+        return
+
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        key, value = parse_dotenv_line(line)
+        if not key or key in os.environ:
+            continue
+
+        os.environ[key] = value
+
+
+def parse_dotenv_line(line):
+    line = line.strip()
+
+    if not line or line.startswith("#") or "=" not in line:
+        return None, None
+
+    key, value = line.split("=", 1)
+    key = key.strip()
+    value = value.strip()
+
+    if not key:
+        return None, None
+
+    if (
+        len(value) >= 2
+        and value[0] == value[-1]
+        and value[0] in {"'", '"'}
+    ):
+        value = value[1:-1]
+
+    return key, value
+
+
+load_dotenv_file()
 
 
 def get_config_value(name, default=None):
@@ -96,6 +155,10 @@ def get_config_value(name, default=None):
         pass
 
     return default
+
+
+def get_config(name, default=None):
+    return get_config_value(name, default)
 
 
 def get_nested_secret(secrets, path):
@@ -132,6 +195,10 @@ def get_config_bool(name, default=False):
 
 def get_sqlite_db_path():
     return get_config_value("STORY_DB_PATH", DEFAULT_SQLITE_DB_PATH)
+
+
+def get_chroma_db_path():
+    return get_config_value("CHROMA_DB_PATH", DEFAULT_CHROMA_DB_PATH)
 
 
 # Backwards-compatible alias for older scripts and tests. New database access

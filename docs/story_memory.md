@@ -107,9 +107,19 @@ headings and item formatting shown to the LLM.
 
 Story Memory uses a configurable vector provider. Set `rag.provider` to:
 - `none`: Disable RAG retrieval and indexing. Story generation continues without injected memory.
-- `chroma`: Use the existing local Chroma persistence under `data/chroma_db`.
+- `chroma`: Use local Chroma persistence under `data/chroma_db` by default.
 - `mongodb_vector`: Store memory records and embeddings in MongoDB Atlas and
   retrieve with Atlas Vector Search.
+
+The Chroma path is configurable with `CHROMA_DB_PATH` or the Streamlit secrets
+key `rag.chroma_path`. In the Docker/K3s deployment it is set to:
+
+```text
+/app/data/chroma
+```
+
+That path is under the mounted `/app/data` PVC so the vector index survives pod
+restarts.
 
 All vector providers that embed text use the same model:
 

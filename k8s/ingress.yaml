@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: story-builder
+  namespace: story-builder
+spec:
+  rules:
+    - host: story-builder.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: story-builder
+                port:
+                  name: http

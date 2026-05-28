@@ -5,13 +5,14 @@ from config import (
     VECTOR_COLLECTION_NAME,
     VECTOR_INDEX_NAME,
     VECTOR_PROVIDER,
+    get_chroma_db_path,
 )
 
 
 logger = logging.getLogger(__name__)
 
 
-CHROMA_PATH = "data/chroma_db"
+CHROMA_PATH = get_chroma_db_path()
 COLLECTION_NAME = VECTOR_COLLECTION_NAME
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
